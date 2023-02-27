@@ -7,7 +7,7 @@ import Register from './pages/users/Register';
 import Top from './pages/Top';
 import Cart from './pages/products/Cart';
 import MembersInfoEdit from './pages/users/MembersInfoEdit';
-import Favorite from './pages/products/favorite';
+import Favorite from './pages/products/Favorite';
 import Histry from './pages/products/Histry';
 import ProductDetail from './pages/products/ProductDetail';
 import ProductRegistration from './pages/products/ProductRegistration';
@@ -17,6 +17,7 @@ import ErrPage from './pages/404';
 function App() {
 
   return (
+    <>
     <Router>
       <Routes>
         <Route path='/' element={<Top />}></Route>
@@ -32,7 +33,7 @@ function App() {
         <Route path='*' element={<ErrPage />}></Route>
       </Routes>
     </Router>
-
+    </>
   )
 }
 

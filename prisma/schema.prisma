@@ -10,8 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 //マイグレートしていない
 model Users {
-  id Int @default(autoincrement()) @id
+  id Int @id @default(autoincrement())
+}
+
+model Items {
+  id             Int       @id @default(autoincrement())
+  name           String
+  price          Int
+  description    String
+  user_id        Int
+  size_id        Int?
+  shopping_date  DateTime?
+  shopping_price Int?
 }
