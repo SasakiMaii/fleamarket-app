@@ -38,7 +38,7 @@ const Register= () => {
           elevation={3}
           sx={{
             p: 4,
-            height: "140vh",
+            height: "145vh",
             width: "450px",
             m: "20px auto",
           }}

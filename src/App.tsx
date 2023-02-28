@@ -27,7 +27,7 @@ function App() {
         <Route path='/membersinfoedit' element={<MembersInfoEdit />}></Route>
         <Route path='/favorite' element={<Favorite />}></Route>
         <Route path='/histry' element={<Histry />}></Route>
-        <Route path='/productdetail/:id' element={<ProductDetail />}></Route>
+        <Route path='productdetail/:id' element={<ProductDetail />}></Route>
         <Route path='/productregistration' element={<ProductRegistration />}></Route>
         <Route path='/purchaseconfirmation' element={<PurchaseConfirmation />}></Route>
         <Route path='*' element={<ErrPage />}></Route>
