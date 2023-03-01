@@ -5,7 +5,6 @@ import PasswordInput from "../../components/form/PasswordInput copy";
 import { Avatar, Box, Button, Grid, Paper, Typography,Link } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { pink } from "@mui/material/colors";
-import Header from "../../components/layout/Header"
 
 const Login: React.FC = () => {
   const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -27,7 +26,7 @@ const Login: React.FC = () => {
           <Grid
             container
             direction="column"
-            justifyContent="flex-start" //多分、デフォルトflex-startなので省略できる。
+            justifyContent="flex-start" 
             alignItems="center"
           >
             <Avatar sx={{ bgcolor: pink[400] }}>

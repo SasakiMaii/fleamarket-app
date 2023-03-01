@@ -19,9 +19,14 @@ model Items {
   id             Int       @id @default(autoincrement())
   name           String
   price          Int
+  image          String
   description    String
   user_id        Int
   size_id        Int?
   shopping_date  DateTime?
   shopping_price Int?
+  product_state String?
+  product_brand String?
+  product_days String?
+  category String?
 }
