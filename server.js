@@ -31,7 +31,7 @@ app.get("/items", async (req, res) => {
   return res.json(item);
 });
 
-app.get("/:id", async (req, res) => {
+app.get("items/:id", async (req, res) => {
   const id = req.params.id;
   const item = await prisma.items.findUnique({
     where: {
@@ -39,4 +39,10 @@ app.get("/:id", async (req, res) => {
     },
   });
   return res.json(item);
+});
+
+//users
+app.get("/user", async (req, res) => {
+  const user = await prisma.users.findMany();
+  return res.json(user);
 });

@@ -1,16 +1,54 @@
 //rafce
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EmailInput from "../../components/form/EmailInput";
 import PasswordInput from "../../components/form/PasswordInput copy";
-import { Avatar, Box, Button, Grid, Paper, Typography,Link } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Typography,
+  Link,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { pink } from "@mui/material/colors";
+import { Users } from "../../types/type";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-    e.preventDefault();
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [err, setErr] = useState<string[]>([]);
+  const [loginData, setLoginData] = useState<Users[]>([]);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/user");
+        const data = await response.json();
+        setLoginData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const emailMatch = loginData.some((data) => data.email === email);
+  const passMatch = loginData.some((data) => data.password === password);
+
+  const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    setErr([]);
+    e.preventDefault();
+    if (emailMatch === true && passMatch === true) {
+      navigate("/");
+    } else if (emailMatch === false || passMatch === false) {
+      setErr(["＊入力内容を確認してください＊"]);
+    }
+  };
+  console.log();
   return (
     <>
       <Grid>
@@ -26,7 +64,7 @@ const Login: React.FC = () => {
           <Grid
             container
             direction="column"
-            justifyContent="flex-start" 
+            justifyContent="flex-start"
             alignItems="center"
           >
             <Avatar sx={{ bgcolor: pink[400] }}>
@@ -37,9 +75,12 @@ const Login: React.FC = () => {
             </Typography>
           </Grid>
           <div>
+            {err.map((er, index) => {
+              return <Box key={index}  sx={{ color: "#dc143c", fontSize: 14 ,mb:1 }}>{er}</Box>;
+            })}
             <div>
-              <EmailInput />
-              <PasswordInput />
+              <EmailInput email={email} setEmail={setEmail} />
+              <PasswordInput password={password} setPassword={setPassword} />
             </div>
             <Box mt={3}>
               <Button
@@ -53,7 +94,7 @@ const Login: React.FC = () => {
               </Button>
             </Box>
             <Box mt={5}>
-            <Link href="/register">新規登録する</Link>
+              <Link href="/register">新規登録する</Link>
             </Box>
           </div>
         </Paper>

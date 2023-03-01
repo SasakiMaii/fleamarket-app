@@ -28,3 +28,19 @@ export type Items = {
   product_days?: string
   category?: string
 };
+
+export type Users={
+  nick_name?: string
+  first_name?: string
+  last_name?: string
+  email?: string
+  password?: string
+  profile?: string
+  image?: string
+  phone?: number
+  postal_code?: string
+  prefecture?: string
+  city?: string
+  street?: string
+  bilding?: string
+}

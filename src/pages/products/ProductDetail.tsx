@@ -41,13 +41,17 @@ const ProductDetail = () => {
   }, []);
 
   const getDetailItem = async (signal: AbortSignal) => {
-    const response = await fetch(`http://localhost:8000/${id}`, { signal });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch(`http://localhost:8000/items/${id}`, { signal });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      setDetailItems([data]);
+    } catch (error) {
+      console.error('An error occurred:', error);
     }
-    const data = await response.json();
-    console.log(data);
-    setDetailItems([data]);
   };
 
   if (loading) {
