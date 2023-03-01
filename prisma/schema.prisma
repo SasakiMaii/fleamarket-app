@@ -13,6 +13,19 @@ datasource db {
 //マイグレートしていない
 model Users {
   id Int @id @default(autoincrement())
+  nick_name String?
+  first_name String
+  last_name String
+  email String @unique
+  password String
+  profile String?
+  image String?
+  phone Int
+  postal_code String
+  prefecture String
+  city String
+  street String
+  bilding String?
 }
 
 model Items {

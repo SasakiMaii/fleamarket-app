@@ -6,26 +6,27 @@ import Box from "@mui/material/Box";
 import LastNameInput from "../../components/form/LastNameInput";
 import FirstNameInput from "../../components/form/FirstNameInput";
 import ProfileTextarea from "../../components/form/ProfileTextarea";
-import PostalCodeinput from '../../components/form/PostalCodeinput';
+import PostalCodeinput from "../../components/form/PostalCodeinput";
 import AddressInput from "../../components/form/AddressInput";
-import { Avatar, Button, Grid, Paper, Typography,Link } from "@mui/material";
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import { Avatar, Button, Grid, Paper, Typography, Link } from "@mui/material";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { pink } from "@mui/material/colors";
 import PhoneInput from "../../components/form/PhoneInput";
 import { AddressResult } from "../../types/type";
 
+const Register = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [postalCodeData, setPostalCodeData] = useState<AddressResult>({});
 
-const Register= () => {
-  const [postalCode,setPostalCode]=useState<string>("")
-  const [postalCodeData,setPostalCodeData]=useState<AddressResult>({})
-
-  const getZipCode=async()=>{
-    const response=await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`)
-    const data=await response.json()
-    setPostalCodeData(data.results[0])
-    console.log(postalCodeData)
-    console.log(postalCodeData.address1)
-  }
+  const getZipCode = async () => {
+    const response = await fetch(
+      `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
+    );
+    const data = await response.json();
+    setPostalCodeData(data.results[0]);
+  };
 
   const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.preventDefault();
@@ -50,7 +51,7 @@ const Register= () => {
             alignItems="center"
           >
             <Avatar sx={{ bgcolor: pink[400] }}>
-              < HowToRegIcon/>
+              <HowToRegIcon />
             </Avatar>
             <Typography variant={"h5"} sx={{ m: "30px" }}>
               新規登録
@@ -61,12 +62,15 @@ const Register= () => {
               <NickNameInput />
               <LastNameInput />
               <FirstNameInput />
-              <PostalCodeinput postalCode={postalCode} setPostalCode={setPostalCode}
-              getZipCode={getZipCode} />
-              <AddressInput postalCodeData={postalCodeData}/>
-              <PhoneInput/>
-              <EmailInput />
-              <PasswordInput />
+              <PostalCodeinput
+                postalCode={postalCode}
+                setPostalCode={setPostalCode}
+                getZipCode={getZipCode}
+              />
+              <AddressInput postalCodeData={postalCodeData} />
+              <PhoneInput />
+              <EmailInput email={email} setEmail={setEmail}/>
+              <PasswordInput password={password} setPassword={setPassword} />
               <ProfileTextarea />
             </Box>
             <Box mt={3}>
@@ -81,7 +85,7 @@ const Register= () => {
               </Button>
             </Box>
             <Box mt={5}>
-            <Link href="/login">ログインページへ移動する</Link>
+              <Link href="/login">ログインページへ移動する</Link>
             </Box>
           </div>
         </Paper>

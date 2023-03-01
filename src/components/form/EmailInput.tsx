@@ -1,10 +1,14 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
 
-const EmailInput = () => {
-  const [email, setEmail] = useState<string | number>("");
+type EmailProps={
+  email?:string
+  setEmail:Dispatch<SetStateAction<string>>
+}
 
+const EmailInput = (props:EmailProps) => {
+const{email,setEmail}=props
   return (
     <div>
       <label htmlFor="email"></label>

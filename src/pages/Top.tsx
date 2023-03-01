@@ -36,19 +36,19 @@ const Top = () => {
       >
         {items.map((item: Items) => {
           return (
-            <Box mb={5} key={item.id} width="250px" mx={2}>
+            <Box mb={5} key={item.id} width="200px" mx={2}>
               <div key={item.id}>
               <NavLink to={`productdetail/${item.id}`} >
-                <Card sx={{ minWidth: 250, maxWidth: 250, display: "flex" }}>
+                <Card sx={{ maxWidth: 200, display: "flex" ,alignItems:"center"}}>
                   <CardMedia
-                    sx={{ height: 250, width: 250, flex: "1" }}
+                    sx={{ height: 180, width: "100%", flex: "1",backgroundSize:110 }}
                     image={item.image}
                   />
                   <CardContent sx={{ flex: "1" }}>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom  component="div">
                       {item.name}
                     </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
+                    <Typography gutterBottom variant="h6" component="div" sx={{backgroundColor:"#ff9"}}>
                       ¥{item.price?.toLocaleString()}
                     </Typography>
                   </CardContent>

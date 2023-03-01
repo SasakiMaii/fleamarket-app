@@ -19,7 +19,6 @@ const PostalCodeinput = (props:RegisterProps) => {
         id="postalCode"
         label="郵便番号"
         variant="standard" fullWidth required
-        onBlur={props.getZipCode}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           props.setPostalCode(e.target.value)
         }
