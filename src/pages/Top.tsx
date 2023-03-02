@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -45,7 +44,7 @@ const Top = () => {
                     image={item.image}
                   />
                   <CardContent sx={{ flex: "1" }}>
-                    <Typography gutterBottom  component="div">
+                    <Typography gutterBottom  component="div" sx={{fontSize:12,mb:1}}>
                       {item.name}
                     </Typography>
                     <Typography gutterBottom variant="h6" component="div" sx={{backgroundColor:"#ff9"}}>

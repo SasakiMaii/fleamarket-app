@@ -1,12 +1,18 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import IconButton from "@mui/joy/IconButton";
 import Textarea from "@mui/joy/Textarea";
 import Typography from "@mui/joy/Typography";
 import { Box } from "@mui/material";
 
-const ProfileTextarea = () => {
-  const [profile, setProfile] = useState<any>("");
+type ProfileProps={
+  profile:string
+  setProfile:Dispatch<SetStateAction<string>>;
+}
+
+const ProfileTextarea = (props:ProfileProps) => {
+  const {profile,setProfile}=props
+
   const [text, setText] = useState("");
   const addEmoji = (emoji: string) => () => setProfile(`${profile}${emoji}`);
   return (

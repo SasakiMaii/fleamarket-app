@@ -1,10 +1,16 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-const FirstNameInput = () => {
-  const [firstName, setFirstName] = useState<String>("");
+type FirstNameProps={
+  firstName:string
+  setFirstName: Dispatch<SetStateAction<string>>;
+}
+
+const FirstNameInput = (props:FirstNameProps) => {
+  const {firstName,setFirstName}=props
+
   return (
     <Box >
       <label htmlFor="firstName"></label>

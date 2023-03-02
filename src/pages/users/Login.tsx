@@ -1,7 +1,7 @@
 //rafce
 import React, { useEffect, useState } from "react";
 import EmailInput from "../../components/form/EmailInput";
-import PasswordInput from "../../components/form/PasswordInput copy";
+import PasswordInput from "../../components/form/PasswordInput";
 import {
   Avatar,
   Box,
@@ -15,6 +15,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { pink } from "@mui/material/colors";
 import { Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
+
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -46,9 +47,10 @@ const Login: React.FC = () => {
       navigate("/");
     } else if (emailMatch === false || passMatch === false) {
       setErr(["＊入力内容を確認してください＊"]);
+      console.log(err)
     }
   };
-  console.log();
+  console.log(err);
   return (
     <>
       <Grid>
