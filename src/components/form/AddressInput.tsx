@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,13 +10,19 @@ import { Address } from "../../types/type";
 
 type AddressProps = {
   postalCodeData: Address;
+  prefectuer: string;
+  setPrefectuer: Dispatch<SetStateAction<string>>;
+  city:string;
+  setCity: Dispatch<SetStateAction<string>>;
+  street: string;
+  setStreet: Dispatch<SetStateAction<string>>;
+  building: string;
+  setBuilding: Dispatch<SetStateAction<string>>;
 };
 
 const AddressInput = (props: AddressProps) => {
-  const [prefectuer, setPrefectuer] = useState<string | number>("");
-  const [street, setStreet] = useState<string | number>("");
-  const [building, setBuilding] = useState<string | number>("");
-  console.log(props.postalCodeData.address1, "あ");
+  const {postalCodeData,prefectuer,setPrefectuer,street,setStreet,building,setBuilding,city,setCity}=props
+  
   return (
     <div>
       <Box>
@@ -27,7 +33,7 @@ const AddressInput = (props: AddressProps) => {
             onChange={(e: SelectChangeEvent) => setPrefectuer(e.target.value)}
             label="都道府県"
             defaultValue="都道府県"
-            value={props.postalCodeData.address1 || ""}
+            value={postalCodeData.address1 || prefectuer}
           >
             <MenuItem value="都道府県">都道府県を選択</MenuItem>
             <MenuItem value="北海道">北海道</MenuItem>
@@ -81,24 +87,24 @@ const AddressInput = (props: AddressProps) => {
         </FormControl>
       </Box>
       <div>
+        <label htmlFor="city"></label>
+        <TextField
+          type="text"
+          id="city"
+          label="市区都"
+          value={props.postalCodeData.address2 || city}
+          fullWidth
+          required
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setCity(e.target.value)
+          }
+        />
         <label htmlFor="street"></label>
         <TextField
           type="text"
           id="street"
-          label="市区都"
-          value={props.postalCodeData.address2 || ""}
-          fullWidth
-          required
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setStreet(e.target.value)
-          }
-        />
-        <label htmlFor="street2"></label>
-        <TextField
-          type="text"
-          id="street2"
-          label="町村番地"
-          value={props.postalCodeData.address3 || ""}
+          label="町村"
+          value={props.postalCodeData.address3 || street}
           fullWidth
           required
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -111,8 +117,9 @@ const AddressInput = (props: AddressProps) => {
         <TextField
           type="text"
           id="building"
-          label="建物名"
+          label="番地（建物名）"
           fullWidth
+          value={building}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setBuilding(e.target.value)
           }
