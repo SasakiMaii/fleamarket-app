@@ -21,14 +21,47 @@ const ProductRegistration = () => {
   const [price, setPrice] = useState("");
   const [itemDays, setItemDays] = useState("1~2日で発送");
   const [itemImage, setItemImage] = useState("");
-  const [itemImageName, setItemImageName] = useState("");
+  const [itemImageName, setItemImageName] = useState<any>("");
 
   const [nameErr, setNameErr] = useState("");
   const [detailMessageErr, setDetailMessageErr] = useState("");
   const [priceErr, setPriceErr] = useState("");
+  const [imageError, setImageError] = useState("");
   const navigate=useNavigate()
 
+
   const now = new Date();
+
+  const handleImageChange=(event: any)=> {
+    const selectedFile = event.target.files[0];
+    const reader: any = new FileReader();
+    reader.readAsDataURL(selectedFile);
+    reader.onloadend = () => {
+      setItemImage(reader.result);
+    };
+    setItemImageName([selectedFile]);
+  }
+
+  const clearImage=()=>{
+    setItemImage("")
+  }
+
+
+
+  const validateImage=()=>{
+    const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
+    const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];
+    if(itemImageName[0].size>imageSizeLimit){
+      setImageError("*画像のサイズが大きいです")
+      return false
+    }
+    if (!allowedImageTypes.includes(itemImageName[0].type)){
+      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。")
+      return false
+    }
+    setImageError("")
+    return true
+  }
 
   const ValidateName = () => {
     if (!itemName) {
@@ -55,30 +88,21 @@ const ProductRegistration = () => {
     return true;
   };
 
-  function handleImageChange(event: any) {
-    const selectedFile = event.target.files[0];
-    const reader: any = new FileReader();
-    reader.readAsDataURL(selectedFile);
-    reader.onloadend = () => {
-      setItemImage(reader.result);
-    };
-    setItemImageName(selectedFile);
-  }
-
   const submitRegister = async (e: any) => {
     e.preventDefault();
     let isNameValid = ValidateName();
     let isDetailMessageValid = ValidateDetailMessage();
     let isPriceVarlid = ValidatePrice();
+    const isImageValid=validateImage();
 
-    if (isDetailMessageValid && isNameValid && isPriceVarlid) {
+    if (isDetailMessageValid && isNameValid && isPriceVarlid&&isImageValid) {
       try {
         const response = await fetch("http://localhost:8000/items", {
           method: "POST",
           body: JSON.stringify({
             name: itemName,
             price: Number(price),
-            image: itemImage,
+            image: itemImageName[0].name||'',
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,
@@ -112,6 +136,8 @@ const ProductRegistration = () => {
           handleImageChange={handleImageChange}
           itemImageName={itemImageName}
           setItemImageName={setItemImageName}
+          text='商品の画像'
+          clearImage={clearImage}
         />
         <ItemCategorySelect
           itemCategory={itemCategory}

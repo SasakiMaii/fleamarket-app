@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Box } from "@mui/system";
-import { InputLabel, TextField } from "@mui/material";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import { Button, InputLabel, TextField } from "@mui/material";
 
 type ItemImageProps = {
   itemImage: string;
@@ -9,6 +8,8 @@ type ItemImageProps = {
   handleImageChange: any;
   itemImageName: string;
   setItemImageName: Dispatch<SetStateAction<string>>;
+  text:string
+  clearImage:() => void
 };
 
 const ItemImageSelect = (props: ItemImageProps) => {
@@ -18,10 +19,12 @@ const ItemImageSelect = (props: ItemImageProps) => {
     handleImageChange,
     itemImageName,
     setItemImageName,
+    text,
+    clearImage
   } = props;
   return (
-    <Box>
-      <InputLabel id="itemImage">商品の画像</InputLabel>
+    <Box mb={5}>
+      <InputLabel id="itemImage">{text}</InputLabel>
       <TextField
         type="file"
         id="itemImage"
@@ -33,6 +36,8 @@ const ItemImageSelect = (props: ItemImageProps) => {
       {itemImage && (
         <img width={200} height={200} src={itemImage} alt="uploaded image" />
       )}
+      <Button onClick={clearImage}>選択されている画像をクリア</Button>
+      <Box>※最大5MB</Box>
     </Box>
   );
 };

@@ -17,7 +17,7 @@ const ProfileTextarea = (props:ProfileProps) => {
   const addEmoji = (emoji: string) => () => setProfile(`${profile}${emoji}`);
   return (
     <div>
-      <Box mt={5}>
+      <Box my={5}>
         <label htmlFor="profile"></label>
         <Textarea
           name="profile"

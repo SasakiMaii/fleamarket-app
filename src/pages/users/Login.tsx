@@ -1,4 +1,3 @@
-//rafce
 import React, { useEffect, useState } from "react";
 import EmailInput from "../../components/form/EmailInput";
 import PasswordInput from "../../components/form/PasswordInput";
@@ -18,13 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SessionContext } from "../../App";
 import crypto from 'crypto';
-
 import CryptoJS from 'crypto-js';
 
-// 秘密鍵
 export const secretKey = 'your-secret-key';
 
-// 暗号化する関数
+// 暗号化
 function encrypt(data: string | CryptoJS.lib.WordArray) {
   const encrypted = CryptoJS.AES.encrypt(data, secretKey).toString();
   return encrypted;
@@ -58,18 +55,20 @@ const Login = (user:Users) => {
 
   console.log(emailFilter,"filter")
 
-  const save:any=JSON.stringify(emailFilter) 
+  const save:any=JSON.stringify(emailFilter)
   const encryptedData = encrypt(save);
+
 
   const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     setErr([]);
     e.preventDefault();
     if (emailMatch === true && passMatch === true) {
-      document.cookie = `data=${encryptedData}; path=/; max-age=60 secure`;
-      setSession({
-        isLoggedIn: true,
-        user: user
-      })
+      console.log("aaa")
+      document.cookie = `data=${encryptedData}; path=/; max-age=60; secure`;
+      // setSession({
+      //   isLoggedIn: true,
+      //   user: user
+      // })
       navigate("/");
     } else if (emailMatch === false || passMatch === false) {
       setErr(["＊入力内容を確認してください＊"]);
