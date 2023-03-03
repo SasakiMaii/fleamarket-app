@@ -12,19 +12,28 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import { useNavigate } from "react-router-dom";
+import { useContext } from 'react'
+import { SessionContextType } from '../../types/type'
+import { SessionContext } from "../../App";
 
-const pages = [{id:1,category:"出品"},{id:2,category:"いいね一覧"} , {id:3,category:"購入履歴・出品履歴"}];
-const settings = ["マイページ", "ログアウト"];
+const pages = [
+  { id: 1, category: "出品" },
+  { id: 2, category: "いいね一覧" },
+  { id: 3, category: "購入履歴・出品履歴" },
+];
+const settings = [{id:1,category:"マイページ"}, {id:2,category:"ログアウト"}];
 
-function ResponsiveAppBar() {
+function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const navigate = useNavigate();
+  const {session,setSession}=useContext(SessionContext)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -33,12 +42,29 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleCloseNavMenu = (id: number) => {
+    console.log(id);
+    if (id === 1) {
+      navigate("/productregistration");
+    } else if (id === 2) {
+      navigate("/favorite");
+    } else if (id===3){
+      navigate("/histry");
+    }else{
+      setAnchorElNav(null);
+    }
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleCloseUserMenu = (id:number) => {
+    if(id===1){
+      navigate("/membersinfoedit")
+    }else if(id===2){
+      document.cookie = "data=; max-age=0; path=/;";
+      setSession(null)
+      navigate("/login")
+    }else{
+      setAnchorElUser(null);
+    }
   };
 
   return (
@@ -94,7 +120,10 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.id} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page.id}
+                  onClick={() => handleCloseNavMenu(page.id)}
+                >
                   <Typography textAlign="center">{page.category}</Typography>
                 </MenuItem>
               ))}
@@ -105,7 +134,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -123,7 +152,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page.id}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page.id)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page.category}
@@ -154,8 +183,8 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.id} onClick={()=>handleCloseUserMenu(setting.id)}>
+                  <Typography textAlign="center">{setting.category}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -165,4 +194,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default Header;
