@@ -14,8 +14,8 @@ import { pink } from "@mui/material/colors";
 import PhoneInput from "../../components/form/PhoneInput";
 import { AddressResult, Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
+import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
 // import ImageRegistration from "../../components/form/ImageRegistration";
-
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -31,13 +31,15 @@ const Register = () => {
   const [nickName, setNickName] = useState("");
   const [phone, setPhone] = useState("");
   const [profile, setProfile] = useState("");
-  // const [file, setFile] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [userData, setUserData] = useState<Users[]>([]);
+  const [itemImage, setItemImage] = useState("");
+  const [imageError, setImageError] = useState("");
+  const [itemImageName, setItemImageName] = useState<any>([]);
   const navigate = useNavigate();
 
   const getZipCode = async () => {
@@ -56,22 +58,37 @@ const Register = () => {
     })();
   }, []);
 
+  const handleImageChange=(event: any)=> {
+    const selectedFile = event.target.files[0];
+    const reader: any = new FileReader();
+    reader.readAsDataURL(selectedFile);
+    reader.onloadend = () => {
+      setItemImage(reader.result);
+    };
+    setItemImageName([selectedFile]);
+  }
 
-  // const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
+  const clearImage=()=>{
+    setItemImage("")
+  }
 
-  //   const reader = new FileReader();
-  //   reader.onload = (event) => {
-  //     const imageUrl = event.target?.result;
-  //     if (typeof imageUrl === "string") {
-  //       setFile(imageUrl);
-  //     }
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
 
   const emailMatch = userData.some((data) => data.email === email);
+
+  const validateImage=()=>{
+    const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
+    const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];
+    if(itemImageName[0].size>imageSizeLimit){
+      setImageError("*画像のサイズが大きいです")
+      return false
+    }
+    if (!allowedImageTypes.includes(itemImageName[0].type)){
+      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。")
+      return false
+    }
+    setImageError("")
+    return true
+  }
 
   const validateEmail = () => {
     if (!email) {
@@ -91,7 +108,6 @@ const Register = () => {
   };
 
   const validatePhone = () => {
-
     if (!phone) {
       setPhoneError("*電話番号を入力してください");
 
@@ -155,16 +171,15 @@ const Register = () => {
     const isPhoneValid = validatePhone();
     const isAddressValid = validateAddress();
     const isNameValid = validateName();
-    // const blob = await fetch(file).then((r) => r.blob());
-    // const formData = new FormData();
-    // formData.append("image", blob, );
+    const isImageValid=validateImage()
 
     if (
       isEmailValid &&
       isPhoneValid &&
       isAddressValid &&
       isPassValid &&
-      isNameValid
+      isNameValid&&
+      isImageValid
     ) {
       try {
         const data = {
@@ -180,7 +195,7 @@ const Register = () => {
           city: city || postalCodeData.address2,
           street: street || postalCodeData.address3,
           bilding: building,
-          image: "",
+          image: itemImageName[0].name||'',
         };
         const response = await fetch("http://localhost:8000/user", {
           method: "POST",
@@ -190,7 +205,7 @@ const Register = () => {
           },
         });
         const responseData = await response.json();
-        navigate("/login")
+        navigate("/login");
       } catch (err) {
         console.log(err, "エラー");
       }
@@ -199,15 +214,7 @@ const Register = () => {
   return (
     <Box mt={10}>
       <Grid>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            height: "168vh",
-            width: "450px",
-            m: "20px auto",
-          }}
-        >
+
           <Grid
             container
             direction="column"
@@ -264,11 +271,18 @@ const Register = () => {
               )}
               <PasswordInput password={password} setPassword={setPassword} />
               <ProfileTextarea profile={profile} setProfile={setProfile} />
-              {/* <ImageRegistration
-                file={file}
-                setFile={setFile}
-                handleFileSelect={handleFileSelect}
-              /> */}
+              {imageError && (
+                <p style={{ color: "red", fontSize: 13 }}>{imageError}</p>
+              )}
+              <ItemImageSelect
+                itemImage={itemImage}
+                setItemImage={setItemImage}
+                handleImageChange={handleImageChange}
+                itemImageName={itemImageName}
+                setItemImageName={setItemImageName}
+                text='プロフィール画像'
+                clearImage={clearImage}
+              />
             </Box>
             <Box mt={3}>
               <Button
@@ -285,7 +299,6 @@ const Register = () => {
               <Link href="/login">ログインページへ移動する</Link>
             </Box>
           </form>
-        </Paper>
       </Grid>
     </Box>
   );
