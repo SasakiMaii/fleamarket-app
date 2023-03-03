@@ -17,6 +17,7 @@ const Top = () => {
   const [items, setItems] = useState<Items[]>([]);
   const[userCookie,setUserCookie]=useState<Users[]>([])
   const { session, setSession } = useContext(SessionContext);
+  
   const cookieData = document.cookie
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));

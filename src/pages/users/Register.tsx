@@ -195,7 +195,7 @@ const Register = () => {
           city: city || postalCodeData.address2,
           street: street || postalCodeData.address3,
           bilding: building,
-          image: itemImageName[0].name||'',
+          image: itemImage||'',
         };
         const response = await fetch("http://localhost:8000/user", {
           method: "POST",

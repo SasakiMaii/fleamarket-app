@@ -6,23 +6,27 @@ import Box from '@mui/material/Box';
 type PhoneProps={
   phone:string
   setPhone:Dispatch<SetStateAction<string>>;
+  editPhone?:number|undefined
 }
 
 const PhoneInput = (props:PhoneProps) => {
-  const {phone,setPhone}=props
+  const {phone,setPhone,editPhone}=props
   return (
     <Box mt={5}>
-      <label htmlFor="phone"></label>
-      <TextField
+      {editPhone?( <><label htmlFor="phone"></label><TextField
         type="tel"
         id="phone"
         label="電話番号"
-        value={phone}
+        value={editPhone}
         variant="standard" fullWidth required
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setPhone(e.target.value)
-        }
-      />
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)} /></>):(<><label htmlFor="phone"></label><TextField
+          type="tel"
+          id="phone"
+          label="電話番号"
+          value={phone}
+          variant="standard" fullWidth required
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)} /></>)}
+      
     </Box>
   );
 }

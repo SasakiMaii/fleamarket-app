@@ -102,7 +102,7 @@ const ProductRegistration = () => {
           body: JSON.stringify({
             name: itemName,
             price: Number(price),
-            image: itemImageName[0].name||'',
+            image: itemImage||'',
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,

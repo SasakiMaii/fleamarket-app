@@ -64,7 +64,7 @@ const Login = (user:Users) => {
     e.preventDefault();
     if (emailMatch === true && passMatch === true) {
       console.log("aaa")
-      document.cookie = `data=${encryptedData}; path=/; max-age=60; secure`;
+      document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
       // setSession({
       //   isLoggedIn: true,
       //   user: user
