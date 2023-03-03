@@ -38,7 +38,6 @@ const Register = () => {
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [userData, setUserData] = useState<Users[]>([]);
-
   const navigate = useNavigate();
 
   const getZipCode = async () => {
@@ -53,11 +52,10 @@ const Register = () => {
     (async () => {
       const response = await fetch("http://localhost:8000/user");
       const data = await response.json();
-      setUserData([data]);
+      setUserData([data[0]]);
     })();
   }, []);
 
-  // console.log(userData)
 
   // const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = e.target.files?.[0];
@@ -70,13 +68,10 @@ const Register = () => {
   //       setFile(imageUrl);
   //     }
   //   };
-
   //   reader.readAsDataURL(file);
   // };
-  const emailMatch = userData.length!==0&&userData[0].some((data) => data.email === email);
 
-  console.log(emailMatch);
-  console.log(email);
+  const emailMatch = userData.some((data) => data.email === email);
 
   const validateEmail = () => {
     if (!email) {
@@ -96,15 +91,15 @@ const Register = () => {
   };
 
   const validatePhone = () => {
-    console.log("前");
+
     if (!phone) {
       setPhoneError("*電話番号を入力してください");
-      console.log("OK");
+
       return false;
     }
     if (!/^[0-9-+]+$/.test(phone)) {
       setPhoneError("*有効な電話番号を入力してください");
-      console.log("OK");
+
       return false;
     }
     setPhoneError("");
@@ -114,7 +109,7 @@ const Register = () => {
   const validateName = () => {
     if (!lastName && !firstName) {
       setNameError("*性・名を入力してください");
-      console.log("OK");
+
       return false;
     }
     setNameError("");
@@ -171,7 +166,6 @@ const Register = () => {
       isPassValid &&
       isNameValid
     ) {
-      console.log("OK");
       try {
         const data = {
           nick_name: nickName || "",

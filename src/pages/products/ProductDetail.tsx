@@ -1,9 +1,7 @@
 import {
   Button,
-  Card,
   CardMedia,
   Divider,
-  Grid,
   List,
   ListItem,
   ListItemText,
@@ -130,7 +128,7 @@ const ProductDetail = () => {
           </Divider>
           <Typography sx={{ marginTop: 5 }}>{item.product_days}</Typography>
           <Divider sx={{ marginTop: 5 }}></Divider>
-          <Button variant="contained" disableElevation sx={{ marginTop: 10 }}>
+          <Button variant="contained" href="/cart" disableElevation sx={{ marginTop: 10 }}>
             カートに入れる
           </Button>
         </Box>

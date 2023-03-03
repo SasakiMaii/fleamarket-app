@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 export type Address = {
   address1?: string;
@@ -32,8 +32,6 @@ export type Items = {
 };
 
 export type Users = {
-  some(arg0: (data: any) => boolean): unknown;
-  filter(arg0: (user: any) => void): unknown;
   nick_name?: string;
   first_name?: string;
   last_name?: string;
@@ -48,6 +46,23 @@ export type Users = {
   street?: string;
   bilding?: string;
 };
+
+export interface Session {
+  isLoggedIn: boolean;
+  user: Users | null;
+}
+
+export interface SessionContextValue {
+  session: Session | null;
+  setSession: (session: Session | null) => void;
+}
+
+export interface SessionContextType {
+  session: Session | null;
+  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
+}
+
+
 
 // export type VaridateProps = {
 //   nameError: string;

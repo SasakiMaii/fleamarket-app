@@ -36,6 +36,40 @@ app.get("/items/:id", async (req, res) => {
   return res.json(item);
 });
 
+app.post("/items", async (req, res) => {
+  const {
+    name,
+    price,
+    image,
+    description,
+    shopping_date,
+    product_state,
+    product_brand,
+    product_days,
+    category,
+    user_id,
+    size_id,
+    shopping_price,
+  } = req.body;
+  const item = await prisma.items.create({
+    data: {
+      name,
+      price,
+      image,
+      description,
+      shopping_date,
+      product_state,
+      product_brand,
+      product_days,
+      category,
+      user_id,
+      size_id,
+      shopping_price,
+    },
+  });
+  return res.json(item);
+});
+
 //users
 app.get("/user", async (req, res) => {
   const user = await prisma.users.findMany();
@@ -78,7 +112,3 @@ app.post("/user", async (req, res) => {
   });
   return res.json(register);
 });
-
-
-
-
