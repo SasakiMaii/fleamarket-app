@@ -1,3 +1,4 @@
+import { Theme } from "@mui/material";
 import React from "react";
 
 export type Address = {
@@ -62,7 +63,15 @@ export interface SessionContextType {
   setSession: React.Dispatch<React.SetStateAction<Session | null>>;
 }
 
-
+export interface StylesProps {
+  root: {
+    width: string;
+  };
+  heading: {
+    fontSize: string;
+    fontWeight: Theme['typography']['fontWeightRegular'];
+  };
+}
 
 // export type VaridateProps = {
 //   nameError: string;

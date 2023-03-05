@@ -46,8 +46,6 @@ const ProductRegistration = () => {
     setItemImage("")
   }
 
-
-
   const validateImage=()=>{
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
     const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];
@@ -102,7 +100,7 @@ const ProductRegistration = () => {
           body: JSON.stringify({
             name: itemName,
             price: Number(price),
-            image: itemImageName[0].name||'',
+            image: itemImage||'',
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,

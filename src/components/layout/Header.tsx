@@ -14,16 +14,20 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
-import { useContext } from 'react'
-import { SessionContextType } from '../../types/type'
+import { useContext } from "react";
+import { SessionContextType } from "../../types/type";
 import { SessionContext } from "../../App";
 
 const pages = [
   { id: 1, category: "出品" },
   { id: 2, category: "いいね一覧" },
   { id: 3, category: "購入履歴・出品履歴" },
+  { id: 4, category: "カート" },
 ];
-const settings = [{id:1,category:"マイページ"}, {id:2,category:"ログアウト"}];
+const settings = [
+  { id: 1, category: "マイページ" },
+  { id: 2, category: "ログアウト" },
+];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -33,7 +37,7 @@ function Header() {
     null
   );
   const navigate = useNavigate();
-  const {session,setSession}=useContext(SessionContext)
+  const { session, setSession } = useContext(SessionContext);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -48,21 +52,23 @@ function Header() {
       navigate("/productregistration");
     } else if (id === 2) {
       navigate("/favorite");
-    } else if (id===3){
+    } else if (id === 3) {
       navigate("/histry");
-    }else{
+    } else if (id === 4) {
+      navigate("/cart");
+    } else {
       setAnchorElNav(null);
     }
   };
 
-  const handleCloseUserMenu = (id:number) => {
-    if(id===1){
-      navigate("/membersinfoedit")
-    }else if(id===2){
+  const handleCloseUserMenu = (id: number) => {
+    if (id === 1) {
+      navigate("/membersinfoedit");
+    } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
-      setSession(null)
-      navigate("/login")
-    }else{
+      setSession(null);
+      navigate("/login");
+    } else {
       setAnchorElUser(null);
     }
   };
@@ -183,7 +189,10 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting.id} onClick={()=>handleCloseUserMenu(setting.id)}>
+                <MenuItem
+                  key={setting.id}
+                  onClick={() => handleCloseUserMenu(setting.id)}
+                >
                   <Typography textAlign="center">{setting.category}</Typography>
                 </MenuItem>
               ))}

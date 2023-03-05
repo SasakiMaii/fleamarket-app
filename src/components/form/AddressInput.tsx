@@ -12,7 +12,7 @@ type AddressProps = {
   postalCodeData: Address;
   prefectuer: string;
   setPrefectuer: Dispatch<SetStateAction<string>>;
-  city:string;
+  city: string;
   setCity: Dispatch<SetStateAction<string>>;
   street: string;
   setStreet: Dispatch<SetStateAction<string>>;
@@ -21,8 +21,18 @@ type AddressProps = {
 };
 
 const AddressInput = (props: AddressProps) => {
-  const {postalCodeData,prefectuer,setPrefectuer,street,setStreet,building,setBuilding,city,setCity}=props
-  
+  const {
+    postalCodeData,
+    prefectuer,
+    setPrefectuer,
+    street,
+    setStreet,
+    building,
+    setBuilding,
+    city,
+    setCity,
+  } = props;
+
   return (
     <div>
       <Box>
@@ -30,10 +40,10 @@ const AddressInput = (props: AddressProps) => {
           <InputLabel id="prefectuer">都道府県</InputLabel>
           <Select
             id="prefectuer"
-            onChange={(e: SelectChangeEvent) => setPrefectuer(e.target.value)}
+            value={postalCodeData.address1 || prefectuer||""}
+            onChange={(e: any) => setPrefectuer(e.target.value)}
             label="都道府県"
             defaultValue="都道府県"
-            value={postalCodeData.address1 || prefectuer}
           >
             <MenuItem value="都道府県">都道府県を選択</MenuItem>
             <MenuItem value="北海道">北海道</MenuItem>
@@ -99,6 +109,7 @@ const AddressInput = (props: AddressProps) => {
             setCity(e.target.value)
           }
         />
+
         <label htmlFor="street"></label>
         <TextField
           type="text"

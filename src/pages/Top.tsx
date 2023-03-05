@@ -17,6 +17,7 @@ const Top = () => {
   const [items, setItems] = useState<Items[]>([]);
   const[userCookie,setUserCookie]=useState<Users[]>([])
   const { session, setSession } = useContext(SessionContext);
+  
   const cookieData = document.cookie
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));
@@ -54,23 +55,23 @@ console.log(userCookie[0]?.nick_name)
 
   return (
     <>
-      <Box mt={10} mb={5} textAlign="center">
-        出品商品一覧
-      </Box>
       {document.cookie ? (
-        <Box>
+        <Box mt={10} mb={5}>
           {userCookie[0]?.nick_name ? (
-            <Box>{userCookie[0]?.nick_name}さんようこそ</Box>
+            <Box >{userCookie[0]?.nick_name}さんようこそ</Box>
           ) : (
             <Box>{userCookie[0]?.first_name}さんようこそ</Box>
           )}
         </Box>
       ) : (
-        <Box>
+        <Box mt={10} mb={5}>
           現在ログインしていません
           <Link to={"/login"}>ログインページへ移動</Link>
         </Box>
       )}
+      <Box mt={10} mb={5} sx={{borderBottom:1,fontWeight:"bold"}} textAlign="center">
+        出品商品一覧
+      </Box>
       <Box
         display="flex"
         justifyContent="center"

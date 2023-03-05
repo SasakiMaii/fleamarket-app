@@ -1,24 +1,26 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import { Box,Button } from '@mui/material';
+import React, { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
+import TextField from "@mui/material/TextField";
+import { Box, Button } from "@mui/material";
 
-type RegisterProps={
-  postalCode?:string|number
-  setPostalCode:Dispatch<SetStateAction<string>>
-  getZipCode:() => Promise<void>
-}
+type RegisterProps = {
+  postalCode?: string | number;
+  setPostalCode: Dispatch<SetStateAction<string>>;
+  getZipCode: () => Promise<void>;
+};
 
-const PostalCodeinput = (props:RegisterProps) => {
-
+const PostalCodeinput = (props: RegisterProps) => {
   return (
-    <Box mt={5} >
+    <Box mt={5}>
       <label htmlFor="postalCode"></label>
       <TextField
         type="text"
         id="postalCode"
         label="郵便番号"
-        variant="standard" fullWidth required
+        variant="standard"
+        fullWidth
+        value={props.postalCode}
+        required
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           props.setPostalCode(e.target.value)
         }
@@ -26,6 +28,6 @@ const PostalCodeinput = (props:RegisterProps) => {
       <Button onClick={props.getZipCode}>郵便番号で住所を自動入力する</Button>
     </Box>
   );
-}
+};
 
-export default PostalCodeinput
+export default PostalCodeinput;
