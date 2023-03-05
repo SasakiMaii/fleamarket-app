@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import { Users } from "../../types/type";
 
 type NicknameProps = {
-  nickName: string | Users;
+  nickName: string ;
   setNickName: Dispatch<SetStateAction<string>>;
   editNickName?: string | undefined;
 };
@@ -16,19 +16,6 @@ const NickNameInput = (props: NicknameProps) => {
   return (
     <Box>
       <label htmlFor="nickName"></label>
-      {editNickName ? (
-        <TextField
-          type="text"
-          id="nickName"
-          variant="standard"
-          fullWidth
-          value={editNickName}
-          label="ニックネーム"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setNickName(e.target.value)
-          }
-        />
-      ) : (
         <TextField
           type="text"
           id="nickName"
@@ -40,7 +27,6 @@ const NickNameInput = (props: NicknameProps) => {
             setNickName(e.target.value)
           }
         />
-      )}
     </Box>
   );
 };

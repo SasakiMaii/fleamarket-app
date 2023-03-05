@@ -14,8 +14,6 @@ const FirstNameInput = (props: FirstNameProps) => {
 
   return (
     <Box>
-      {editFirstName ? (
-        <>
           <label htmlFor="firstName"></label>
           <TextField
             type="text"
@@ -23,29 +21,12 @@ const FirstNameInput = (props: FirstNameProps) => {
             label="名"
             variant="standard"
             fullWidth
-            value={editFirstName}
+            value={firstName}
             required
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFirstName(e.target.value)
             }
           />
-        </>
-      ) : (
-        <>
-          <label htmlFor="firstName"></label>
-          <TextField
-            type="text"
-            id="firstName"
-            label="名"
-            variant="standard"
-            fullWidth
-            required
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setFirstName(e.target.value)
-            }
-          />
-        </>
-      )}
     </Box>
   );
 };

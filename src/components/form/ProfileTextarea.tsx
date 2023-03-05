@@ -19,13 +19,11 @@ const ProfileTextarea = (props: ProfileProps) => {
   return (
     <div>
       <Box my={5}>
-        {editProfile ? (
-          <>
             <label htmlFor="profile"></label>
             <Textarea
               name="profile"
               id="profile"
-              value={editProfile}
+              value={profile||undefined}
               placeholder="プロフィール"
               minRows={2}
               maxRows={4}
@@ -59,49 +57,6 @@ const ProfileTextarea = (props: ProfileProps) => {
               }
               sx={{ minWidth: 300 }}
             ></Textarea>
-          </>
-        ) : (
-          <>
-            <label htmlFor="profile"></label>
-            <Textarea
-              name="profile"
-              id="profile"
-              value={profile}
-              placeholder="プロフィール"
-              minRows={2}
-              maxRows={4}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setProfile(e.target.value)
-              }
-              startDecorator={
-                <Box sx={{ display: "flex", gap: 0.5 }}>
-                  <IconButton
-                    variant="outlined"
-                    color="neutral"
-                    onClick={addEmoji("👍")}
-                  >
-                    👍
-                  </IconButton>
-                  <IconButton
-                    variant="outlined"
-                    color="neutral"
-                    onClick={addEmoji("💖")}
-                  >
-                    💖
-                  </IconButton>
-                  <IconButton
-                    variant="outlined"
-                    color="neutral"
-                    onClick={addEmoji("😍")}
-                  >
-                    😍
-                  </IconButton>
-                </Box>
-              }
-              sx={{ minWidth: 300 }}
-            ></Textarea>
-          </>
-        )}
       </Box>
     </div>
   );

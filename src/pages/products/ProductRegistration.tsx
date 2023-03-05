@@ -46,8 +46,6 @@ const ProductRegistration = () => {
     setItemImage("")
   }
 
-
-
   const validateImage=()=>{
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
     const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];

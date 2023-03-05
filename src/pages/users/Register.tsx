@@ -15,7 +15,6 @@ import PhoneInput from "../../components/form/PhoneInput";
 import { AddressResult, Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
 import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
-// import ImageRegistration from "../../components/form/ImageRegistration";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -58,7 +57,7 @@ const Register = () => {
     })();
   }, []);
 
-  const handleImageChange=(event: any)=> {
+  const handleImageChange = (event: any) => {
     const selectedFile = event.target.files[0];
     const reader: any = new FileReader();
     reader.readAsDataURL(selectedFile);
@@ -66,29 +65,28 @@ const Register = () => {
       setItemImage(reader.result);
     };
     setItemImageName([selectedFile]);
-  }
+  };
 
-  const clearImage=()=>{
-    setItemImage("")
-  }
-
+  const clearImage = () => {
+    setItemImage("");
+  };
 
   const emailMatch = userData.some((data) => data.email === email);
 
-  const validateImage=()=>{
+  const validateImage = () => {
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
-    const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];
-    if(itemImageName[0].size>imageSizeLimit){
-      setImageError("*画像のサイズが大きいです")
-      return false
+    const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (itemImageName[0].size > imageSizeLimit) {
+      setImageError("*画像のサイズが大きいです");
+      return false;
     }
-    if (!allowedImageTypes.includes(itemImageName[0].type)){
-      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。")
-      return false
+    if (!allowedImageTypes.includes(itemImageName[0].type)) {
+      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。");
+      return false;
     }
-    setImageError("")
-    return true
-  }
+    setImageError("");
+    return true;
+  };
 
   const validateEmail = () => {
     if (!email) {
@@ -171,14 +169,14 @@ const Register = () => {
     const isPhoneValid = validatePhone();
     const isAddressValid = validateAddress();
     const isNameValid = validateName();
-    const isImageValid=validateImage()
+    const isImageValid = validateImage();
 
     if (
       isEmailValid &&
       isPhoneValid &&
       isAddressValid &&
       isPassValid &&
-      isNameValid&&
+      isNameValid &&
       isImageValid
     ) {
       try {
@@ -195,7 +193,7 @@ const Register = () => {
           city: city || postalCodeData.address2,
           street: street || postalCodeData.address3,
           bilding: building,
-          image: itemImage||'',
+          image: itemImageName[0].name || "",
         };
         const response = await fetch("http://localhost:8000/user", {
           method: "POST",
@@ -214,91 +212,87 @@ const Register = () => {
   return (
     <Box mt={10}>
       <Grid>
-
-          <Grid
-            container
-            direction="column"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <Avatar sx={{ bgcolor: pink[400] }}>
-              <HowToRegIcon />
-            </Avatar>
-            <Typography variant={"h5"} sx={{ m: "30px" }}>
-              新規登録
-            </Typography>
-          </Grid>
-          <form onSubmit={submitRegister}>
-            <Box flexDirection="column">
-              <NickNameInput nickName={nickName} setNickName={setNickName} />
-              {nameError && (
-                <p style={{ color: "red", fontSize: 13 }}>{nameError}</p>
-              )}
-              <LastNameInput lastName={lastName} setLastName={setLastName} />
-              <FirstNameInput
-                firstName={firstName}
-                setFirstName={setFirstName}
-              />
-              {addressError && (
-                <p style={{ color: "red", fontSize: 13 }}>{addressError}</p>
-              )}
-              <PostalCodeinput
-                postalCode={postalCode}
-                setPostalCode={setPostalCode}
-                getZipCode={getZipCode}
-              />
-              <AddressInput
-                postalCodeData={postalCodeData}
-                prefectuer={prefectuer}
-                setPrefectuer={setPrefectuer}
-                city={city}
-                setCity={setCity}
-                street={street}
-                setStreet={setStreet}
-                building={building}
-                setBuilding={setBuilding}
-              />
-              {phoneError && (
-                <p style={{ color: "red", fontSize: 13 }}>{phoneError}</p>
-              )}
-              <PhoneInput phone={phone} setPhone={setPhone} />
-              {emailError && (
-                <p style={{ color: "red", fontSize: 13 }}>{emailError}</p>
-              )}
-              <EmailInput email={email} setEmail={setEmail} />
-              {passwordError && (
-                <p style={{ color: "red", fontSize: 13 }}>{passwordError}</p>
-              )}
-              <PasswordInput password={password} setPassword={setPassword} />
-              <ProfileTextarea profile={profile} setProfile={setProfile} />
-              {imageError && (
-                <p style={{ color: "red", fontSize: 13 }}>{imageError}</p>
-              )}
-              <ItemImageSelect
-                itemImage={itemImage}
-                setItemImage={setItemImage}
-                handleImageChange={handleImageChange}
-                itemImageName={itemImageName}
-                setItemImageName={setItemImageName}
-                text='プロフィール画像'
-                clearImage={clearImage}
-              />
-            </Box>
-            <Box mt={3}>
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                fullWidth
-                onClick={submitRegister}
-              >
-                登録
-              </Button>
-            </Box>
-            <Box mt={5}>
-              <Link href="/login">ログインページへ移動する</Link>
-            </Box>
-          </form>
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          <Avatar sx={{ bgcolor: pink[400] }}>
+            <HowToRegIcon />
+          </Avatar>
+          <Typography variant={"h5"} sx={{ m: "30px" }}>
+            新規登録
+          </Typography>
+        </Grid>
+        <form onSubmit={submitRegister}>
+          <Box flexDirection="column">
+            <NickNameInput nickName={nickName} setNickName={setNickName} />
+            {nameError && (
+              <p style={{ color: "red", fontSize: 13 }}>{nameError}</p>
+            )}
+            <LastNameInput lastName={lastName} setLastName={setLastName} />
+            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
+            {addressError && (
+              <p style={{ color: "red", fontSize: 13 }}>{addressError}</p>
+            )}
+            <PostalCodeinput
+              postalCode={postalCode}
+              setPostalCode={setPostalCode}
+              getZipCode={getZipCode}
+            />
+            <AddressInput
+              postalCodeData={postalCodeData}
+              prefectuer={prefectuer}
+              setPrefectuer={setPrefectuer}
+              city={city}
+              setCity={setCity}
+              street={street}
+              setStreet={setStreet}
+              building={building}
+              setBuilding={setBuilding}
+            />
+            {phoneError && (
+              <p style={{ color: "red", fontSize: 13 }}>{phoneError}</p>
+            )}
+            <PhoneInput phone={phone} setPhone={setPhone} />
+            {emailError && (
+              <p style={{ color: "red", fontSize: 13 }}>{emailError}</p>
+            )}
+            <EmailInput email={email} setEmail={setEmail} />
+            {passwordError && (
+              <p style={{ color: "red", fontSize: 13 }}>{passwordError}</p>
+            )}
+            <PasswordInput password={password} setPassword={setPassword} />
+            <ProfileTextarea profile={profile} setProfile={setProfile} />
+            {imageError && (
+              <p style={{ color: "red", fontSize: 13 }}>{imageError}</p>
+            )}
+            <ItemImageSelect
+              itemImage={itemImage}
+              setItemImage={setItemImage}
+              handleImageChange={handleImageChange}
+              itemImageName={itemImageName}
+              setItemImageName={setItemImageName}
+              text="プロフィール画像"
+              clearImage={clearImage}
+            />
+          </Box>
+          <Box mt={3}>
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              fullWidth
+              onClick={submitRegister}
+            >
+              登録
+            </Button>
+          </Box>
+          <Box mt={5}>
+            <Link href="/login">ログインページへ移動する</Link>
+          </Box>
+        </form>
       </Grid>
     </Box>
   );

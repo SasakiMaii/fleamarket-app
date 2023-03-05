@@ -13,24 +13,6 @@ const PasswordInput = (props: PassProps) => {
   const { password, setPassword, editPass } = props;
   return (
     <Box>
-      {editPass ? (
-        <>
-          <label htmlFor="password"></label>
-          <TextField
-            type="password"
-            id="password"
-            fullWidth
-            required
-            label="パスワード"
-            variant="standard"
-            value={editPass}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-              setPassword(e.target.value)
-            }
-          />
-        </>
-      ) : (
-        <>
           <label htmlFor="password"></label>
           <TextField
             type="password"
@@ -43,9 +25,7 @@ const PasswordInput = (props: PassProps) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
               setPassword(e.target.value)
             }
-          />{" "}
-        </>
-      )}
+          />
     </Box>
   );
 };
