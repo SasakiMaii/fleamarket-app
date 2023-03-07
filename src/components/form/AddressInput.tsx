@@ -40,7 +40,7 @@ const AddressInput = (props: AddressProps) => {
           <InputLabel id="prefectuer">都道府県</InputLabel>
           <Select
             id="prefectuer"
-            value={postalCodeData.address1 || prefectuer||""}
+            value={postalCodeData.address1 || prefectuer}
             onChange={(e: any) => setPrefectuer(e.target.value)}
             label="都道府県"
             defaultValue="都道府県"

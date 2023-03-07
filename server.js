@@ -112,3 +112,97 @@ app.post("/user", async (req, res) => {
   });
   return res.json(register);
 });
+
+app.get("/image/:id", async (req, res) => {
+  const id = req.params.id;
+  const register = await prisma.users.findMany({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      image: true,
+    },
+  });
+  return res.json(register);
+});
+
+app.get("/user/:id", async (req, res) => {
+  const id = req.params.id;
+  const register = await prisma.users.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  return res.json(register);
+});
+
+app.put("/user/:id", async (req, res) => {
+  const id = req.params.id;
+  const {
+    nick_name,
+    first_name,
+    last_name,
+    email,
+    password,
+    profile,
+    image,
+    phone,
+    postal_code,
+    prefecture,
+    city,
+    street,
+    bilding,
+  } = req.body;
+  const update = await prisma.users.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      nick_name,
+      first_name,
+      last_name,
+      email,
+      password,
+      profile,
+      image,
+      phone,
+      postal_code,
+      prefecture,
+      city,
+      street,
+      bilding,
+    },
+  });
+  return res.json(update);
+});
+
+//likes
+app.get("/likes", async (req, res) => {
+  const likes = await prisma.likes.findMany();
+  return res.json(likes);
+});
+
+app.post("/likes", async (req, res) => {
+  const {
+    name,
+    price,
+    image,
+    description,
+    like_date,
+    category,
+    user_id,
+  } = req.body;
+  const item = await prisma.likes.create({
+    data: {
+      name,
+      price,
+      image,
+      description,
+      like_date,
+      category,
+      user_id,
+    },
+  });
+  return res.json(item);
+});
+

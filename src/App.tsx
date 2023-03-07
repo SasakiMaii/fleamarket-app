@@ -52,7 +52,7 @@ function App() {
             <Route path="/register" element={<Register />}></Route>
             <Route path="/cart" element={<Cart />}></Route>
             <Route
-              path="/membersinfoedit"
+              path="/membersinfoedit/:id"
               element={<MembersInfoEdit />}
             ></Route>
             <Route path="/favorite" element={<Favorite />}></Route>

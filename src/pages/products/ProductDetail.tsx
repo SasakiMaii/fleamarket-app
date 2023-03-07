@@ -8,17 +8,22 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from 'react-router-dom';
 import { Items } from "../../types/type";
 import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Link } from "@mui/material";
 
 const ProductDetail = () => {
   const [detailItems, setDetailItems] = useState<Items[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const [like,setLike]=useState(false)
   const { id } = useParams();
-
+  const navigate=useNavigate()
+  
   useEffect(() => {
     setLoading(true);
     const controller = new AbortController();
@@ -40,7 +45,9 @@ const ProductDetail = () => {
 
   const getDetailItem = async (signal: AbortSignal) => {
     try {
-      const response = await fetch(`http://localhost:8000/items/${id}`, { signal });
+      const response = await fetch(`http://localhost:8000/items/${id}`, {
+        signal,
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -48,7 +55,7 @@ const ProductDetail = () => {
       console.log(data);
       setDetailItems([data]);
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
     }
   };
 
@@ -58,6 +65,14 @@ const ProductDetail = () => {
 
   if (error) {
     return <p>{error.message}</p>;
+  }
+  const onLikeFlag=()=>{
+    if(like===false){
+      setLike(true)
+      navigate("/favorite" ,{state:detailItems})
+    }else{
+      setLike(false)
+    }
   }
 
   return (
@@ -90,6 +105,16 @@ const ProductDetail = () => {
                 }}
               />
             </ListItem>
+
+            <Box sx={{ textAlign: "right", fontWeight: "bold",color:"#000" }}>
+              <Button
+              sx={{color:"#000"}}
+              onClick={onLikeFlag}
+              >
+                お気に入りに登録
+                {like?<FavoriteIcon />:<FavoriteBorderIcon/>}
+              </Button>
+            </Box>
             <ListItem>
               <ListItemText
                 primary={`¥${item.price?.toLocaleString()}`}
@@ -128,7 +153,12 @@ const ProductDetail = () => {
           </Divider>
           <Typography sx={{ marginTop: 5 }}>{item.product_days}</Typography>
           <Divider sx={{ marginTop: 5 }}></Divider>
-          <Button variant="contained" href="/cart" disableElevation sx={{ marginTop: 10 }}>
+          <Button
+            variant="contained"
+            href="/cart"
+            disableElevation
+            sx={{ marginTop: 10 }}
+          >
             カートに入れる
           </Button>
         </Box>

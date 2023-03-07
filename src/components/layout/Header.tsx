@@ -15,8 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { SessionContextType } from "../../types/type";
 import { SessionContext } from "../../App";
+import CryptoJS from "crypto-js";
+import { secretKey } from '../../pages/users/Login';
+import useState from 'react';
+import { Users } from '../../types/type';
+import { Link } from '@mui/material';
 
 const pages = [
   { id: 1, category: "出品" },
@@ -36,6 +40,7 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const [userCookieData,setUserCookeData]=React.useState<any>([]);
   const navigate = useNavigate();
   const { session, setSession } = useContext(SessionContext);
 
@@ -47,7 +52,6 @@ function Header() {
   };
 
   const handleCloseNavMenu = (id: number) => {
-    console.log(id);
     if (id === 1) {
       navigate("/productregistration");
     } else if (id === 2) {
@@ -60,10 +64,35 @@ function Header() {
       setAnchorElNav(null);
     }
   };
+  //cookie復号
+  const cookieData = document.cookie
+  .split(";")
+  .find((cookie) => cookie.trim().startsWith("data="));
+
+const encryptedData = cookieData ? cookieData.split("=")[1] : "";
+
+  const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
+    const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    return decrypted;
+  };
+
+  React.useEffect(()=>{
+    if (document.cookie) {
+      const decording = decrypts(encryptedData);
+      const Cookiedata = JSON.parse(decording);
+      setUserCookeData(Cookiedata)
+      // const idData=userCookieData.map((user:any)=>{
+      //   return user.id
+      // })
+    }
+  },[])
+
+
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
-      navigate("/membersinfoedit");
+      navigate(`/membersinfoedit/${userCookieData.length===1?userCookieData[0].id:""}`);
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
       setSession(null);
@@ -82,7 +111,7 @@ function Header() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={"/"}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -92,7 +121,7 @@ function Header() {
               color: "inherit",
               textDecoration: "none",
             }}
-          >
+            >
             FURIMA
           </Typography>
 
@@ -139,8 +168,8 @@ function Header() {
           <Typography
             variant="h5"
             noWrap
+            href={"/"}
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -154,6 +183,7 @@ function Header() {
           >
             FURIMA
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Link } from "@mui/material";
+import { Avatar, Box, Button, CardMedia, Link } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import NickNameInput from "../../components/form/NickNameInput";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ import PhoneInput from "../../components/form/PhoneInput";
 import PasswordInput from "../../components/form/PasswordInput";
 import ProfileTextarea from "../../components/form/ProfileTextarea";
 import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
-
+import { useParams } from "react-router-dom";
 //アコーディオン
 import {
   Accordion,
@@ -43,28 +43,52 @@ const MembersInfoEdit = () => {
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
-  const [userData, setUserData] = useState<Users[]>([]);
+  const [userImageData, setUserImageData] = useState<any[]>([]);
   const [itemImage, setItemImage] = useState("");
   const [imageError, setImageError] = useState("");
+  const [nickName, setNickName] = useState("");
+  const [user, setUser] = useState<any>([]);
   const [itemImageName, setItemImageName] = useState<any>([]);
-  //  const [EditShow, setEditShow] = useState(false);
-
-  const [nickName, setNickName] = useState(userCookie[0]?.nick_name);
 
   const navigate = useNavigate();
+  const { id } = useParams();
 
+  //image
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`http://localhost:8000/image/${id}`);
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = () => {
+        const base64data = reader.result;
+        setUserImageData([base64data]);
+      };
+    })();
+  }, []);
+  //user情報
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`http://localhost:8000/user/${id}`);
+      const data = await res.json();
+      setUser(data);
+    })();
+  }, []);
+
+
+  //cookie復号
   const cookieData = document.cookie
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));
-  const encryptedData = cookieData ? cookieData.split("=")[1] : "";
 
-  //cookie復号
+  const encryptedData = cookieData ? cookieData.split("=")[1] : "";
   const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
     const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
     const decrypted = bytes.toString(CryptoJS.enc.Utf8);
     return decrypted;
   };
 
+  //郵便番号から住所取得するAPI
   const getZipCode = async () => {
     const response = await fetch(
       `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
@@ -73,28 +97,27 @@ const MembersInfoEdit = () => {
     setPostalCodeData(data.results[0]);
   };
 
+  //cookieに入っているデータを復号してから、inputタブに表示
   useEffect(() => {
-    if (document.cookie) {
-      const decording = decrypts(encryptedData);
-      // console.log(decording);
-      const Cookiedata = JSON.parse(decording);
-      setUserCookie(Cookiedata);
-      setPassword(Cookiedata[0]?.password);
-      setCity(Cookiedata[0]?.city);
-      setStreet(Cookiedata[0]?.street);
-      setBuilding(Cookiedata[0]?.bilding);
-      setPhone(Cookiedata[0]?.phone);
-      setPrefectuer(Cookiedata[0]?.prefecture);
-      setNickName(Cookiedata[0]?.nick_name);
-      setFirstName(Cookiedata[0]?.first_name);
-      setLastName(Cookiedata[0]?.last_name);
-      setProfile(Cookiedata[0]?.profile);
-      setEmail(Cookiedata[0]?.email);
-      setPostalCode(Cookiedata[0]?.postal_code);
-      console.log(Cookiedata[0]?.postal_code);
-    }
-  }, []);
 
+      setPassword(user.password);
+      setCity(user.city);
+      setStreet(user.street);
+      setBuilding(user.bilding);
+      setPhone(user.phone);
+      setPrefectuer(user.prefecture);
+      setNickName(user.nick_name);
+      setFirstName(user.first_name);
+      setLastName(user.last_name);
+      setProfile(user.profile);
+      setEmail(user.email);
+      setPostalCode(user.postal_code);
+      console.log(user,"user")
+
+  }, [user]);
+
+
+  //プロフィール写真
   const handleImageChange = (event: any) => {
     const selectedFile = event.target.files[0];
     const reader: any = new FileReader();
@@ -105,70 +128,120 @@ const MembersInfoEdit = () => {
     setItemImageName([selectedFile]);
   };
 
+  //プロフィール写真削除
   const clearImage = () => {
     setItemImage("");
   };
 
-  const submitEdit = (e: any) => {
-    e.preventDefault();
-    setEmail(userCookie[0]?.email);
-  };
+  // 暗号化
+function encrypt(data: string | CryptoJS.lib.WordArray) {
+  const encrypted = CryptoJS.AES.encrypt(data, secretKey).toString();
+  return encrypted;
+}
 
-  console.log(nickName);
-  console.log(userCookie[0]?.nick_name);
-  console.log(userCookie[0]?.image)
+  //更新
+  const submitEdit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    try {
+      const data:Users = {
+        nick_name: nickName || "",
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        profile: profile || "",
+        phone: Number(phone),
+        postal_code: postalCode,
+        prefecture: prefectuer || postalCodeData.address1,
+        city: city || postalCodeData.address2,
+        street: street || postalCodeData.address3,
+        bilding: building,
+        // image: itemImageName[0].name || "",
+      };
+      const response = await fetch(`http://localhost:8000/user/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const resData = await response.json();
+      console.log(resData)
+      alert('更新が完了しました')
+    } catch (error) {
+      console.log("era", error);
+    }
+  };
+  console.log(user.nick_name)
+
   return (
-    <Box mt={10}  mb={2}>
-      <Box sx={{display: 'flex', justifyContent: 'center',}}>
-      <Avatar sx={{ width: '90px', height: '90px', border:1 }} alt="profile_image" src={userCookie[0]?.image}/>
+    <Box mt={10} mb={2}>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        {userImageData.length === 1 &&
+          userImageData.map((iamgeData) => {
+            return (
+              <Box key={iamgeData}>
+                <Avatar
+                  sx={{ width: "90px", height: "90px", border: 1 }}
+                  alt="profile_image"
+                  src={iamgeData[0]}
+                />
+              </Box>
+            );
+          })}
       </Box>
-      <Box mb={10}>{userCookie[0]?.nick_name}さん</Box>
+          <Box mb={10}>{user.nick_name?user.nick_name:user.first_name}さん</Box>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-        >
+          >
           <Typography>会員情報を変更する</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Box>
-            <NickNameInput nickName={nickName} setNickName={setNickName} />
-            <LastNameInput
-              lastName={lastName}
-              setLastName={setLastName}
-              editLastName={userCookie[0]?.last_name}
-            />
-            <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
-            <PostalCodeinput
-              setPostalCode={setPostalCode}
-              postalCode={postalCode}
-              getZipCode={getZipCode}
-            />
-            <AddressInput
-              postalCodeData={postalCodeData}
-              prefectuer={prefectuer}
-              setPrefectuer={setPrefectuer}
-              city={city}
-              setCity={setCity}
-              street={street}
-              setStreet={setStreet}
-              building={building}
-              setBuilding={setBuilding}
-            />
-            <PhoneInput phone={phone} setPhone={setPhone} />
-            <EmailInput setEmail={setEmail} email={email} />
-            <PasswordInput password={password} setPassword={setPassword} />
-            <ProfileTextarea profile={profile} setProfile={setProfile} />
-            <ItemImageSelect
-              itemImage={itemImage}
-              setItemImage={setItemImage}
-              handleImageChange={handleImageChange}
-              itemImageName={itemImageName}
-              setItemImageName={setItemImageName}
-              text="プロフィール画像"
-              clearImage={clearImage}
-            />
+            <>
+              <NickNameInput
+                nickName={nickName}
+                setNickName={setNickName}
+              />
+              <LastNameInput lastName={lastName} setLastName={setLastName} />
+              <FirstNameInput
+                firstName={firstName}
+                setFirstName={setFirstName}
+              />
+              <PostalCodeinput
+                setPostalCode={setPostalCode}
+                postalCode={postalCode}
+                getZipCode={getZipCode}
+              />
+              <AddressInput
+                postalCodeData={postalCodeData}
+                prefectuer={prefectuer}
+                setPrefectuer={setPrefectuer}
+                city={city}
+                setCity={setCity}
+                street={street}
+                setStreet={setStreet}
+                building={building}
+                setBuilding={setBuilding}
+              />
+              <PhoneInput phone={phone} setPhone={setPhone} />
+              <EmailInput setEmail={setEmail} email={email} />
+              <PasswordInput password={password} setPassword={setPassword} />
+              <ProfileTextarea profile={profile} setProfile={setProfile} />
+              {/* <ItemImageSelect
+  itemImage={itemImage}
+  setItemImage={setItemImage}
+  handleImageChange={handleImageChange}
+  itemImageName={itemImageName}
+  setItemImageName={setItemImageName}
+  text="プロフィール画像"
+  clearImage={clearImage}
+/> */}
+            </>
+
             <Box mt={3}>
               <Button
                 type="submit"
@@ -192,8 +265,7 @@ const MembersInfoEdit = () => {
           <Typography>売上金の確認</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-          </Typography>
+          <Typography></Typography>
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -205,8 +277,7 @@ const MembersInfoEdit = () => {
           <Typography>設定</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-          </Typography>
+          <Typography></Typography>
         </AccordionDetails>
       </Accordion>
     </Box>
