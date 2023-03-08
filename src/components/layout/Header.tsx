@@ -15,8 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { SessionContextType } from "../../types/type";
 import { SessionContext } from "../../App";
+import CryptoJS from "crypto-js";
+import { secretKey } from "../../pages/users/Login";
+import useState from "react";
+import { Users } from "../../types/type";
+import { Link } from "@mui/material";
 
 const pages = [
   { id: 1, category: "出品" },
@@ -36,6 +40,7 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const [userCookieData, setUserCookeData] = React.useState<any>([]);
   const navigate = useNavigate();
   const { session, setSession } = useContext(SessionContext);
 
@@ -47,7 +52,6 @@ function Header() {
   };
 
   const handleCloseNavMenu = (id: number) => {
-    console.log(id);
     if (id === 1) {
       navigate("/productregistration");
     } else if (id === 2) {
@@ -60,10 +64,33 @@ function Header() {
       setAnchorElNav(null);
     }
   };
+  //cookie復号
+
+  React.useEffect(() => {
+    const cookieData = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("data="));
+    const encryptedData = cookieData ? cookieData.split("=")[1] : "";
+    const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
+      const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return decrypted;
+    };
+    if (document.cookie) {
+      const decording = decrypts(encryptedData);
+      const Cookiedata = JSON.parse(decording);
+      setUserCookeData(Cookiedata);
+      // const idData=userCookieData.map((user:any)=>{
+      //   return user.id
+      // })
+    }
+  }, []);
+   console.log(userCookieData)
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
-      navigate("/membersinfoedit");
+      navigate(`/membersinfoedit/${userCookieData}`);
+      window.location.reload()
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
       setSession(null);
@@ -82,7 +109,7 @@ function Header() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={"/"}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -139,8 +166,8 @@ function Header() {
           <Typography
             variant="h5"
             noWrap
+            href={"/"}
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -154,6 +181,7 @@ function Header() {
           >
             FURIMA
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -166,6 +194,7 @@ function Header() {
             ))}
           </Box>
 
+            {document.cookie&&
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -173,31 +202,32 @@ function Header() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
                 <MenuItem
-                  key={setting.id}
-                  onClick={() => handleCloseUserMenu(setting.id)}
+                key={setting.id}
+                onClick={() => handleCloseUserMenu(setting.id)}
                 >
                   <Typography textAlign="center">{setting.category}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
+            }
         </Toolbar>
       </Container>
     </AppBar>

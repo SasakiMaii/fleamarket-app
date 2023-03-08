@@ -11,7 +11,7 @@ type ProfileProps = {
   editProfile?: string | undefined;
 };
 
-const ProfileTextarea = (props: ProfileProps) => {
+const ProfileTextarea = React.memo((props: ProfileProps) => {
   const { profile, setProfile, editProfile } = props;
 
   const [text, setText] = useState("");
@@ -23,7 +23,7 @@ const ProfileTextarea = (props: ProfileProps) => {
             <Textarea
               name="profile"
               id="profile"
-              value={profile||undefined}
+              value={profile||""}
               placeholder="プロフィール"
               minRows={2}
               maxRows={4}
@@ -60,6 +60,6 @@ const ProfileTextarea = (props: ProfileProps) => {
       </Box>
     </div>
   );
-};
+});
 
 export default ProfileTextarea;

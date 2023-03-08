@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BrandInput from "../../components/listing-form/BrandInput";
 import DetailMessageText from "../../components/listing-form/DetailMessageText";
 import ItemCategorySelect from "../../components/listing-form/ItemCategorySelect";
@@ -10,6 +10,7 @@ import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
 import ItemNameInput from "../../components/listing-form/ItemNameInput";
 import PriceInput from "../../components/listing-form/PriceInput";
 import { useNavigate } from 'react-router-dom';
+import { secretKey } from "../users/Login";
 
 
 const ProductRegistration = () => {
@@ -28,6 +29,7 @@ const ProductRegistration = () => {
   const [priceErr, setPriceErr] = useState("");
   const [imageError, setImageError] = useState("");
   const navigate=useNavigate()
+
 
 
   const now = new Date();
@@ -86,6 +88,7 @@ const ProductRegistration = () => {
     return true;
   };
 
+
   const submitRegister = async (e: any) => {
     e.preventDefault();
     let isNameValid = ValidateName();
@@ -104,7 +107,7 @@ const ProductRegistration = () => {
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,
-            product_brand: brand,
+            product_brand: brand||"",
             product_days: itemDays,
             category: itemCategory,
             user_id: 1,

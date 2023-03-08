@@ -4,46 +4,38 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Items, Users } from '../types/type';
+import { Items, Users } from "../types/type";
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { SessionContext } from "../App";
 import { secretKey } from "./users/Login";
 import CryptoJS from "crypto-js";
 
-
-
 const Top = () => {
   const [items, setItems] = useState<Items[]>([]);
-  const[userCookie,setUserCookie]=useState<Users[]>([])
+  const [userCookie, setUserCookie] = useState<Users[]>([]);
+  const [user, setUser] = useState<Users[]>([]);
   const { session, setSession } = useContext(SessionContext);
-  
+
+  //cookie復号
   const cookieData = document.cookie
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));
   const encryptedData = cookieData ? cookieData.split("=")[1] : "";
-  console.log(encryptedData);
-
-  //cookie復号
   const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
     const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
     const decrypted = bytes.toString(CryptoJS.enc.Utf8);
     return decrypted;
   };
+  useEffect(() => {
+    if (document.cookie) {
+      const decording = decrypts(encryptedData);
+      const Cookiedata = JSON.parse(decording);
+      setUserCookie(Cookiedata);
+    }
+  }, []);
 
-useEffect(()=>{
-  if(document.cookie){
-    const decording = decrypts(encryptedData);
-    console.log(decording);
-    const Cookiedata = JSON.parse(decording);
-    console.log(Cookiedata[0].nick_name);
-    setUserCookie(Cookiedata)
-  }
-},[])
-  
-console.log(userCookie[0]?.nick_name)
-
-
+//Item情報
   useEffect(() => {
     (async () => {
       const res = await fetch("http://localhost:8000/items");
@@ -53,15 +45,36 @@ console.log(userCookie[0]?.nick_name)
     })();
   }, []);
 
+  console.log(items, "item");
+
+//user情報
+  useEffect(() => {
+    ( async() => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/user/${userCookie}`
+        );
+        const userdata = await response.json();
+        console.log("user", userdata);
+        setUser(userdata);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, []);
+
+  const userMutch =user.filter(data=>{
+    return data.id===Number(userCookie)
+  })
+console.log(userMutch)
+
+
   return (
     <>
       {document.cookie ? (
-        <Box mt={10} mb={5}>
-          {userCookie[0]?.nick_name ? (
-            <Box >{userCookie[0]?.nick_name}さんようこそ</Box>
-          ) : (
-            <Box>{userCookie[0]?.first_name}さんようこそ</Box>
-          )}
+        <Box mt={10} mb={5} >
+          {userMutch.length === 1 &&
+            userMutch.map((data) => <Box key={data.id}>{data.nick_name?data.nick_name:data.first_name}さんようこそ</Box>)}
         </Box>
       ) : (
         <Box mt={10} mb={5}>
@@ -69,7 +82,12 @@ console.log(userCookie[0]?.nick_name)
           <Link to={"/login"}>ログインページへ移動</Link>
         </Box>
       )}
-      <Box mt={10} mb={5} sx={{borderBottom:1,fontWeight:"bold"}} textAlign="center">
+      <Box
+        mt={10}
+        mb={5}
+        sx={{ borderBottom: 1, fontWeight: "bold" }}
+        textAlign="center"
+      >
         出品商品一覧
       </Box>
       <Box

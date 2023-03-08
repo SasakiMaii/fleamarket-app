@@ -12,20 +12,20 @@ datasource db {
 
 //マイグレートしていない
 model Users {
-  id Int @id @default(autoincrement())
-  nick_name String?
-  first_name String
-  last_name String
-  email String @unique
-  password String
-  profile String?
-  image String?
-  phone Int
+  id          Int     @id @default(autoincrement())
+  nick_name   String?
+  first_name  String
+  last_name   String
+  email       String  @unique
+  password    String
+  profile     String?
+  image       String?
+  phone       Int
   postal_code String
-  prefecture String
-  city String
-  street String
-  bilding String?
+  prefecture  String
+  city        String
+  street      String
+  bilding     String?
 }
 
 model Items {
@@ -38,8 +38,19 @@ model Items {
   size_id        Int?
   shopping_date  DateTime?
   shopping_price Int?
-  product_state String?
-  product_brand String?
-  product_days String?
-  category String?
+  product_state  String?
+  product_brand  String?
+  product_days   String?
+  category       String?
+}
+
+model Likes {
+  id         Int       @id @default(autoincrement())
+  name       String
+  price      Int
+  user_id    Int
+  like_date  DateTime?
+  category   String
+  image      String?
+  product_id Int?
 }

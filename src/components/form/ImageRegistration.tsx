@@ -7,7 +7,7 @@ type ImageProps = {
   handleFileSelect: any;
 };
 
-const ImageRegistration = (props: ImageProps) => {
+const ImageRegistration = React.memo((props: ImageProps) => {
   const { file, setFile, handleFileSelect } = props;
 
   return (
@@ -19,11 +19,11 @@ const ImageRegistration = (props: ImageProps) => {
         fullWidth
         sx={{ marginBottom:2 ,}}
         type="file"
-        value={file}
+        value={file||""}
         onChange={handleFileSelect}
       />
     </>
   );
-};
+});
 
 export default ImageRegistration;

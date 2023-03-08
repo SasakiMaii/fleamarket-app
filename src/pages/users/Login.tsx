@@ -16,8 +16,8 @@ import { SessionContextType, Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SessionContext } from "../../App";
-import crypto from 'crypto';
 import CryptoJS from 'crypto-js';
+import { Cookie } from '@mui/icons-material';
 
 export const secretKey = 'your-secret-key';
 
@@ -53,9 +53,10 @@ const Login = (user:Users) => {
   const passMatch = loginData.some((data) => data.password === password);
   const emailFilter = loginData.filter((data) => data.email === email);
 
-  console.log(emailFilter,"filter")
+  console.log(emailFilter[0]?.id,"filter")
+  const id=emailFilter[0]?.id
 
-  const save:any=JSON.stringify(emailFilter)
+  const save:any=JSON.stringify(id)
   const encryptedData = encrypt(save);
 
 
