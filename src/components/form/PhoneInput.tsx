@@ -8,7 +8,7 @@ type PhoneProps = {
   setPhone: Dispatch<SetStateAction<string>>;
 };
 
-const PhoneInput = (props: PhoneProps) => {
+const PhoneInput = React.memo((props: PhoneProps) => {
   const { phone, setPhone } = props;
   return (
     <Box mt={5}>
@@ -17,7 +17,7 @@ const PhoneInput = (props: PhoneProps) => {
         type="tel"
         id="phone"
         label="電話番号"
-        value={phone}
+        value={phone||""}
         variant="standard"
         fullWidth
         required
@@ -27,6 +27,6 @@ const PhoneInput = (props: PhoneProps) => {
       />
     </Box>
   );
-};
+});
 
 export default PhoneInput;

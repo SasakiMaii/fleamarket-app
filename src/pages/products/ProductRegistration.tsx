@@ -107,7 +107,7 @@ const ProductRegistration = () => {
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,
-            product_brand: brand,
+            product_brand: brand||"",
             product_days: itemDays,
             category: itemCategory,
             user_id: 1,

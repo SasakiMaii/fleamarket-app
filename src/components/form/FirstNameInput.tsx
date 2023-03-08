@@ -9,7 +9,7 @@ type FirstNameProps = {
   editFirstName?: string | undefined;
 };
 
-const FirstNameInput = (props: FirstNameProps) => {
+const FirstNameInput = React.memo((props: FirstNameProps) => {
   const { firstName, setFirstName, editFirstName } = props;
 
   return (
@@ -21,7 +21,7 @@ const FirstNameInput = (props: FirstNameProps) => {
             label="名"
             variant="standard"
             fullWidth
-            value={firstName}
+            value={firstName||""}
             required
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFirstName(e.target.value)
@@ -29,6 +29,6 @@ const FirstNameInput = (props: FirstNameProps) => {
           />
     </Box>
   );
-};
+});
 
 export default FirstNameInput;

@@ -20,7 +20,7 @@ type AddressProps = {
   setBuilding: Dispatch<SetStateAction<string>>;
 };
 
-const AddressInput = (props: AddressProps) => {
+const AddressInput = React.memo((props: AddressProps) => {
   const {
     postalCodeData,
     prefectuer,
@@ -40,7 +40,7 @@ const AddressInput = (props: AddressProps) => {
           <InputLabel id="prefectuer">都道府県</InputLabel>
           <Select
             id="prefectuer"
-            value={postalCodeData.address1 || prefectuer}
+            value={postalCodeData.address1 || prefectuer||""}
             onChange={(e: any) => setPrefectuer(e.target.value)}
             label="都道府県"
             defaultValue="都道府県"
@@ -102,7 +102,7 @@ const AddressInput = (props: AddressProps) => {
           type="text"
           id="city"
           label="市区都"
-          value={props.postalCodeData.address2 || city}
+          value={props.postalCodeData.address2 || city||""}
           fullWidth
           required
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -115,7 +115,7 @@ const AddressInput = (props: AddressProps) => {
           type="text"
           id="street"
           label="町村"
-          value={props.postalCodeData.address3 || street}
+          value={props.postalCodeData.address3 || street||""}
           fullWidth
           required
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -130,7 +130,7 @@ const AddressInput = (props: AddressProps) => {
           id="building"
           label="番地（建物名）"
           fullWidth
-          value={building}
+          value={building||""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setBuilding(e.target.value)
           }
@@ -138,6 +138,6 @@ const AddressInput = (props: AddressProps) => {
       </div>
     </div>
   );
-};
+});
 
 export default AddressInput;

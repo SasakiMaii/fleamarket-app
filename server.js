@@ -187,22 +187,32 @@ app.post("/likes", async (req, res) => {
     name,
     price,
     image,
-    description,
     like_date,
     category,
     user_id,
+    product_id
   } = req.body;
   const item = await prisma.likes.create({
     data: {
       name,
       price,
       image,
-      description,
       like_date,
       category,
       user_id,
+      product_id
     },
   });
   return res.json(item);
+});
+
+app.delete("/likes/:id", async (req, res) => {
+  const id = req.params.id;
+  const likes = await prisma.likes.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  return res.json(likes);
 });
 

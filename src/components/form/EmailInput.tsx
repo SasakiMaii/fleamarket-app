@@ -7,7 +7,7 @@ type EmailProps = {
   setEmail:any;
 };
 
-const EmailInput = (props: EmailProps) => {
+const EmailInput = React.memo((props: EmailProps) => {
   const { email, setEmail} = props;
   return (
     <div>
@@ -18,7 +18,7 @@ const EmailInput = (props: EmailProps) => {
             label="メールアドレス"
             variant="standard"
             fullWidth
-            value={email}
+            value={email||""}
             required
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
               setEmail(e.target.value)
@@ -26,6 +26,6 @@ const EmailInput = (props: EmailProps) => {
           />
     </div>
   );
-};
+});
 
 export default EmailInput;

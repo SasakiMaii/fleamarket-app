@@ -8,22 +8,45 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
-import { Items } from "../../types/type";
+import { useParams, useNavigate } from "react-router-dom";
+import { Items, Users } from "../../types/type";
 import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Link } from "@mui/material";
+import { secretKey } from "../users/Login";
+import CryptoJS from "crypto-js";
 
 const ProductDetail = () => {
   const [detailItems, setDetailItems] = useState<Items[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [like,setLike]=useState(false)
+  const [like, setLike] = useState(false);
+  const [userCookieData, setUserCookeData] = React.useState<any>([]);
   const { id } = useParams();
-  const navigate=useNavigate()
-  
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const cookieData = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("data="));
+    const encryptedData = cookieData ? cookieData.split("=")[1] : "";
+    const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
+      const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return decrypted;
+    };
+    if (document.cookie) {
+      const decording = decrypts(encryptedData);
+      const Cookiedata = JSON.parse(decording);
+      setUserCookeData(Cookiedata);
+      // const idData=userCookieData.map((user:any)=>{
+      //   return user.id
+      // })
+    }
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     const controller = new AbortController();
@@ -66,14 +89,48 @@ const ProductDetail = () => {
   if (error) {
     return <p>{error.message}</p>;
   }
-  const onLikeFlag=()=>{
-    if(like===false){
-      setLike(true)
-      navigate("/favorite" ,{state:detailItems})
-    }else{
-      setLike(false)
+
+
+  const now = new Date();
+  
+  const onLikeFlag = async () => {
+    if (like === false) {
+      setLike(true);
+      const res = await fetch("http://localhost:8000/likes", {
+        method: "POST",
+        body: JSON.stringify({
+          name: detailItems[0].name,
+          price: Number(detailItems[0].price),
+          image: detailItems[0].image || "",
+          like_date: now,
+          user_id: Number(userCookieData),
+          category: "",
+          product_id: detailItems[0].id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+    } else {
+      setLike(false);
+      const res:any = await fetch(
+        `http://localhost:8000/likes/${detailItems[0]?.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).catch((err) => {
+        console.log(err, "エラー");
+      });
+      const data = await res.json();
+      console.log(data)
     }
-  }
+  };
+
 
   return (
     <Box mt={10} sx={{ textAlign: "center", maxWidth: 800 }}>
@@ -106,13 +163,10 @@ const ProductDetail = () => {
               />
             </ListItem>
 
-            <Box sx={{ textAlign: "right", fontWeight: "bold",color:"#000" }}>
-              <Button
-              sx={{color:"#000"}}
-              onClick={onLikeFlag}
-              >
+            <Box sx={{ textAlign: "right", fontWeight: "bold", color: "#000" }}>
+              <Button sx={{ color: "#000" }} onClick={onLikeFlag}>
                 お気に入りに登録
-                {like?<FavoriteIcon />:<FavoriteBorderIcon/>}
+                {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
               </Button>
             </Box>
             <ListItem>

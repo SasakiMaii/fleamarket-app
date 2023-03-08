@@ -9,7 +9,7 @@ type RegisterProps = {
   getZipCode: () => Promise<void>;
 };
 
-const PostalCodeinput = (props: RegisterProps) => {
+const PostalCodeinput = React.memo((props: RegisterProps) => {
   return (
     <Box mt={5}>
       <label htmlFor="postalCode"></label>
@@ -19,7 +19,7 @@ const PostalCodeinput = (props: RegisterProps) => {
         label="郵便番号"
         variant="standard"
         fullWidth
-        value={props.postalCode}
+        value={props.postalCode||""}
         required
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           props.setPostalCode(e.target.value)
@@ -28,6 +28,6 @@ const PostalCodeinput = (props: RegisterProps) => {
       <Button onClick={props.getZipCode}>郵便番号で住所を自動入力する</Button>
     </Box>
   );
-};
+});
 
 export default PostalCodeinput;

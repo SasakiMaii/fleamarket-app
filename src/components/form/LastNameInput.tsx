@@ -10,7 +10,7 @@ type LastNameProps = {
   editLastName?: string | undefined;
 };
 
-const LastNameInput = (props: LastNameProps) => {
+const LastNameInput = React.memo((props: LastNameProps) => {
   const { lastName, setLastName, editLastName } = props;
 
   return (
@@ -20,7 +20,7 @@ const LastNameInput = (props: LastNameProps) => {
             type="text"
             id="lastName"
             label="性"
-            value={lastName}
+            value={lastName||""}
             variant="standard"
             fullWidth
             required
@@ -30,6 +30,6 @@ const LastNameInput = (props: LastNameProps) => {
           />
     </Box>
   );
-};
+});
 
 export default LastNameInput;

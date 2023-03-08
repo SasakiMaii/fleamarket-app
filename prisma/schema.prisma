@@ -45,13 +45,12 @@ model Items {
 }
 
 model Likes {
-  id        Int       @id @default(autoincrement())
-  name      String
-  price     Int
-  user_id   Int
-  like_date DateTime?
-  category  String
-  image     String?
+  id         Int       @id @default(autoincrement())
+  name       String
+  price      Int
+  user_id    Int
+  like_date  DateTime?
+  category   String
+  image      String?
   product_id Int?
-  
 }

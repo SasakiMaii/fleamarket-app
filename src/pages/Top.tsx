@@ -64,16 +64,17 @@ const Top = () => {
   }, []);
 
   const userMutch =user.filter(data=>{
-    return data.id==userCookie[0]?.id
+    return data.id===Number(userCookie)
   })
 console.log(userMutch)
+
 
   return (
     <>
       {document.cookie ? (
-        <Box mt={10} mb={5}>
+        <Box mt={10} mb={5} >
           {userMutch.length === 1 &&
-            userMutch.map((data) => <Box>{data.nick_name?data.nick_name:data.first_name}さんようこそ</Box>)}
+            userMutch.map((data) => <Box key={data.id}>{data.nick_name?data.nick_name:data.first_name}さんようこそ</Box>)}
         </Box>
       ) : (
         <Box mt={10} mb={5}>

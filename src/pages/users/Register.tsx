@@ -73,6 +73,7 @@ const Register = () => {
 
   const emailMatch = userData.some((data) => data.email === email);
 
+
   const validateImage = () => {
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
     const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
@@ -193,7 +194,7 @@ const Register = () => {
           city: city || postalCodeData.address2,
           street: street || postalCodeData.address3,
           bilding: building,
-          image: itemImageName[0].name || "",
+          image: itemImage || "",
         };
         const response = await fetch("http://localhost:8000/user", {
           method: "POST",
@@ -203,6 +204,7 @@ const Register = () => {
           },
         });
         const responseData = await response.json();
+        console.log(responseData)
         navigate("/login");
       } catch (err) {
         console.log(err, "エラー");

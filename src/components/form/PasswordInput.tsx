@@ -9,7 +9,7 @@ type PassProps = {
   editPass?: string | undefined;
 };
 
-const PasswordInput = (props: PassProps) => {
+const PasswordInput = React.memo((props: PassProps) => {
   const { password, setPassword, editPass } = props;
   return (
     <Box>
@@ -21,13 +21,13 @@ const PasswordInput = (props: PassProps) => {
             required
             label="パスワード"
             variant="standard"
-            value={password}
+            value={password||""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
               setPassword(e.target.value)
             }
           />
     </Box>
   );
-};
+});
 
 export default PasswordInput;
