@@ -60,6 +60,7 @@ function Header() {
       navigate("/histry");
     } else if (id === 4) {
       navigate("/cart");
+      window.location.reload()
     } else {
       setAnchorElNav(null);
     }
@@ -89,7 +90,9 @@ function Header() {
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
+      window.location.reload()
       navigate(`/membersinfoedit/${userCookieData}`);
+      window.location.reload()
       window.location.reload()
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
@@ -101,7 +104,7 @@ function Header() {
   };
 
   return (
-    <AppBar>
+    <AppBar sx={{backgroundColor:"#e198b4"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <StorefrontIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />

@@ -16,10 +16,10 @@ import { SessionContextType, Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { SessionContext } from "../../App";
-import CryptoJS from 'crypto-js';
-import { Cookie } from '@mui/icons-material';
+import CryptoJS from "crypto-js";
+import { Cookie } from "@mui/icons-material";
 
-export const secretKey = 'your-secret-key';
+export const secretKey = "your-secret-key";
 
 // 暗号化
 function encrypt(data: string | CryptoJS.lib.WordArray) {
@@ -27,7 +27,7 @@ function encrypt(data: string | CryptoJS.lib.WordArray) {
   return encrypted;
 }
 
-const Login = (user:Users) => {
+const Login = (user: Users) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string[]>([]);
@@ -53,24 +53,39 @@ const Login = (user:Users) => {
   const passMatch = loginData.some((data) => data.password === password);
   const emailFilter = loginData.filter((data) => data.email === email);
 
-  console.log(emailFilter[0]?.id,"filter")
-  const id=emailFilter[0]?.id
+  console.log(emailFilter[0]?.id, "filter");
+  console.log(loginData[0])
+  const id = emailFilter[0]?.id;
 
-  const save:any=JSON.stringify(id)
+  const save: any = JSON.stringify(id);
   const encryptedData = encrypt(save);
 
-
-  const submit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+  const submit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setErr([]);
     e.preventDefault();
     if (emailMatch === true && passMatch === true) {
-      console.log("aaa")
+    //   const res = await fetch("http://localhost:8000/login", {
+    //     method: "POST",
+    //     mode: 'cors', //クロスオリジンリクエストをするのでCORSモードにする
+    //     credentials: 'include' ,
+    //     body: JSON.stringify({
+    //       email: email,
+    //       password: password,
+    //     }),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
+    //   const data = await res.json();
+    //   console.log(data);
+
       document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
       // setSession({
       //   isLoggedIn: true,
       //   user: user
       // })
       navigate("/");
+      window.location.reload()
     } else if (emailMatch === false || passMatch === false) {
       setErr(["＊入力内容を確認してください＊"]);
     }

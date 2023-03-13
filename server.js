@@ -1,16 +1,68 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import session from "express-session";
+import { v4 as uuidv4 } from "uuid";
+import cookieParser from "cookie-parser";
 
+const sessionId = uuidv4();
 const app = express();
-const PORT = 8000;
-
+const PORT = process.env.PORT || 8000;
 const prisma = new PrismaClient();
+
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
+app.use(
+  session({
+    secret: "my-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {},
+  })
+);
+
 app.listen(PORT, () => {
   console.log("サーバーが起動中・・・");
+});
+
+async function authenticateUser(email, password) {
+  const user = await prisma.users.findUnique({ where: { email } });
+  if (!user || user.password !== password) {
+    return null; // 認証失敗
+  }
+  return user; // 認証成功
+}
+
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
+
+// ログイン処理
+app.post("/login", async (req, res) => {
+  // ユーザー認証処理
+  const user = await authenticateUser(req.body.email, req.body.password);
+  if (user) {
+    // ユーザーが認証された場合は、セッションにユーザー情報を保存する
+    console.log(`Session ID: ${req.sessionID}`);
+    res.json({ message: "ログイン成功" });
+    req.session.userId = user.id;
+  } else {
+    res.json({ message: "ログイン失敗" });
+  }
 });
 
 app.get("/items", async (req, res) => {
@@ -183,15 +235,8 @@ app.get("/likes", async (req, res) => {
 });
 
 app.post("/likes", async (req, res) => {
-  const {
-    name,
-    price,
-    image,
-    like_date,
-    category,
-    user_id,
-    product_id
-  } = req.body;
+  const { name, price, image, like_date, category, user_id, product_id } =
+    req.body;
   const item = await prisma.likes.create({
     data: {
       name,
@@ -200,7 +245,7 @@ app.post("/likes", async (req, res) => {
       like_date,
       category,
       user_id,
-      product_id
+      product_id,
     },
   });
   return res.json(item);
@@ -215,4 +260,59 @@ app.delete("/likes/:id", async (req, res) => {
   });
   return res.json(likes);
 });
+
+//cart
+app.get("/cart", async (req, res) => {
+  const cart = await prisma.cart.findMany();
+  return res.json(cart);
+});
+
+app.get("/cart/:user_id", async (req, res) => {
+  const user_id = parseInt(req.params.user_id);
+  const cart = await prisma.cart.findMany({
+    where: {
+      user_id: user_id,
+    },
+    orderBy: {
+      cart_date: "asc", // カートに追加された日時の昇順でソートする
+    },
+  });
+  const cartByUser = {};
+
+  cart.forEach((item) => {
+    if (!cartByUser[item.user_id]) {
+      cartByUser[item.user_id] = []; // user_idが未登録の場合は空の配列を作成する
+    }
+    cartByUser[item.user_id].push(item); // カート情報を配列に追加する
+  });
+  return res.json(cartByUser);
+});
+
+app.post("/cart", async (req, res) => {
+  const { name, price, image, cart_date, category, user_id, product_id } =
+    req.body;
+  const cartData = await prisma.cart.create({
+    data: {
+      name,
+      price,
+      image,
+      cart_date,
+      category,
+      user_id,
+      product_id,
+    },
+  });
+  return res.json(cartData);
+});
+
+app.delete("/cart/:id", async (req, res) => {
+  const id = req.params.id;
+  const cart = await prisma.cart.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  return res.json(cart);
+});
+
 

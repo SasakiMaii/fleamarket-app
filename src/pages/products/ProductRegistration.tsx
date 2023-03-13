@@ -11,6 +11,7 @@ import ItemNameInput from "../../components/listing-form/ItemNameInput";
 import PriceInput from "../../components/listing-form/PriceInput";
 import { useNavigate } from 'react-router-dom';
 import { secretKey } from "../users/Login";
+import CryptoJS from "crypto-js";
 
 
 const ProductRegistration = () => {
@@ -28,9 +29,28 @@ const ProductRegistration = () => {
   const [detailMessageErr, setDetailMessageErr] = useState("");
   const [priceErr, setPriceErr] = useState("");
   const [imageError, setImageError] = useState("");
+  const [userCookieData, setUserCookieData] = useState<any>([]);
   const navigate=useNavigate()
 
-
+  useEffect(() => {
+    const cookieData = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("data="));
+    const encryptedData = cookieData ? cookieData.split("=")[1] : "";
+    const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
+      const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return decrypted;
+    };
+    if (document.cookie) {
+      const decording = decrypts(encryptedData);
+      const Cookiedata = JSON.parse(decording);
+      setUserCookieData(Cookiedata);
+      // const idData=userCookieData.map((user:any)=>{
+      //   return user.id
+      // })
+    }
+  }, []);
 
   const now = new Date();
 
@@ -110,7 +130,7 @@ const ProductRegistration = () => {
             product_brand: brand||"",
             product_days: itemDays,
             category: itemCategory,
-            user_id: 1,
+            user_id: Number(userCookieData),
             size_id: 1,
             shopping_price: 1,
           }),

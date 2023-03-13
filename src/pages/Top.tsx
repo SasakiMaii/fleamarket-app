@@ -40,7 +40,6 @@ const Top = () => {
     (async () => {
       const res = await fetch("http://localhost:8000/items");
       const data = await res.json();
-      console.log(data);
       setItems(data);
     })();
   }, []);
@@ -70,9 +69,9 @@ console.log(userMutch)
 
 
   return (
-    <>
+    <Box sx={{backgroundImage:"url(../public/TopImage.png)",}}>
       {document.cookie ? (
-        <Box mt={10} mb={5} >
+        <Box mt={8} mb={5} pt={5} >
           {userMutch.length === 1 &&
             userMutch.map((data) => <Box key={data.id}>{data.nick_name?data.nick_name:data.first_name}さんようこそ</Box>)}
         </Box>
@@ -121,7 +120,7 @@ console.log(userMutch)
                       <Typography
                         gutterBottom
                         component="div"
-                        sx={{ fontSize: 12, mb: 1 }}
+                        sx={{ fontSize: 12, mb: 1,fontWeight:"bold" }}
                       >
                         {item.name}
                       </Typography>
@@ -129,7 +128,7 @@ console.log(userMutch)
                         gutterBottom
                         variant="h6"
                         component="div"
-                        sx={{ backgroundColor: "#ff9" }}
+                        sx={{ backgroundColor: "#e7e7eb",borderRadius:3,p:1 }}
                       >
                         ¥{item.price?.toLocaleString()}
                       </Typography>
@@ -141,7 +140,7 @@ console.log(userMutch)
           );
         })}
       </Box>
-    </>
+    </Box>
   );
 };
 

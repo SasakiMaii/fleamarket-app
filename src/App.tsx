@@ -16,6 +16,7 @@ import React, { createContext, useContext, useState } from "react";
 import { Session, SessionContextType, SessionContextValue, Users } from "./types/type";
 
 
+
 export const SessionContext = React.createContext<SessionContextType>({
   session: { isLoggedIn: false, user: null },
   setSession: () => {},

@@ -1,12 +1,4 @@
-import {
-  Box,
-  CardMedia,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Box, CardMedia, List, ListItem, ListItemText } from "@mui/material";
 import React, { useState } from "react";
 // import { useLocation } from "react-router-dom";
 import { Items, Likes } from "../../types/type";
@@ -14,8 +6,6 @@ import { useEffect } from "react";
 
 const Favorite = () => {
   const [likes, setLikes] = useState<Likes[]>([]);
-  // const location = useLocation();
-  // const itemData = location.state;
 
   useEffect(() => {
     (async () => {
@@ -25,25 +15,24 @@ const Favorite = () => {
     })();
   }, []);
 
-  console.log(likes)
+  console.log(likes);
 
   return (
     <>
-      <Box my={10}>いいねした商品</Box>
-
-        {likes.map((like: Likes) => {
+      <Box my={10}>お気に入りされた商品</Box>
+      {likes.length >= 1 ? (
+        likes.map((like: Likes) => {
           return (
             <>
-            <List
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                border: 1,
-                mb:5
-              }}
-            >
-              <ListItem>
+              <List
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  border: 1,
+                  mb: 5,
+                }}
+              >
                 <ListItem>
                   <ListItemText>{like.name}</ListItemText>
                   <CardMedia
@@ -54,11 +43,13 @@ const Favorite = () => {
                 <ListItem>
                   <ListItemText>{like.price}円</ListItemText>
                 </ListItem>
-              </ListItem>
-      </List>
+              </List>
             </>
           );
-        })}
+        })
+      ) : (
+        <Box>お気に入りされた商品はありません</Box>
+      )}
     </>
   );
 };

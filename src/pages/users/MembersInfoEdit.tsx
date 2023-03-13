@@ -260,6 +260,18 @@ const MembersInfoEdit = () => {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
+              <Typography>出品した商品</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>￥</Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
               <Typography>売上金の確認</Typography>
             </AccordionSummary>
             <AccordionDetails>
