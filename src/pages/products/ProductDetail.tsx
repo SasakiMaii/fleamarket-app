@@ -9,25 +9,31 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Items, Users } from "../../types/type";
+import { Items, Users, Likes, CartType } from "../../types/type";
 import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Link } from "@mui/material";
+
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
+import Card from '@mui/material/Card';
 
 const ProductDetail = () => {
   const [detailItems, setDetailItems] = useState<Items[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
   const [like, setLike] = useState(false);
-  const [userCookieData, setUserCookeData] = React.useState<any>([]);
+  const [userCookieData, setUserCookieData] = React.useState<any>([]);
+  const [likeItems, setLikeItems] = useState<Likes[]>([]);
+  const [cartItems, setCartItems] = useState<CartType[]>([]);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  //cookieのuserIDを復号して取得
+  useEffect(() => {
     const cookieData = document.cookie
       .split(";")
       .find((cookie) => cookie.trim().startsWith("data="));
@@ -40,18 +46,18 @@ const ProductDetail = () => {
     if (document.cookie) {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
-      setUserCookeData(Cookiedata);
-      // const idData=userCookieData.map((user:any)=>{
-      //   return user.id
-      // })
+      setUserCookieData(Cookiedata);
     }
   }, []);
 
+  //lodingに関して
   useEffect(() => {
     setLoading(true);
     const controller = new AbortController();
     const signal = controller.signal;
-    getDetailItem(signal)
+    getDetailItem(signal);
+    getlikeItem(signal);
+    getCartItem(signal)
       .then(() => {
         setLoading(false);
       })
@@ -66,6 +72,14 @@ const ProductDetail = () => {
     };
   }, []);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>{error.message}</p>;
+  }
+
+  //詳細商品取得
   const getDetailItem = async (signal: AbortSignal) => {
     try {
       const response = await fetch(`http://localhost:8000/items/${id}`, {
@@ -75,27 +89,98 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setDetailItems([data]);
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
+  //お気に入りアイテム取得
+  const getlikeItem = async (signal: AbortSignal) => {
+    try {
+      const response = await fetch(`http://localhost:8000/likes`, {
+        signal,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      // console.log(data);
+      setLikeItems(data);
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+  //カート情報取得
+  const getCartItem = async (signal: AbortSignal) => {
+    try {
+      const response = await fetch(`http://localhost:8000/cart`, {
+        signal,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCartItems(data);
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+  //ログインしているユーザーがお気に入りしている商品
+  const likeData = likeItems.filter((like) => {
+    return (
+      like.product_id === detailItems[0]?.id &&
+      like.user_id === Number(userCookieData)
+    );
+  });
+  const likeItemsID = likeItems.filter((like) => {
+    return like.user_id === Number(userCookieData);
+  });
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  console.log(likeItemsID);
+  console.log(
+    document.cookie.indexOf(`like_product${detailItems[0]?.id}`) !== -1
+  );
 
-  if (error) {
-    return <p>{error.message}</p>;
-  }
-
-
-  const now = new Date();
-  
-  const onLikeFlag = async () => {
-    if (like === false) {
+  //「like_product」が存在していたらアイコン変える
+  useEffect(() => {
+    if (document.cookie.indexOf(`like_product${detailItems[0]?.id}`) !== -1) {
       setLike(true);
+    } else {
+      setLike(false);
+    }
+  }, [detailItems]);
+
+  //お気に入りテーブルのIDを表示
+  const likeId = likeData.map((item) => {
+    return item.id;
+  });
+
+  //「like_product」cookie登録
+  const setLikeCookie = (id: number | undefined, maxAge: number) => {
+    document.cookie = `like_product${detailItems[0].id}=${id};path=/; max-age=${maxAge}; secure`;
+  };
+  //「like_product」cookie消去
+  const deleteLikeCookie = (id: number[] | undefined) => {
+    document.cookie = `like_product${detailItems[0].id}=${id};path=/; max-age=0; secure`;
+  };
+  //「like_product」のバリューを取得
+  const cookie = document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith(`like_product${detailItems[0]?.id}=`));
+  const cookieValue = cookie ? cookie.split("=")[1] : null;
+
+  console.log(cookieValue);
+
+  //ハートをクリックしたとき
+  const now = new Date();
+  const onLikeFlag = async () => {
+    if (
+      like === false &&
+      document.cookie.indexOf(`like_product${detailItems[0].id}`) === -1
+    ) {
+      setLike(true);
+      console.log(like);
       const res = await fetch("http://localhost:8000/likes", {
         method: "POST",
         body: JSON.stringify({
@@ -112,11 +197,14 @@ const ProductDetail = () => {
         },
       });
       const data = await res.json();
-      console.log(data);
+      console.log(data.id, "成功");
+      setLikeCookie(data.id, 100000);
+      window.location.reload();
     } else {
       setLike(false);
-      const res:any = await fetch(
-        `http://localhost:8000/likes/${detailItems[0]?.id}`,
+      console.log("a");
+      const res: any = await fetch(
+        `http://localhost:8000/likes/${cookieValue}`,
         {
           method: "DELETE",
           headers: {
@@ -126,14 +214,66 @@ const ProductDetail = () => {
       ).catch((err) => {
         console.log(err, "エラー");
       });
+      deleteLikeCookie(likeId);
       const data = await res.json();
-      console.log(data)
+      console.log("削除", data);
     }
   };
 
+  const cartId:any =cartItems.filter((item) => {
+    return (detailItems.length>0&&detailItems&&item.product_id === detailItems[0].id)
+  });
+  console.log(cartId);
+
+
+  const setCartClick = async () => {
+    if (cartId.length>=1) {
+      alert("こちらの商品は販売終了しました。");
+    } else {
+      navigate("/cart", { state: detailItems });
+      const res = await fetch(`http://localhost:8000/cart`, {
+        method: "POST",
+        body: JSON.stringify({
+          name: detailItems[0].name,
+          price: Number(detailItems[0].price),
+          image: detailItems[0].image || "",
+          like_date: now,
+          user_id: Number(userCookieData),
+          category: "",
+          product_id: detailItems[0].id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      window.location.reload()
+      console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
+    }
+  };
 
   return (
     <Box mt={10} sx={{ textAlign: "center", maxWidth: 800 }}>
+      {cartId.length>=1&& (
+        <Box
+          sx={{
+            backgroundColor: "#dc143c",
+            color: "white",
+            py: 2,
+            fontFamily: "Helvetica",
+            fontSize: 30,
+            fontWeight: "bold",
+            width: "250px",
+            borderRadius: 3,
+            p: 2,
+            m: "auto",
+          }}
+        >
+          <LocalMallIcon sx={{ mr: 2 }} />
+          SOLD OUT
+          <LocalMallIcon sx={{ ml: 2 }} />
+        </Box>
+      )}
       {detailItems.map((item: Items) => (
         <Box
           key={item.id}
@@ -142,10 +282,16 @@ const ProductDetail = () => {
             textAlign: "center",
           }}
         >
-          <CardMedia
-            sx={{ height: 500, width: 500, textAlign: "center" }}
-            image={item.image}
-          />
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CardMedia
+              sx={{
+                height: 500,
+                width: 450,
+                backgroundSize:"93%"
+              }}
+              image={item.image}
+            />
+          </Box>
           <List>
             <ListItem>
               <ListItemText
@@ -173,7 +319,7 @@ const ProductDetail = () => {
               <ListItemText
                 primary={`¥${item.price?.toLocaleString()}`}
                 primaryTypographyProps={{
-                  variant: "h5",
+                  variant: "h4",
                   component: "p",
                   color: "primary.main",
                 }}
@@ -182,34 +328,34 @@ const ProductDetail = () => {
               <Typography
                 variant="body2"
                 color="textSecondary"
-                sx={{ marginLeft: 1 }}
               >
                 (税込)
               </Typography>
             </ListItem>
           </List>
+          <Card sx={{width:700,m:"auto",px:5,pb:5}}>
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>
             商品の説明
           </Divider>
-          <Typography sx={{ marginTop: 5 }}>{item.description}</Typography>
+          <Typography sx={{width:600,m:"auto",mt:5}}>{item.description}</Typography>
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>
             カテゴリー
           </Divider>
-          <Typography sx={{ marginTop: 5 }}>{item.category}</Typography>
+          <Typography sx={{ width:500,m:"auto",mt:5 }}>{item.category}</Typography>
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>
             商品の状態
           </Divider>
-          <Typography sx={{ marginTop: 5 }}>{item.product_state}</Typography>
+          <Typography sx={{ width:500,m:"auto",mt:5 }}>{item.product_state}</Typography>
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>ブランド</Divider>
-          <Typography sx={{ marginTop: 5 }}>{item.product_brand}</Typography>
+          <Typography sx={{ width:500,m:"auto",mt:5  }}>{item.product_brand}</Typography>
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>
             発送までの日数
           </Divider>
-          <Typography sx={{ marginTop: 5 }}>{item.product_days}</Typography>
-          <Divider sx={{ marginTop: 5 }}></Divider>
+          <Typography sx={{ width:500,m:"auto",mt:5  }}>{item.product_days}</Typography>
+          </Card>
           <Button
             variant="contained"
-            href="/cart"
+            onClick={setCartClick}
             disableElevation
             sx={{ marginTop: 10 }}
           >

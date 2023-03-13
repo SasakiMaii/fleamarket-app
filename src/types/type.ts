@@ -33,7 +33,7 @@ export type Items = {
 };
 
 export type Users = {
-  id?:number;
+  id?: number;
   nick_name?: string;
   first_name?: string;
   last_name?: string;
@@ -43,9 +43,9 @@ export type Users = {
   image?: string;
   phone?: number;
   postal_code?: string;
-  prefecture?: string|Address;
-  city?: string|Address;
-  street?: string|Address;
+  prefecture?: string | Address;
+  city?: string | Address;
+  street?: string | Address;
   bilding?: string;
 };
 
@@ -70,19 +70,32 @@ export interface StylesProps {
   };
   heading: {
     fontSize: string;
-    fontWeight: Theme['typography']['fontWeightRegular'];
+    fontWeight: Theme["typography"]["fontWeightRegular"];
   };
 }
 
-export type Likes={
-  name :     string,
-  price  :   number,
-  user_id   ?:number,
-  like_date :Date,
-  category:  string,
-  image ?:    string
-}
+export type Likes = {
+  id: number;
+  name: string;
+  price: number;
+  user_id?: number;
+  like_date: Date;
+  product_id?:number;
+  category?: string;
+  image?: string;
+};
 
+export type CartType ={
+  map: any;
+  id: number;
+  name: string;
+  price: number;
+  user_id?: number;
+  cart_date: Date;
+  product_id?:number;
+  category?: string;
+  image?: string;
+}
 
 // export type VaridateProps = {
 //   nameError: string;

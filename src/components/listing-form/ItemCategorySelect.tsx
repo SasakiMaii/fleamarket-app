@@ -29,6 +29,7 @@ const ItemCategorySelect = (props: ItemCategoryProps) => {
         <MenuItem value="ベビー・キッズ">ベビー・キッズ</MenuItem>
         <MenuItem value="インテリア">インテリア</MenuItem>
         <MenuItem value="コスメ・香水・美容">コスメ・香水・美容</MenuItem>
+        <MenuItem value="アクセサリー">アクセサリー</MenuItem>
         <MenuItem value="家電・スマホ・カメラ">家電・スマホ・カメラ</MenuItem>
         <MenuItem value="スポーツ・レジャー">スポーツ・レジャー</MenuItem>
         <MenuItem value="ハンドメイド">ハンドメイド</MenuItem>
