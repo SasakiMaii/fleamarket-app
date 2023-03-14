@@ -314,5 +314,29 @@ app.delete("/cart/:id", async (req, res) => {
   });
   return res.json(cart);
 });
+app.delete("/cartdata/:user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+  const cart = await prisma.cart.deleteMany({
+    where: {
+      user_id: Number(user_id),
+    },
+  });
+  return res.json(cart);
+});
 
+//order
+app.post("/orders", async (req, res) => {
+  const { price, user_id, carts } = req.body;
+  const order = await prisma.order.create({
+    data: {
+      price,
+      user_id,
+      carts: {
+        connect: carts&&carts.map((cart) => ({ id: cart.id })),
+      },
+    },
+    include: { carts: true },
+  });
+  return res.json(order);
+});
 

@@ -6,8 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button,Link } from "@mui/material";
-import {  useLocation } from "react-router-dom";
+import { Box, Button, Link } from "@mui/material";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Items, CartType } from "../../types/type";
 import { useEffect } from "react";
 import { secretKey } from "../users/Login";
@@ -16,6 +16,7 @@ import CryptoJS from "crypto-js";
 const Cart = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [cart, setCart] = useState<CartType[]>([]);
+  const navigate=useNavigate()
   const location = useLocation();
   const itemData = location.state;
 
@@ -45,8 +46,12 @@ const Cart = () => {
           `http://localhost:8000/cart/${userCookieData}`
         );
         const data = await response.json();
-        console.log(data)
-        setCart(data[Number(userCookieData)]===undefined?[]:data[Number(userCookieData)]);
+        console.log(data);
+        setCart(
+          data[Number(userCookieData)] === undefined
+            ? []
+            : data[Number(userCookieData)]
+        );
         console.log(data[Number(userCookieData)]);
       } catch (err) {
         console.log("エラー", err);
@@ -60,7 +65,7 @@ const Cart = () => {
   console.log(cart);
 
   const allPrice =
-    cart.length>=1 &&
+    cart.length >= 1 &&
     cart.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
 
   //カートに入っているアイテムの削除
@@ -78,11 +83,15 @@ const Cart = () => {
     setCart(cart.filter((item: Items) => item.id !== id));
   };
 
+  const onPurchaseConfirm=()=>{
+    navigate(`/purchaseconfirmation/${userCookieData}`)
+  }
+
   return (
     <Box mt={10}>
-      {cart.length>=1 ? (
+      {cart.length >= 1 ? (
         <>
-          <Box sx={{ borderBottom: 1 }}>購入内容の確認</Box>
+          <Box sx={{ borderBottom: 1 }}>カートの確認</Box>
           <TableContainer component={Paper} sx={{ marginTop: 5 }}>
             <Table sx={{ minWidth: 650 }} aria-label="spanning table">
               <TableHead>
@@ -100,7 +109,10 @@ const Cart = () => {
                   return (
                     <TableRow key={item.id}>
                       <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                        <Link href={`/productdetail/${Number(item.product_id)}`} sx={{ mr: 2 }}>
+                        <Link
+                          href={`/productdetail/${Number(item.product_id)}`}
+                          sx={{ mr: 2 }}
+                        >
                           <img
                             width={100}
                             height={100}
@@ -108,7 +120,12 @@ const Cart = () => {
                             alt={item.name}
                           />
                         </Link>
-                        <Link href={`/productdetail/${Number(item.product_id)}`} sx={{ width: 200 }}>{item.name}</Link>
+                        <Link
+                          href={`/productdetail/${Number(item.product_id)}`}
+                          sx={{ width: 200 }}
+                        >
+                          {item.name}
+                        </Link>
                       </TableCell>
                       <TableCell align="right">
                         ¥ {item.price?.toLocaleString()}
@@ -131,11 +148,14 @@ const Cart = () => {
               </TableBody>
             </Table>
           </TableContainer>
- 
-          <Button variant="contained" disableElevation sx={{ marginTop: 5,ml:5 }}>
-            カートに入れる
-          </Button>
 
+          <Button
+            variant="contained"
+            disableElevation
+            sx={{ marginTop: 5, ml: 5 }}
+            onClick={onPurchaseConfirm}>
+            購入手続きへ
+          </Button>
         </>
       ) : (
         <>

@@ -14,7 +14,6 @@ import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
@@ -137,14 +136,14 @@ const ProductDetail = () => {
     return like.user_id === Number(userCookieData);
   });
 
-  console.log(likeItemsID);
+  console.log(likeItemsID,"likeitemsid");
   console.log(
-    document.cookie.indexOf(`like_product${detailItems[0]?.id}`) !== -1
+    document.cookie.indexOf(`like_product${detailItems[0]?.id}${userCookieData}`) !== -1
   );
 
   //「like_product」が存在していたらアイコン変える
   useEffect(() => {
-    if (document.cookie.indexOf(`like_product${detailItems[0]?.id}`) !== -1) {
+    if (document.cookie.indexOf(`like_product${detailItems[0]?.id}${userCookieData}`) !== -1&&likeItemsID.length>=1) {
       setLike(true);
     } else {
       setLike(false);
@@ -158,16 +157,16 @@ const ProductDetail = () => {
 
   //「like_product」cookie登録
   const setLikeCookie = (id: number | undefined, maxAge: number) => {
-    document.cookie = `like_product${detailItems[0].id}=${id};path=/; max-age=${maxAge}; secure`;
+    document.cookie = `like_product${detailItems[0].id}${userCookieData}=${id};path=/; max-age=${maxAge}; secure`;
   };
   //「like_product」cookie消去
-  const deleteLikeCookie = (id: number[] | undefined) => {
-    document.cookie = `like_product${detailItems[0].id}=${id};path=/; max-age=0; secure`;
+   const deleteLikeCookie = (id: number[] | undefined) => {
+    document.cookie = `like_product${detailItems[0].id}${userCookieData}=${id};path=/; max-age=0; secure`;
   };
   //「like_product」のバリューを取得
   const cookie = document.cookie
     .split("; ")
-    .find((cookie) => cookie.startsWith(`like_product${detailItems[0]?.id}=`));
+    .find((cookie) => cookie.startsWith(`like_product${detailItems[0]?.id}${userCookieData}=`));
   const cookieValue = cookie ? cookie.split("=")[1] : null;
 
   console.log(cookieValue);
@@ -177,7 +176,7 @@ const ProductDetail = () => {
   const onLikeFlag = async () => {
     if (
       like === false &&
-      document.cookie.indexOf(`like_product${detailItems[0].id}`) === -1
+      document.cookie.indexOf(`like_product${detailItems[0].id}${userCookieData}`) === -1
     ) {
       setLike(true);
       console.log(like);
@@ -253,7 +252,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <Box mt={10} sx={{ textAlign: "center", maxWidth: 800 }}>
+    <Box mt={8} sx={{ textAlign: "center", maxWidth: 900 }}>
       {cartId.length>=1&& (
         <Box
           sx={{
