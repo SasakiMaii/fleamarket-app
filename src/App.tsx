@@ -64,7 +64,7 @@ function App() {
               element={<ProductRegistration />}
             ></Route>
             <Route
-              path="/purchaseconfirmation"
+              path="/purchaseconfirmation/:id"
               element={<PurchaseConfirmation />}
             ></Route>
             <Route path="*" element={<ErrPage />}></Route>

@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//マイグレートしていない
 model Users {
   id          Int     @id @default(autoincrement())
   nick_name   String?
@@ -64,4 +63,14 @@ model Cart {
   category   String
   image      String?
   product_id Int?
+  order      Order?    @relation("OrderToCart", fields: [orderId], references: [id])
+  orderId    Int?
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  price     Int
+  user_id   Int
+  orderedAt DateTime @default(now())
+  carts     Cart[]   @relation("OrderToCart")
 }

@@ -50,7 +50,7 @@ function Header() {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  console.log(userCookieData===1)
   const handleCloseNavMenu = (id: number) => {
     if (id === 1) {
       navigate("/productregistration");
@@ -125,7 +125,7 @@ function Header() {
           >
             FURIMA
           </Typography>
-
+            {userCookieData===1&&
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -165,6 +165,7 @@ function Header() {
               ))}
             </Menu>
           </Box>
+}
           <StorefrontIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -184,6 +185,7 @@ function Header() {
           >
             FURIMA
           </Typography>
+          {userCookieData===1&&
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -196,8 +198,9 @@ function Header() {
               </Button>
             ))}
           </Box>
+}
 
-            {document.cookie&&
+            {userCookieData===1&&
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
