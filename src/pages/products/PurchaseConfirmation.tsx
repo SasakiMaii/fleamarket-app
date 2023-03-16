@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { AddressResult, CartType, Items, Users } from "../../types/type";
+import { AddressResult, CartType, Items } from "../../types/type";
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
 import {
   Box,
   Button,
-  Card,
   Divider,
   Grid,
   Link,
@@ -19,18 +18,13 @@ import {
   Typography,
 } from "@mui/material";
 import PaymentMethods from "../../components/cart-form/PaymentMethods";
-import { profile } from "console";
 import AddressInput from "../../components/form/AddressInput";
-import EmailInput from "../../components/form/EmailInput";
 import FirstNameInput from "../../components/form/FirstNameInput";
 import LastNameInput from "../../components/form/LastNameInput";
-import NickNameInput from "../../components/form/NickNameInput";
-import PasswordInput from "../../components/form/PasswordInput";
 import PhoneInput from "../../components/form/PhoneInput";
 import PostalCodeinput from "../../components/form/PostalCodeinput";
-import ProfileTextarea from "../../components/form/ProfileTextarea";
-import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
 import { useNavigate, useParams } from "react-router-dom";
+// import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
 
 const PurchaseConfirmation = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
@@ -51,9 +45,15 @@ const PurchaseConfirmation = () => {
   const [nameError, setNameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [addressError, setAddressError] = useState("");
+  const [items, setItems] = useState<Items[]>([]);
+
+  // const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
+  // const stripePromise = loadStripe(
+  //   "pk_test_51MlMrOB3V27vlWJWlPWsfkQet7REEO553Sw8PKjllmqPucZZvoUBUrY9YzqykxH6HQRhshMUc8s0lF684DJJjKDt00P4HYw7xz"
+  // );
 
   //cookieのuserIDを復号して取得
   useEffect(() => {
@@ -73,6 +73,7 @@ const PurchaseConfirmation = () => {
     }
   }, []);
 
+  //ログイン中ユーザのカート内容
   useEffect(() => {
     async function fetchCart() {
       try {
@@ -80,7 +81,6 @@ const PurchaseConfirmation = () => {
           `http://localhost:8000/cart/${userCookieData}`
         );
         const data = await response.json();
-        console.log(data);
         setCart(data[Number(userCookieData)]);
         console.log(data[Number(userCookieData)]);
       } catch (err) {
@@ -92,12 +92,24 @@ const PurchaseConfirmation = () => {
     }
   }, [userCookieData]);
 
-//カート内商品の金額合計
-  const allPrice =
-    cart.length >= 1 &&
-    cart.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
+  //商品の取得
+  useEffect(() => {
+    async function fetchCart() {
+      try {
+        const response = await fetch(`http://localhost:8000/items`);
+        const data = await response.json();
+        setItems(data);
+        console.log(data);
+      } catch (err) {
+        console.log("エラー", err);
+      }
+    }
+    if (userCookieData) {
+      fetchCart();
+    }
+  }, []);
 
-//住所検索API
+  //住所検索API
   const getZipCode = async () => {
     const response = await fetch(
       `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`
@@ -106,14 +118,12 @@ const PurchaseConfirmation = () => {
     setPostalCodeData(data.results[0]);
   };
 
-  console.log(userCookieData);
   //user情報
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(`http://localhost:8000/user/${id}`);
       const data = await res.json();
       setUser(data);
-      console.log(user);
     };
     fetchData();
   }, [setUser]);
@@ -130,6 +140,7 @@ const PurchaseConfirmation = () => {
     setPostalCode(user.postal_code);
   }, [user]);
 
+  //バリデーション
   const validatePhone = () => {
     if (!phone) {
       setPhoneError("*電話番号を入力してください");
@@ -144,7 +155,7 @@ const PurchaseConfirmation = () => {
     setPhoneError("");
     return true;
   };
-
+  //名前バリデーション
   const validateName = () => {
     if (!lastName && !firstName) {
       setNameError("*性・名を入力してください");
@@ -154,7 +165,7 @@ const PurchaseConfirmation = () => {
     setNameError("");
     return true;
   };
-
+  //住所バリデーション
   const validateAddress = () => {
     if (
       !postalCode &&
@@ -171,7 +182,35 @@ const PurchaseConfirmation = () => {
     setAddressError("");
     return true;
   };
+  console.log(typeof cart, "カート", cart);
 
+  function compareArrays(arr1: string[], arr2: string[]): string[] {
+    const matchingData: string[] = [];
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr2.includes(arr1[i])) {
+        matchingData.push(arr1[i]);
+      }
+    }
+    return matchingData;
+  }
+
+  const cartProductId: any =
+    cart.length >= 1 &&
+    cart.map((data) => {
+      return Number(data.product_id);
+    });
+  const cartItemId: any =
+    items.length >= 1 &&
+    items.map((data) => {
+      return Number(data.id);
+    });
+  const matchingData = compareArrays(cartProductId, cartItemId);
+  const matchingDataInt = matchingData.map((id) => parseInt(id, 10));
+
+  console.log(matchingDataInt);
+
+
+  //購入処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
     const isPhoneValid = validatePhone();
@@ -179,36 +218,72 @@ const PurchaseConfirmation = () => {
     const isNameValid = validateName();
 
     if (isPhoneValid && isAddressValid && isNameValid) {
-        const data = {
-          price: allPrice,
-          orderedAt: new Date(),
-          user_id: Number(userCookieData),
-          carts: cart,
-        };
+      const data = {
+        price: allPrice,
+        orderedAt: new Date(),
+        user_id: Number(userCookieData),
+        carts: cart,
+      };
 
-        const response = await fetch("http://localhost:8000/orders", {
-          method: "POST",
-          body: JSON.stringify(data),
+      const response = await fetch("http://localhost:8000/orders", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+      console.log(responseData, "dataaaa");
+      const res: any = await fetch(
+        `http://localhost:8000/cartstate/${Number(id)}`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-        });
-        const responseData = await response.json();
-        const res: any = await fetch(`http://localhost:8000/cartdata/${Number(id)}`, {
-          method: "DELETE",
+          body: JSON.stringify({
+            state: false,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result = await res.json();
+      console.log("///state変更完了///", result);
+      //購入したID
+      const res2: any = await fetch(
+        `http://localhost:8000/itemstate/${userCookieData}`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-        }).catch((err) => {
-          console.log(err, "エラー2");
-        });
-        const result = await res.json();
-        console.log("///削除///", result);
-        setCart(cart.filter((item: Items) => item.id !== id));
-        alert("購入が完了しました");
-        navigate("/");
+          body: JSON.stringify({
+            state: false,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result2 = await res2.json();
+      console.log("///state2変更完了///", result2);
+      setCart(cart.filter((item: Items) => item.id !== id));
+      alert("購入が完了しました");
+      navigate("/");
     }
   };
+
+  const cartState: any =
+    cart.length >= 1 &&
+    cart.filter((item) => {
+      return item.state === true;
+    });
+
+    const allPrice =
+    cartState.length >= 1 &&
+    cartState.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
+
+  console.log(cartState);
 
   return (
     <>
@@ -222,9 +297,9 @@ const PurchaseConfirmation = () => {
               <TableCell align="center">金額</TableCell>
             </TableRow>
           </TableHead>
-          {cart.length >= 1 && (
+          {cartState.length >= 1 && (
             <TableBody>
-              {cart.map((item: CartType) => {
+              {cartState.map((item: CartType) => {
                 return (
                   <TableRow key={item.id}>
                     <TableCell sx={{ display: "flex", alignItems: "center" }}>

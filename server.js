@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8000;
 const prisma = new PrismaClient();
 
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 
 app.use(
@@ -102,6 +102,7 @@ app.post("/items", async (req, res) => {
     user_id,
     size_id,
     shopping_price,
+    state,
   } = req.body;
   const item = await prisma.items.create({
     data: {
@@ -117,6 +118,7 @@ app.post("/items", async (req, res) => {
       user_id,
       size_id,
       shopping_price,
+      state,
     },
   });
   return res.json(item);
@@ -289,8 +291,17 @@ app.get("/cart/:user_id", async (req, res) => {
 });
 
 app.post("/cart", async (req, res) => {
-  const { name, price, image, cart_date, category, user_id, product_id } =
-    req.body;
+  const {
+    name,
+    price,
+    image,
+    cart_date,
+    category,
+    user_id,
+    product_id,
+    orderId,
+    state,
+  } = req.body;
   const cartData = await prisma.cart.create({
     data: {
       name,
@@ -300,9 +311,61 @@ app.post("/cart", async (req, res) => {
       category,
       user_id,
       product_id,
+      orderId,
+      state,
     },
   });
   return res.json(cartData);
+});
+
+app.put("/cartstate/:user_id", async (req, res) => {
+  const { state } = req.body;
+  const user_id = req.params.user_id;
+  const cartData = await prisma.cart.updateMany({
+    where: {
+      user_id: Number(user_id),
+    },
+    data: { state: state },
+  });
+  return res.json(cartData);
+});
+app.put("/itemstate/:order_id", async (req, res) => {
+  const order_id = parseInt(req.params.order_id);
+  try {
+    const itemData = await prisma.items.updateMany({
+      where: {
+        order_id: {
+          in: [order_id],
+        },
+      },
+      data: {
+        state: false, // stateフィールドをfalseに変更
+      },
+    });
+    return res.json(itemData);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Internal Server Error");
+  }
+});
+app.put("/orderitems/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const order_id = parseInt(req.body.order_id);
+
+  try {
+    const itemData = await prisma.items.updateMany({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        order_id: Number(order_id),
+      },
+    });
+    return res.json(itemData);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Internal Server Error");
+  }
 });
 
 app.delete("/cart/:id", async (req, res) => {
@@ -314,29 +377,27 @@ app.delete("/cart/:id", async (req, res) => {
   });
   return res.json(cart);
 });
-app.delete("/cartdata/:user_id", async (req, res) => {
-  const user_id = req.params.user_id;
-  const cart = await prisma.cart.deleteMany({
-    where: {
-      user_id: Number(user_id),
-    },
-  });
-  return res.json(cart);
-});
 
 //order
 app.post("/orders", async (req, res) => {
-  const { price, user_id, carts } = req.body;
+  const { price, user_id, carts, cartId } = req.body;
   const order = await prisma.order.create({
     data: {
       price,
       user_id,
       carts: {
-        connect: carts&&carts.map((cart) => ({ id: cart.id })),
+        connect: carts && carts.map((cart) => ({ id: cart.id })),
       },
     },
     include: { carts: true },
   });
   return res.json(order);
 });
-
+app.get("/orders", async (req, res) => {
+  const order = await prisma.order.findMany({
+    include: {
+      carts: true,
+    },
+  });
+  return res.json(order);
+});

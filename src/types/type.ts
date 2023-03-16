@@ -1,6 +1,7 @@
 import { Theme } from "@mui/material";
 import React from "react";
 
+
 export type Address = {
   address1?: string;
   address2?: string;
@@ -30,6 +31,7 @@ export type Items = {
   product_brand?: string;
   product_days?: string;
   category?: string;
+  state?: boolean;
 };
 
 export type Users = {
@@ -80,22 +82,31 @@ export type Likes = {
   price: number;
   user_id?: number;
   like_date: Date;
-  product_id?:number;
+  product_id?: number;
   category?: string;
   image?: string;
 };
 
-export type CartType ={
+export type CartType = {
   map: any;
   id: number;
   name: string;
   price: number;
   user_id?: number;
   cart_date: Date;
-  product_id?:number;
+  product_id?: number;
   category?: string;
   image?: string;
-}
+  state: boolean;
+};
+
+export type Orders = {
+  price: number;
+  id: number;
+  user_id: number;
+  orderedAt: Date;
+  carts: CartType[];
+};
 
 // export type VaridateProps = {
 //   nameError: string;
