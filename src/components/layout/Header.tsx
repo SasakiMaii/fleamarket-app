@@ -125,7 +125,7 @@ function Header() {
           >
             FURIMA
           </Typography>
-            {userCookieData===1&&
+            {userCookieData&&
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -185,7 +185,7 @@ function Header() {
           >
             FURIMA
           </Typography>
-          {userCookieData===1&&
+          {userCookieData&&
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -200,7 +200,7 @@ function Header() {
           </Box>
 }
 
-            {userCookieData===1&&
+            {userCookieData&&
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

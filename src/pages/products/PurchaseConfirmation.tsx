@@ -24,7 +24,7 @@ import LastNameInput from "../../components/form/LastNameInput";
 import PhoneInput from "../../components/form/PhoneInput";
 import PostalCodeinput from "../../components/form/PostalCodeinput";
 import { useNavigate, useParams } from "react-router-dom";
-// import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
+import CheckoutForm from "../../components/cart-form/CheckoutForm";
 
 const PurchaseConfirmation = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
@@ -44,6 +44,7 @@ const PurchaseConfirmation = () => {
   const [user, setUser] = useState<any>([]);
   const [nameError, setNameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [selectedError, setSelectedError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [items, setItems] = useState<Items[]>([]);
 
@@ -165,6 +166,16 @@ const PurchaseConfirmation = () => {
     setNameError("");
     return true;
   };
+  //支払い方法
+  const validatePayment = () => {
+    if (!selectedOption) {
+      setSelectedError("*支払い方法を選択してください");
+
+      return false;
+    }
+    setSelectedError("");
+    return true;
+  };
   //住所バリデーション
   const validateAddress = () => {
     if (
@@ -209,15 +220,21 @@ const PurchaseConfirmation = () => {
 
   console.log(matchingDataInt);
 
-
   //購入処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
     const isPhoneValid = validatePhone();
     const isAddressValid = validateAddress();
     const isNameValid = validateName();
+    const isPayment = validatePayment();
 
-    if (isPhoneValid && isAddressValid && isNameValid) {
+    if (
+      isPhoneValid &&
+      isAddressValid &&
+      isNameValid &&
+      isPayment &&
+      selectedError === "コンビニ払い"
+    ) {
       const data = {
         price: allPrice,
         orderedAt: new Date(),
@@ -270,6 +287,8 @@ const PurchaseConfirmation = () => {
       setCart(cart.filter((item: Items) => item.id !== id));
       alert("購入が完了しました");
       navigate("/");
+    } else if (selectedOption === "クレジットカード払い") {
+      navigate("/creditpayment");
     }
   };
 
@@ -279,11 +298,12 @@ const PurchaseConfirmation = () => {
       return item.state === true;
     });
 
-    const allPrice =
+  const allPrice =
     cartState.length >= 1 &&
     cartState.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
 
   console.log(cartState);
+  console.log(selectedOption);
 
   return (
     <>
@@ -344,6 +364,9 @@ const PurchaseConfirmation = () => {
           <Divider sx={{ marginTop: 5, fontWeight: "bold" }}>
             支払い方法
           </Divider>
+          {selectedError && (
+            <p style={{ color: "red", fontSize: 13 }}>{selectedError}</p>
+          )}
           <PaymentMethods
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
@@ -361,11 +384,10 @@ const PurchaseConfirmation = () => {
               width: 500,
               m: "auto",
               mt: 1,
-              color: "red",
-              fontSize: "10px",
+              fontSize: "12px",
             }}
           >
-            *配送先が登録と別住所の場合は入力内容を変更してください。入力内容に間違いがないか確認してください
+            *配送先が登録と別住所の場合は入力内容を変更してください。
           </Box>
 
           <Box>

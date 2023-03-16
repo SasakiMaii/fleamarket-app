@@ -133,6 +133,7 @@ const ProductRegistration = () => {
             user_id: Number(userCookieData),
             size_id: 1,
             shopping_price: 1,
+            state:true,
           }),
           headers: {
             "Content-Type": "application/json",

@@ -4,7 +4,8 @@ import cors from "cors";
 import session from "express-session";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
-
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51MlMrOB3V27vlWJWjqJoBgQdgjk93ZRwHxWPKLZAFmyUB6hR3e0fAlPY5WUqHvYzkiVgyzfBEst7g0qLdbkSaIHA00fZiCTxDf');
 const sessionId = uuidv4();
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -26,6 +27,26 @@ app.use(
 app.listen(PORT, () => {
   console.log("サーバーが起動中・・・");
 });
+
+
+//stripe
+
+app.post("/create-payment-intent", async (req, res) => {
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 2000,
+    currency: "jpy",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.json({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
 
 async function authenticateUser(email, password) {
   const user = await prisma.users.findUnique({ where: { email } });
