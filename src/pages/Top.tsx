@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Items, Users } from "../types/type";
+import { CartType, Items, Users } from "../types/type";
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { SessionContext } from "../App";
@@ -16,6 +16,7 @@ const Top = () => {
   const [userCookie, setUserCookie] = useState<Users[]>([]);
   const [user, setUser] = useState<Users[]>([]);
   const { session, setSession } = useContext(SessionContext);
+  const [cart, setCart] = useState<CartType[]>([]);
 
   //cookie復号
   const cookieData = document.cookie
@@ -35,6 +36,32 @@ const Top = () => {
     }
   }, []);
 
+  //ログイン中ユーザのカートの中身
+  useEffect(() => {
+    async function fetchCart() {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/cart/${userCookie}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setCart(
+          data[Number(userCookie)] === undefined
+            ? []
+            : data[Number(userCookie)]
+        );
+        console.log(data[Number(userCookie)]);
+      } catch (err) {
+        console.log("エラー", err);
+      }
+    }
+    if (userCookie) {
+      fetchCart();
+    }
+  }, [userCookie]);
+
+  console.log(cart);
+
 //Item情報
   useEffect(() => {
     (async () => {
@@ -45,6 +72,8 @@ const Top = () => {
   }, []);
 
   console.log(items, "item");
+
+
 
 //user情報
   useEffect(() => {
@@ -67,6 +96,11 @@ const Top = () => {
   })
 console.log(userMutch)
 
+const cartState=cart.length>=1&&cart.filter((item)=>{
+  return item.state===false
+})
+
+console.log(cartState)
 
   return (
     <Box sx={{backgroundImage:"url(../public/TopImage.png)",}}>
@@ -115,7 +149,7 @@ console.log(userMutch)
                         backgroundSize: 110,
                       }}
                       image={item.image}
-                    />
+                      />
                     <CardContent sx={{ flex: "1" }}>
                       <Typography
                         gutterBottom
@@ -124,17 +158,34 @@ console.log(userMutch)
                       >
                         {item.name}
                       </Typography>
-                      <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        sx={{ backgroundColor: "#e7e7eb",borderRadius:3,p:1 }}
-                      >
-                        ¥{item.price?.toLocaleString()}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </NavLink>
+                      {item.state===false ? (
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    backgroundColor: "#fff",
+                    borderBlockColor:"#000",
+                    borderRadius: 3,
+                    p: 1,
+                    color: "#ff0000",
+                  }}
+                >
+                  SOLD
+                </Typography>
+              ) : (
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  component="div"
+                  sx={{ backgroundColor: "#e7e7eb", borderRadius: 3, p: 1 }}
+                >
+                  ¥{item.price?.toLocaleString()}
+                </Typography>
+              )}
+            </CardContent>
+          </Card>
+        </NavLink>
               </div>
             </Box>
           );
@@ -142,6 +193,6 @@ console.log(userMutch)
       </Box>
     </Box>
   );
-};
+    };
 
 export default Top;

@@ -39,6 +39,7 @@ const Cart = () => {
   }, []);
   console.log(userCookieData);
 
+//ログイン中ユーザのカートの中身
   useEffect(() => {
     async function fetchCart() {
       try {
@@ -64,10 +65,6 @@ const Cart = () => {
 
   console.log(cart);
 
-  const allPrice =
-    cart.length >= 1 &&
-    cart.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
-
   //カートに入っているアイテムの削除
   const onCartItemDelete = async (id: number | undefined) => {
     const res: any = await fetch(`http://localhost:8000/cart/${Number(id)}`, {
@@ -85,7 +82,19 @@ const Cart = () => {
 
   const onPurchaseConfirm=()=>{
     navigate(`/purchaseconfirmation/${userCookieData}`)
+    window.location.reload()
   }
+
+  
+  //売り切れじゃない商品
+  const cartState:any=cart.length>=1&&cart.filter((item)=>{
+    return item.state===true
+  })
+  const allPrice =
+  cartState.length >= 1 &&
+  cartState.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
+
+  console.log(cartState)
 
   return (
     <Box mt={10}>
@@ -105,7 +114,7 @@ const Cart = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cart.map((item: CartType) => {
+                {cartState.map((item: CartType) => {
                   return (
                     <TableRow key={item.id}>
                       <TableCell sx={{ display: "flex", alignItems: "center" }}>

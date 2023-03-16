@@ -41,6 +41,8 @@ model Items {
   product_brand  String?
   product_days   String?
   category       String?
+  state Boolean?
+  order_id Int?
 }
 
 model Likes {
@@ -65,6 +67,7 @@ model Cart {
   product_id Int?
   order      Order?    @relation("OrderToCart", fields: [orderId], references: [id])
   orderId    Int?
+  state Boolean?
 }
 
 model Order {
@@ -74,3 +77,7 @@ model Order {
   orderedAt DateTime @default(now())
   carts     Cart[]   @relation("OrderToCart")
 }
+
+
+
+

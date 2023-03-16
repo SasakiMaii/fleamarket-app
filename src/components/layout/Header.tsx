@@ -25,7 +25,7 @@ import { Link } from "@mui/material";
 const pages = [
   { id: 1, category: "出品" },
   { id: 2, category: "いいね一覧" },
-  { id: 3, category: "購入履歴・出品履歴" },
+  { id: 3, category: "購入履歴" },
   { id: 4, category: "カート" },
 ];
 const settings = [

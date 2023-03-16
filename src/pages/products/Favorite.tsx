@@ -96,12 +96,29 @@ const Favorite = () => {
           user_id: Number(userCookieData),
           category: "",
           product_id: like.product_id,
+          state:true
         }),
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await res.json();
+      const res2: any = await fetch(
+        `http://localhost:8000/orderitems/${Number(like.product_id)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order_id:userCookieData,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result2 = await res2.json();
+      console.log("///state2変更完了///", result2);
       window.location.reload();
       console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
       deleteLikes(like)

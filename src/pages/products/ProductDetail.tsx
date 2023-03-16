@@ -19,6 +19,7 @@ import CryptoJS from "crypto-js";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Card from '@mui/material/Card';
 
+
 const ProductDetail = () => {
   const [detailItems, setDetailItems] = useState<Items[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -240,12 +241,29 @@ const ProductDetail = () => {
           user_id: Number(userCookieData),
           category: "",
           product_id: detailItems[0].id,
+          state:true
         }),
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await res.json();
+      const res2: any = await fetch(
+        `http://localhost:8000/orderitems/${Number(detailItems[0].id)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order_id:userCookieData,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result2 = await res2.json();
+      console.log("///state2変更完了///", result2);
       window.location.reload()
       console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
     }
@@ -368,3 +386,5 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+
