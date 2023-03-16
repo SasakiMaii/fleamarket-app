@@ -84,11 +84,7 @@ const Histry = () => {
                     </ListItem>
                   </Link>
                 </Box>
-                <Box sx={{ width: 200, ml: 5 }}>
-                  <ListItem>
-                    <ListItemText>¥{order.price}</ListItemText>
-                  </ListItem>
-                </Box>
+
                 <Button
                   sx={{ width: 200, fontWeight: "bold" }}
                   onClick={() => console.log(`write a review for ${order.id}`)}

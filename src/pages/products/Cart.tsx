@@ -66,7 +66,7 @@ const Cart = () => {
   console.log(cart);
 
   //カートに入っているアイテムの削除
-  const onCartItemDelete = async (id: number | undefined) => {
+  const onCartItemDelete = async (id: number | undefined,cartProductId:number|undefined) => {
     const res: any = await fetch(`http://localhost:8000/cart/${Number(id)}`, {
       method: "DELETE",
       headers: {
@@ -77,6 +77,22 @@ const Cart = () => {
     });
     const data = await res.json();
     console.log("削除", data);
+    const res2: any = await fetch(
+      `http://localhost:8000/orderitems/${cartProductId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order_id:0,
+        }),
+      }
+    ).catch((err) => {
+      console.log(err, "エラー2");
+    });
+    const result2 = await res2.json();
+    console.log("///res2変更完了///", result2);
     setCart(cart.filter((item: Items) => item.id !== id));
   };
 
@@ -98,7 +114,7 @@ const Cart = () => {
 
   return (
     <Box mt={10}>
-      {cart.length >= 1 ? (
+      {cartState.length >= 1 ? (
         <>
           <Box sx={{ borderBottom: 1 }}>カートの確認</Box>
           <TableContainer component={Paper} sx={{ marginTop: 5 }}>
@@ -114,33 +130,33 @@ const Cart = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cartState.map((item: CartType) => {
+                {cartState.map((cart: CartType) => {
                   return (
-                    <TableRow key={item.id}>
+                    <TableRow key={cart.id}>
                       <TableCell sx={{ display: "flex", alignItems: "center" }}>
                         <Link
-                          href={`/productdetail/${Number(item.product_id)}`}
+                          href={`/productdetail/${Number(cart.product_id)}`}
                           sx={{ mr: 2 }}
                         >
                           <img
                             width={100}
                             height={100}
-                            src={item.image}
-                            alt={item.name}
+                            src={cart.image}
+                            alt={cart.name}
                           />
                         </Link>
                         <Link
-                          href={`/productdetail/${Number(item.product_id)}`}
+                          href={`/productdetail/${Number(cart.product_id)}`}
                           sx={{ width: 200 }}
                         >
-                          {item.name}
+                          {cart.name}
                         </Link>
                       </TableCell>
                       <TableCell align="right">
-                        ¥ {item.price?.toLocaleString()}
+                        ¥ {cart.price?.toLocaleString()}
                       </TableCell>
                       <TableCell align="right">
-                        <Button onClick={() => onCartItemDelete(item.id)}>
+                        <Button onClick={() => onCartItemDelete(cart.id,cart.product_id)}>
                           削除
                         </Button>
                       </TableCell>

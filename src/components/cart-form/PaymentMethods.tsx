@@ -3,8 +3,8 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 
 const options = [
-  { value: 'クレジットカード', label: 'クレジットカード' },
-  { value: 'コンビニ払い', label: 'コンビニ払い (手数料300円別途負担)' },
+  { value: 'クレジットカード払い', label: 'クレジットカード払い' },
+  { value: 'コンビニ払い', label: 'コンビニ払い' },
 ];
 
 type PaymentMethodsProps={
