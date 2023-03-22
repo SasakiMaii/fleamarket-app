@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Items, Users, Likes, CartType } from "../../types/type";
+import { Items, Users, Likes, CartType, CommentType } from "../../types/type";
 import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -28,6 +28,7 @@ const ProductDetail = () => {
   const [userCookieData, setUserCookieData] = React.useState<any>([]);
   const [likeItems, setLikeItems] = useState<Likes[]>([]);
   const [cartItems, setCartItems] = useState<CartType[]>([]);
+  const [comment, setComment] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -268,6 +269,26 @@ const ProductDetail = () => {
       console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
     }
   };
+  console.log(comment,"コメント")
+
+  const onCommentSending=async()=>{
+
+    if(comment){
+      const res=await fetch(`http://localhost:8000/comment`,{
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment:comment,
+        createdAt:now,
+        user_id:Number(userCookieData),
+        product_id:Number(detailItems[0].id)
+      }),
+    })
+    const data=await res.json()
+    console.log(data,"成功")
+  }}
 
   return (
     <Box mt={8} sx={{ textAlign: "center", maxWidth: 900 }}>
@@ -380,7 +401,8 @@ const ProductDetail = () => {
           </Button>
         </Box>
       ))}
-      <Comment />
+      <Box>出品者情報</Box>
+      <Comment comment={comment} setComment={setComment} onCommmentSending={onCommentSending}/>
     </Box>
   );
 };

@@ -1,9 +1,13 @@
-import React from 'react'
+import { Box, Link } from "@mui/material";
+import React from "react";
 
 const PaymentCompletion = () => {
   return (
-    <div>PaymentCompletion</div>
-  )
-}
+    <>
+      <Box m={5}>ご購入ありがとうございました🎉</Box>
+      <Link href="/">TOPへ戻る</Link>
+    </>
+  );
+};
 
-export default PaymentCompletion
+export default PaymentCompletion;

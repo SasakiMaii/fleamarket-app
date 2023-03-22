@@ -67,18 +67,18 @@ const Histry = () => {
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor: "#e7e7eb",
-                  maxWidth: "80%",
+                  maxWidth: "100%",
                   margin: "auto",
                   mb: 5,
                 }}
               >
-                <Box sx={{ p: 2 }}>{order.orderedAt.toLocaleDateString()}</Box>
-                <Box sx={{ width: 500 }}>
+                <Box sx={{ p: 2 ,width:100}}>{order.orderedAt.toLocaleDateString()}</Box>
+                <Box sx={{ width: 400 }}>
                   <Link href={`productdetail/${cart.product_id}`}>
-                    <ListItem>
-                      <ListItemText>{cart.name}</ListItemText>
+                    <ListItem >
+                      <ListItemText sx={{textAlign:"center"}}>{cart.name}</ListItemText>
                       <CardMedia
-                        sx={{ height: 100, width: 100 }}
+                        sx={{ height: 100, width: 100,ml:1}}
                         image={cart.image}
                       />
                     </ListItem>
@@ -86,7 +86,7 @@ const Histry = () => {
                 </Box>
 
                 <Button
-                  sx={{ width: 200, fontWeight: "bold" }}
+                  sx={{ width: 400, fontWeight: "bold" }}
                   onClick={() => console.log(`write a review for ${order.id}`)}
                 >
                   レビューを書く

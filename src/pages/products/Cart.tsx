@@ -17,8 +17,7 @@ const Cart = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [cart, setCart] = useState<CartType[]>([]);
   const navigate=useNavigate()
-  const location = useLocation();
-  const itemData = location.state;
+
 
   //cookieのuserIDを復号して取得
   useEffect(() => {
