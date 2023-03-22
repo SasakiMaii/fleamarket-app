@@ -11,7 +11,7 @@ export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [email, setEmail] = useState("");
+ 
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,6 +48,7 @@ export default function CheckoutForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    console.log("aaa")
 
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
@@ -61,9 +62,10 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "/paymentcompletion",
+        return_url: "http://127.0.0.1:5173/paymentcompletion",
       },
     });
+    console.log(error)
 
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
@@ -81,13 +83,7 @@ export default function CheckoutForm() {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <Button
-        sx={{    mt: 5,
-          backgroundColor: "#2a83a2",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#84b9cb",
-          },}}
+      <button style={{marginTop:"20px"}}
         disabled={isLoading || !stripe || !elements}
         id="submit"
       >
@@ -98,9 +94,10 @@ export default function CheckoutForm() {
             "決済する"
           )}
         </span>
-      </Button>
+      </button>
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
   );
 }
+

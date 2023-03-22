@@ -14,20 +14,17 @@ import ErrPage from "./pages/404";
 import Header from "./components/layout/Header";
 import React, { createContext, useContext, useState } from "react";
 import { Session, SessionContextType, SessionContextValue, Users } from "./types/type";
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
 import CreditPayment from "./pages/products/CreditPayment";
 import PaymentCompletion from "./pages/products/PaymentCompletion";
 
-const stripePromise = loadStripe('pk_test_51MlMrOB3V27vlWJWlPWsfkQet7REEO553Sw8PKjllmqPucZZvoUBUrY9YzqykxH6HQRhshMUc8s0lF684DJJjKDt00P4HYw7xz');
 
 
-export const SessionContext = React.createContext<SessionContextType>({
-  session: { isLoggedIn: false, user: null },
-  setSession: () => {},
-});
+// export const SessionContext = React.createContext<SessionContextType>({
+//   session: { isLoggedIn: false, user: null },
+//   setSession: () => {},
+// });
 
-export const useSession = (): SessionContextValue => useContext(SessionContext);
+// export const useSession = (): SessionContextValue => useContext(SessionContext);
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -48,7 +45,7 @@ function App() {
   return (
     <>
       <Router>
-        <SessionContext.Provider value={{ session, setSession }}>
+        {/* <SessionContext.Provider value={{ session, setSession }}> */}
           <Header />
           <Routes>
             <Route path="/" element={<Top />}></Route>
@@ -74,7 +71,7 @@ function App() {
             ></Route>
             <Route path="*" element={<ErrPage />}></Route>
           </Routes>
-        </SessionContext.Provider>
+        {/* </SessionContext.Provider> */}
       </Router>
     </>
   );

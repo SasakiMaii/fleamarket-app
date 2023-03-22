@@ -232,9 +232,10 @@ const PurchaseConfirmation = () => {
       isPhoneValid &&
       isAddressValid &&
       isNameValid &&
-      isPayment &&
-      selectedError === "コンビニ払い"
+      isPayment&&
+      selectedOption==="コンビニ払い"
     ) {
+       console.log("a")
       const data = {
         price: allPrice,
         orderedAt: new Date(),
@@ -285,10 +286,59 @@ const PurchaseConfirmation = () => {
       const result2 = await res2.json();
       console.log("///state2変更完了///", result2);
       setCart(cart.filter((item: Items) => item.id !== id));
-      alert("購入が完了しました");
-      navigate("/");
+      navigate("/paymentcompletion");
     } else if (selectedOption === "クレジットカード払い") {
-      navigate("/creditpayment");
+      const data = {
+        price: allPrice,
+        orderedAt: new Date(),
+        user_id: Number(userCookieData),
+        carts: cart,
+      };
+
+      const response = await fetch("http://localhost:8000/orders", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+      console.log(responseData, "dataaaa");
+      const res: any = await fetch(
+        `http://localhost:8000/cartstate/${Number(id)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: false,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result = await res.json();
+      console.log("///state変更完了///", result);
+      //購入したID
+      const res2: any = await fetch(
+        `http://localhost:8000/itemstate/${userCookieData}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: false,
+          }),
+        }
+      ).catch((err) => {
+        console.log(err, "エラー2");
+      });
+      const result2 = await res2.json();
+      console.log("///state2変更完了///", result2);
+      setCart(cart.filter((item: Items) => item.id !== id));
+      navigate("/creditpayment",{state:allPrice});
     }
   };
 

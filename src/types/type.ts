@@ -108,6 +108,12 @@ export type Orders = {
   carts: CartType[];
 };
 
+export type CommentType={
+  id:number;
+  createdAt:Date;
+  comment:String;
+}
+
 // export type VaridateProps = {
 //   nameError: string;
 //   setNameError: Dispatch<SetStateAction<string>>;

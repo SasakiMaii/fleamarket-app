@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { CartType, Items, Users } from "../types/type";
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
-import { SessionContext } from "../App";
+// import { SessionContext } from "../App";
 import { secretKey } from "./users/Login";
 import CryptoJS from "crypto-js";
 
@@ -15,7 +15,7 @@ const Top = () => {
   const [items, setItems] = useState<Items[]>([]);
   const [userCookie, setUserCookie] = useState<Users[]>([]);
   const [user, setUser] = useState<Users[]>([]);
-  const { session, setSession } = useContext(SessionContext);
+  // const { session, setSession } = useContext(SessionContext);
   const [cart, setCart] = useState<CartType[]>([]);
 
   //cookie復号
@@ -46,9 +46,7 @@ const Top = () => {
         const data = await response.json();
         console.log(data);
         setCart(
-          data[Number(userCookie)] === undefined
-            ? []
-            : data[Number(userCookie)]
+          data[Number(userCookie)] === undefined ? [] : data[Number(userCookie)]
         );
         console.log(data[Number(userCookie)]);
       } catch (err) {
@@ -62,7 +60,7 @@ const Top = () => {
 
   console.log(cart);
 
-//Item情報
+  //Item情報
   useEffect(() => {
     (async () => {
       const res = await fetch("http://localhost:8000/items");
@@ -73,11 +71,9 @@ const Top = () => {
 
   console.log(items, "item");
 
-
-
-//user情報
+  //user情報
   useEffect(() => {
-    ( async() => {
+    (async () => {
       try {
         const response = await fetch(
           `http://localhost:8000/user/${userCookie}`
@@ -91,23 +87,29 @@ const Top = () => {
     })();
   }, []);
 
-  const userMutch =user.filter(data=>{
-    return data.id===Number(userCookie)
-  })
-console.log(userMutch)
+  const userMutch = user.filter((data) => {
+    return data.id === Number(userCookie);
+  });
+  console.log(userMutch);
 
-const cartState=cart.length>=1&&cart.filter((item)=>{
-  return item.state===false
-})
+  const cartState =
+    cart.length >= 1 &&
+    cart.filter((item) => {
+      return item.state === false;
+    });
 
-console.log(cartState)
+  console.log(cartState);
 
   return (
-    <Box sx={{backgroundImage:"url(../public/TopImage.png)",}}>
+    <Box sx={{ backgroundImage: "url(../public/TopImage.png)" }}>
       {document.cookie ? (
-        <Box mt={8} mb={5} pt={5} >
+        <Box mt={8} mb={5} pt={5}>
           {userMutch.length === 1 &&
-            userMutch.map((data) => <Box key={data.id}>{data.nick_name?data.nick_name:data.first_name}さんようこそ</Box>)}
+            userMutch.map((data) => (
+              <Box key={data.id}>
+                {data.nick_name ? data.nick_name : data.first_name}さんようこそ
+              </Box>
+            ))}
         </Box>
       ) : (
         <Box mt={10} mb={5}>
@@ -137,55 +139,52 @@ console.log(cartState)
                   <Card
                     sx={{
                       maxWidth: 200,
-                      display: "flex",
+                      p:2,
                       alignItems: "center",
                     }}
                   >
                     <CardMedia
                       sx={{
-                        height: 180,
+                        height: 110,
                         width: "100%",
                         flex: "1",
-                        backgroundSize: 110,
+                        backgroundSize: 200,
                       }}
                       image={item.image}
-                      />
-                    <CardContent sx={{ flex: "1" }}>
-                      <Typography
-                        gutterBottom
-                        component="div"
-                        sx={{ fontSize: 12, mb: 1,fontWeight:"bold" }}
+                    />
+                    {/* <CardContent sx={{ flex: "1" }}> */}
+                      <Box
+                        sx={{ fontSize: 12, mb: 1, fontWeight: "bold",p:1 }}
                       >
                         {item.name}
-                      </Typography>
-                      {item.state===false ? (
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    backgroundColor: "#fff",
-                    borderBlockColor:"#000",
-                    borderRadius: 3,
-                    p: 1,
-                    color: "#ff0000",
-                  }}
-                >
-                  SOLD
-                </Typography>
-              ) : (
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  component="div"
-                  sx={{ backgroundColor: "#e7e7eb", borderRadius: 3, p: 1 }}
-                >
-                  ¥{item.price?.toLocaleString()}
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </NavLink>
+                      </Box>
+                      {item.state === false ? (
+                        <Box
+                          
+                          sx={{
+                            backgroundColor: "#fff",
+                            borderBlockColor: "#000",
+                            borderRadius: 3,
+                            p: 1,
+                            color: "#ff0000",
+                          }}
+                        >
+                          SOLD
+                        </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            backgroundColor: "#e7e7eb",
+                            borderRadius: 3,
+                            p: 1,
+                          }}
+                        >
+                          ¥{item.price?.toLocaleString()}
+                        </Box>
+                      )}
+                    {/* </CardContent> */}
+                  </Card>
+                </NavLink>
               </div>
             </Box>
           );
@@ -193,6 +192,6 @@ console.log(cartState)
       </Box>
     </Box>
   );
-    };
+};
 
 export default Top;

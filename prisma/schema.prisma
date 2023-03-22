@@ -78,6 +78,14 @@ model Order {
   carts     Cart[]   @relation("OrderToCart")
 }
 
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  comment String
+  user_id Int
+  product_id Int
+}
+
 
 
 

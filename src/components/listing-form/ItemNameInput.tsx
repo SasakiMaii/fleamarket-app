@@ -15,7 +15,7 @@ const ItemNameInput = (props: ItemNamePrps) => {
       <TextField
         type="text"
         id="itemName"
-        label="商品の名前"
+        label="商品の名前はこちらに12文字未満で入力してください"
         variant="standard"
         fullWidth
         required

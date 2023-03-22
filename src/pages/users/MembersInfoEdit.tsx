@@ -1,8 +1,8 @@
-import { Avatar, Box, Button, CardMedia, Link } from "@mui/material";
+import { Avatar, Box, Button, Card, CardMedia, Link } from "@mui/material";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import NickNameInput from "../../components/form/NickNameInput";
 import { useNavigate } from "react-router-dom";
-import { AddressResult, StylesProps, Users } from "../../types/type";
+import { AddressResult, StylesProps, Users, Items } from "../../types/type";
 import CryptoJS from "crypto-js";
 import { secretKey } from "./Login";
 import FirstNameInput from "../../components/form/FirstNameInput";
@@ -50,6 +50,7 @@ const MembersInfoEdit = () => {
   const [user, setUser] = useState<any>([]);
   const [itemImageName, setItemImageName] = useState<any>([]);
   const [userCookieData, setUserCookeData] = useState<any>([]);
+  const [items, setItems] = useState<Items[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -95,8 +96,18 @@ const MembersInfoEdit = () => {
       setUser(data);
     };
     fetchData();
-  }, [setUser]);
-  console.log(user);
+  }, [userCookieData]);
+
+  //出品したアイテムの表示
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`http://localhost:8000/item/${userCookieData}`);
+      const data = await res.json();
+      setItems(data);
+    };
+    fetchData();
+  }, [userCookieData]);
+  console.log(items);
 
   //郵便番号から住所取得するAPI
   const getZipCode = async () => {
@@ -133,6 +144,7 @@ const MembersInfoEdit = () => {
     setItemImageName([selectedFile]);
   };
 
+  console.log(items);
   //プロフィール写真削除
   const clearImage = () => {
     setItemImage("");
@@ -263,7 +275,44 @@ const MembersInfoEdit = () => {
               <Typography>出品した商品</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>￥</Typography>
+              <Box
+                display="flex"
+                justifyContent="center"
+                flexWrap="wrap"
+                alignItems="center"
+              >
+                {items.length >= 1 ? (
+                  items.map((item) => {
+                    return (
+                      <Card sx={{width:"180px", m:2 }}>
+                        <CardMedia
+                          sx={{
+                            height: 180,
+                            width: "100%",
+                            flex: "1",
+                            backgroundSize: 200,
+                          }}
+                          image={item.image}
+                        />
+                        <Box>{item.name}</Box>
+                        <Box>¥{item.price}</Box>
+                        <Button>出品を削除</Button>
+                      </Card>
+                    );
+                  })
+                ) : (
+                  <Box
+                    sx={{
+                      fontSize: "13px",
+                      m: "auto",
+                      textAlign: "center",
+                      pb: 2,
+                    }}
+                  >
+                    ＊出品した商品はありません＊
+                  </Box>
+                )}
+              </Box>
             </AccordionDetails>
           </Accordion>
           <Accordion>
@@ -287,7 +336,7 @@ const MembersInfoEdit = () => {
               <Typography>設定</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography></Typography>
+              <Button sx={{ textAlign: "center" }}>通知をオンにする</Button>
             </AccordionDetails>
           </Accordion>
         </Suspense>

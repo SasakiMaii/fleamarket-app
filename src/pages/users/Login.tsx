@@ -15,7 +15,7 @@ import { pink } from "@mui/material/colors";
 import { SessionContextType, Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { SessionContext } from "../../App";
+// import { SessionContext } from "../../App";
 import CryptoJS from "crypto-js";
 import { Cookie } from "@mui/icons-material";
 
@@ -33,8 +33,8 @@ const Login = (user: Users) => {
   const [err, setErr] = useState<string[]>([]);
   const [loginData, setLoginData] = useState<Users[]>([]);
   const navigate = useNavigate();
-  const { session, setSession } =
-    useContext<SessionContextType>(SessionContext);
+  // const { session, setSession } =
+  //   useContext<SessionContextType>(SessionContext);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { SessionContext } from "../../App";
+// import { SessionContext } from "../../App";
 import CryptoJS from "crypto-js";
 import { secretKey } from "../../pages/users/Login";
 import useState from "react";
@@ -42,7 +42,7 @@ function Header() {
   );
   const [userCookieData, setUserCookeData] = React.useState<any>([]);
   const navigate = useNavigate();
-  const { session, setSession } = useContext(SessionContext);
+  // const { session, setSession } = useContext(SessionContext);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -96,7 +96,7 @@ function Header() {
       window.location.reload()
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
-      setSession(null);
+      // setSession(null);
       navigate("/login");
     } else {
       setAnchorElUser(null);

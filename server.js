@@ -13,6 +13,7 @@ const prisma = new PrismaClient();
 
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
+app.use(express.static("public"));
 app.use(cors());
 
 app.use(
@@ -35,7 +36,7 @@ app.post("/create-payment-intent", async (req, res) => {
 
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: 2000,
+    amount: 1000,
     currency: "jpy",
     automatic_payment_methods: {
       enabled: true,
@@ -46,6 +47,8 @@ app.post("/create-payment-intent", async (req, res) => {
     clientSecret: paymentIntent.client_secret,
   });
 });
+
+app.listen(4242, () => console.log("Node server listening on port 4242!"));
 
 
 async function authenticateUser(email, password) {
@@ -109,6 +112,17 @@ app.get("/items/:id", async (req, res) => {
   return res.json(item);
 });
 
+app.get("/item/:user_id", async (req, res) => {
+  const user_id = parseInt(req.params.user_id);
+  const items= await prisma.items.findMany({
+    where: {
+      user_id: user_id,
+    },
+  });
+  return res.json(items);
+});
+
+
 app.post("/items", async (req, res) => {
   const {
     name,
@@ -143,6 +157,33 @@ app.post("/items", async (req, res) => {
     },
   });
   return res.json(item);
+});
+//comment
+app.get("/comment/:product_id", async (req, res) => {
+  const product_id = Number(req.params.product_id);
+  const comment = await prisma.comment.findMany({
+    where: {
+      product_id:Number(product_id)
+    },
+  });
+  return res.json(comment);
+});
+
+
+app.post("/comment", async (req, res) => {
+  const {
+    comment,
+    product_id,
+    user_id,
+  } = req.body;
+  const comments = await prisma.comment.create({
+    data: {
+      comment,
+      product_id,
+      user_id,
+    },
+  });
+  return res.json(comments);
 });
 
 //users
@@ -414,6 +455,7 @@ app.post("/orders", async (req, res) => {
   });
   return res.json(order);
 });
+
 app.get("/orders", async (req, res) => {
   const order = await prisma.order.findMany({
     include: {
