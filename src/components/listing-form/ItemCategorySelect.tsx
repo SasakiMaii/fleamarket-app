@@ -12,14 +12,14 @@ const ItemCategorySelect = (props: ItemCategoryProps) => {
 
   return (
     <Box>
-      <InputLabel id="category-label" sx={{ mb: 2 }}>
-        カテゴリー
+      <InputLabel id="category-label" sx={{ mb: 1,fontWeight:"bold" }}>
+        カテゴリー選択
       </InputLabel>
       <Select
         id="category"
         onChange={(e: SelectChangeEvent) => setItemCategory(e.target.value)}
         value={itemCategory}
-        sx={{ mb: 5 }}
+        sx={{ mb: 3,px:3,py:2,maxWidth:250,height:30,backgroundColor:"#fff" }}
         aria-labelledby="condition-label"
       >
         <MenuItem value="その他">その他</MenuItem>

@@ -1,5 +1,5 @@
 //rafce
-import * as React from "react";
+import React, { useState,useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,9 +18,8 @@ import { useContext } from "react";
 // import { SessionContext } from "../../App";
 import CryptoJS from "crypto-js";
 import { secretKey } from "../../pages/users/Login";
-import useState from "react";
 import { Users } from "../../types/type";
-import { Link } from "@mui/material";
+
 
 const pages = [
   { id: 1, category: "出品" },
@@ -40,6 +39,7 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const [users,setUsers]=useState<Users[]>([])
   const [userCookieData, setUserCookeData] = React.useState<any>([]);
   const navigate = useNavigate();
   // const { session, setSession } = useContext(SessionContext);
@@ -77,13 +77,10 @@ function Header() {
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       return decrypted;
     };
-    if (document.cookie) {
+    if (document.cookie.split(';').some((item) => item.trim().startsWith('data='))) {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
       setUserCookeData(Cookiedata);
-      // const idData=userCookieData.map((user:any)=>{
-      //   return user.id
-      // })
     }
   }, []);
    console.log(userCookieData)
@@ -103,8 +100,27 @@ function Header() {
     }
   };
 
+  useEffect(()=>{
+    (async()=>{
+      const res=await fetch(`http://localhost:8000/user`)
+      const data=await res.json()
+      setUsers(data)
+    })()
+  },[])
+
+  console.log(users)
+
+  const userData=users.filter((user)=>{
+    return(
+      user.id===Number(userCookieData)
+    )
+  })
+
+  console.log(userData)
+  console.log(userCookieData)
+
   return (
-    <AppBar sx={{backgroundColor:"#e198b4"}}>
+    <AppBar sx={{backgroundColor:"#F6813C"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <StorefrontIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -155,6 +171,7 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
+              
               {pages.map((page) => (
                 <MenuItem
                   key={page.id}
@@ -186,7 +203,6 @@ function Header() {
             FURIMA
           </Typography>
           {userCookieData&&
-
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -204,7 +220,17 @@ function Header() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                {userData.length>=1&&userData.map((user)=>{
+                  return(
+                    <>
+                    {
+                      user.image?
+                      <Avatar alt="Remy Sharp" src={user?.image} sx={{backgroundColor:"#fff"}} />:
+                      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    }
+                    </>
+                  )
+                })}
               </IconButton>
             </Tooltip>
             <Menu

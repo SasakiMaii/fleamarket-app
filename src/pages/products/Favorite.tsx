@@ -126,8 +126,9 @@ const Favorite = () => {
     }
   };
 
+  //ログインしているユーザがお気に入りしているもの
   const userId = likes.filter((like) => {
-    return like.user_id===userCookieData;
+    return like.user_id===Number(userCookieData);
   });
 
   console.log(typeof userId);
@@ -136,7 +137,7 @@ const Favorite = () => {
       <Box my={10} sx={{ fontSize: "23px" }}>
         お気に入りされた商品
       </Box>
-      {likes.length >= 1 && userId ? (
+      {userId.length >= 1 && userId ? (
         userId.map((like: Likes) => {
           return (
             <>

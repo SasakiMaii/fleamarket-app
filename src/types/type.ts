@@ -111,7 +111,18 @@ export type Orders = {
 export type CommentType={
   id:number;
   createdAt:Date;
+  user_id:number;
+  product_id:number;
   comment:String;
+  name:string;
+}
+export type Review={
+  id:number;
+  createdAt:Date;
+  user_id:number;
+  product_id:number;
+  comment:String;
+  rating:number;
 }
 
 // export type VaridateProps = {

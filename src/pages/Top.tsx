@@ -10,6 +10,7 @@ import { useContext } from "react";
 // import { SessionContext } from "../App";
 import { secretKey } from "./users/Login";
 import CryptoJS from "crypto-js";
+import CategorySearch from "../components/feature/CategorySearch";
 
 const Top = () => {
   const [items, setItems] = useState<Items[]>([]);
@@ -101,24 +102,33 @@ const Top = () => {
   console.log(cartState);
 
   return (
-    <Box sx={{ backgroundImage: "url(../public/TopImage.png)" }}>
-      {document.cookie ? (
-        <Box mt={8} mb={5} pt={5}>
+    <Box sx={{ backgroundImage: "url(../public/beig.jpeg)" }}>
+      {/* {document.cookie ? (
+        <Box mt={8} pt={5} mb={3}>
           {userMutch.length === 1 &&
             userMutch.map((data) => (
-              <Box key={data.id}>
-                {data.nick_name ? data.nick_name : data.first_name}さんようこそ
+              <Box
+                key={data.id}
+                sx={{ backgroundColor: "#fff", fontSize: "17px" }}
+              >
+                {data.nick_name ? data.nick_name : data.first_name}さん
+                &ensp;ようこそ
               </Box>
             ))}
         </Box>
       ) : (
-        <Box mt={10} mb={5}>
+        <Box mt={10}>
           現在ログインしていません
           <Link to={"/login"}>ログインページへ移動</Link>
         </Box>
-      )}
+      )} */}
+  <Box  sx={{ backgroundImage: "url(../public/fleamarket.png)",maxWidth:1500,height:200 }}>
+  &emsp;
+  </Box>
+      <Box sx={{ marginRight: 0, textAlign: "rigth",flex:"right" ,mt:7,pt:2,mb:3}}>
+        <CategorySearch />
+      </Box>
       <Box
-        mt={10}
         mb={5}
         sx={{ borderBottom: 1, fontWeight: "bold" }}
         textAlign="center"
@@ -139,7 +149,7 @@ const Top = () => {
                   <Card
                     sx={{
                       maxWidth: 200,
-                      p:2,
+                      p: 2,
                       alignItems: "center",
                     }}
                   >
@@ -153,35 +163,32 @@ const Top = () => {
                       image={item.image}
                     />
                     {/* <CardContent sx={{ flex: "1" }}> */}
+                    <Box sx={{ fontSize: 12, mb: 1, fontWeight: "bold", p: 1 }}>
+                      {item.name}
+                    </Box>
+                    {item.state === false ? (
                       <Box
-                        sx={{ fontSize: 12, mb: 1, fontWeight: "bold",p:1 }}
+                        sx={{
+                          backgroundColor: "#fff",
+                          borderBlockColor: "#000",
+                          borderRadius: 3,
+                          p: 1,
+                          color: "#ff0000",
+                        }}
                       >
-                        {item.name}
+                        SOLD
                       </Box>
-                      {item.state === false ? (
-                        <Box
-                          
-                          sx={{
-                            backgroundColor: "#fff",
-                            borderBlockColor: "#000",
-                            borderRadius: 3,
-                            p: 1,
-                            color: "#ff0000",
-                          }}
-                        >
-                          SOLD
-                        </Box>
-                      ) : (
-                        <Box
-                          sx={{
-                            backgroundColor: "#e7e7eb",
-                            borderRadius: 3,
-                            p: 1,
-                          }}
-                        >
-                          ¥{item.price?.toLocaleString()}
-                        </Box>
-                      )}
+                    ) : (
+                      <Box
+                        sx={{
+                          backgroundColor: "#e7e7eb",
+                          borderRadius: 3,
+                          p: 1,
+                        }}
+                      >
+                        ¥{item.price?.toLocaleString()}
+                      </Box>
+                    )}
                     {/* </CardContent> */}
                   </Card>
                 </NavLink>

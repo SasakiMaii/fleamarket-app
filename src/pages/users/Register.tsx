@@ -77,11 +77,11 @@ const Register = () => {
   const validateImage = () => {
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
     const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
-    if (itemImageName[0].size > imageSizeLimit) {
+    if (itemImageName[0]?.size > imageSizeLimit) {
       setImageError("*画像のサイズが大きいです");
       return false;
     }
-    if (!allowedImageTypes.includes(itemImageName[0].type)) {
+    if (!allowedImageTypes.includes(itemImageName[0]?.type)) {
       setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。");
       return false;
     }
