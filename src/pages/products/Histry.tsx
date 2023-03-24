@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import { Orders, Review } from "../../types/type";
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
+import { useParams } from 'react-router-dom';
 
 const Histry = () => {
   const [orders, setOrders] = useState<Orders[]>([]);
@@ -31,6 +32,7 @@ const Histry = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [review, setReview] = useState<Review[]>([]);
   const [productId, setProductId] = useState(0);
+  const {id}=useParams()
 
   //cookieのuserIDを復号して取得
   useEffect(() => {
@@ -53,7 +55,7 @@ const Histry = () => {
   //購入履歴を取得
   useEffect(() => {
     (async () => {
-      const res = await fetch("http://localhost:8000/orders");
+      const res = await fetch(`http://localhost:8000/orders/${id}`);
       const data = await res.json();
       const newOrders = data.map(
         (order: { orderedAt: string | number | Date }) => {
@@ -129,7 +131,7 @@ const Histry = () => {
       {orders.length >= 1 ? (
         orders.map((order) => (
           <Box key={order.id} sx={{maxWidth:900}}>
-            {order.carts.map((cart) => (
+            {order.carts && order.carts.map((cart) => (
               <List
                 key={cart.id}
                 sx={{
@@ -146,7 +148,7 @@ const Histry = () => {
                   {order.orderedAt.toLocaleDateString()}
                 </Box>
                 <Box sx={{ maxWidth: 400 }}>
-                  <Link href={`productdetail/${cart.product_id}`}>
+                  <Link href={`http://127.0.0.1:5173/productdetail/${cart.product_id}`}>
                     <ListItem>
                       <ListItemText sx={{ textAlign: "center" }}>
                         {cart.name}

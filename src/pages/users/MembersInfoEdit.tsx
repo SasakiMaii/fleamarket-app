@@ -146,6 +146,19 @@ const MembersInfoEdit = () => {
     setItemImage("");
   };
 
+    //出品商品を削除
+    const deleteItem = async (d:number|undefined) => {
+      const res = await fetch(`http://localhost:8000/items/${d}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log(data, "削除成功");
+      setItems(items.filter((item: Items) => item.id !== d));
+    };
+
   //更新
   const submitEdit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -292,7 +305,7 @@ const MembersInfoEdit = () => {
                         />
                         <Box>{item.name}</Box>
                         <Box>¥{item.price}</Box>
-                        <Button>出品を削除</Button>
+                        <Button onClick={()=>deleteItem(item.id)}>出品を削除</Button>
                       </Card>
                     );
                   })

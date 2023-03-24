@@ -101,8 +101,8 @@ app.get("/items", async (req, res) => {
   return res.json(item);
 });
 
-app.get("/items/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/items/:product_id", async (req, res) => {
+  const id = parseInt(req.params.product_id) ;
   const item = await prisma.items.findUnique({
     where: {
       id: Number(id),
@@ -165,6 +165,17 @@ app.post("/items", async (req, res) => {
   });
   return res.json(item);
 });
+
+app.delete("/items/:id", async (req, res) => {
+  const id = req.params.id;
+  const cart = await prisma.items.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  return res.json(cart);
+});
+
 //comment
 app.get("/comment", async (req, res) => {
   const comment = await prisma.comment.findMany();
@@ -456,6 +467,18 @@ app.post("/orders", async (req, res) => {
 
 app.get("/orders", async (req, res) => {
   const order = await prisma.order.findMany({
+    include: {
+      carts: true,
+    },
+  });
+  return res.json(order);
+});
+app.get("/orders/:user_id", async (req, res) => {
+  const user_id = parseInt(req.params.user_id);
+  const order = await prisma.order.findMany({
+    where: {
+      user_id: Number(user_id),
+    },
     include: {
       carts: true,
     },

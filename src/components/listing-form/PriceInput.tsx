@@ -11,7 +11,7 @@ const PriceInput = (props: PriceProps) => {
   const { price, setPrice } = props;
   return (
     <Box>
-      <InputLabel id="price-label">金額</InputLabel>
+      <InputLabel id="price-label"  sx={{mt:2,fontWeight:"bold"}}>金額</InputLabel>
       <TextField
         type="text"
         id="price"

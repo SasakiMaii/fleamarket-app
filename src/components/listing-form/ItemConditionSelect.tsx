@@ -11,14 +11,14 @@ const ItemConditionSelect = (props:ItemConditionProps) => {
   const {itemCondition,setItemCondition}=props
   return (
     <Box>
-       <InputLabel id="condition-label" sx={{ mb: 2 }}>
+       <InputLabel id="condition-label" sx={{ mb: 2 ,fontWeight:"bold"}}>
           商品の状態
         </InputLabel>
         <Select
           id="condition"
           onChange={(e: SelectChangeEvent) => setItemCondition(e.target.value)}
           value={itemCondition}
-          sx={{ mb: 5 }}
+          sx={{ mb: 5,backgroundColor:"#fffffc" }}
           aria-labelledby="condition-label"
         >
           <MenuItem value="新品未使用">新品未使用</MenuItem>

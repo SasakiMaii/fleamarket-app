@@ -24,14 +24,14 @@ const ItemImageSelect = (props: ItemImageProps) => {
   } = props;
   return (
     <Box mb={5}>
-      <InputLabel id="itemImage">{text}</InputLabel>
+      <InputLabel id="itemImage" sx={{mb:1,fontWeight:"bold"}}>{text}</InputLabel>
       <TextField
         type="file"
         id="itemImage"
         fullWidth
         required
         onChange={handleImageChange}
-        sx={{ mb: 4 }}
+        sx={{ mb: 4,backgroundColor:"#fffffc" }}
       />
       {itemImage && (
         <img width={200} height={200} src={itemImage} alt="uploaded image" />
