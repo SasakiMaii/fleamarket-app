@@ -41,8 +41,8 @@ model Items {
   product_brand  String?
   product_days   String?
   category       String?
-  state Boolean?
-  order_id Int?
+  state          Boolean?
+  order_id       Int?
 }
 
 model Likes {
@@ -67,7 +67,7 @@ model Cart {
   product_id Int?
   order      Order?    @relation("OrderToCart", fields: [orderId], references: [id])
   orderId    Int?
-  state Boolean?
+  state      Boolean?
 }
 
 model Order {
@@ -79,13 +79,19 @@ model Order {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  comment String
-  user_id Int
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  comment    String
+  user_id    Int
   product_id Int
+  name       String?
 }
 
-
-
-
+model Review {
+  id         Int      @id @default(autoincrement())
+  comment    String?
+  createdAt  DateTime @default(now())
+  rating     Int
+  user_id    Int
+  product_id Int
+}

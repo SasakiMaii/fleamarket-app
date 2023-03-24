@@ -117,7 +117,7 @@ const Cart = () => {
         <>
           <Box sx={{ borderBottom: 1 }}>カートの確認</Box>
           <TableContainer component={Paper} sx={{ marginTop: 5 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="spanning table">
+            <Table sx={{ maxWidth: 650 }} aria-label="spanning table">
               <TableHead>
                 <TableRow sx={{ borderBottom: 1, color: "#E0E0E0" }}>
                   <TableCell sx={{ fontWeight: "bold" }}>
@@ -146,7 +146,7 @@ const Cart = () => {
                         </Link>
                         <Link
                           href={`/productdetail/${Number(cart.product_id)}`}
-                          sx={{ width: 200 }}
+                          sx={{ maxWidth: 200 }}
                         >
                           {cart.name}
                         </Link>

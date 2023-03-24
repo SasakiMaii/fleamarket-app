@@ -4,8 +4,10 @@ import cors from "cors";
 import session from "express-session";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
-import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_51MlMrOB3V27vlWJWjqJoBgQdgjk93ZRwHxWPKLZAFmyUB6hR3e0fAlPY5WUqHvYzkiVgyzfBEst7g0qLdbkSaIHA00fZiCTxDf');
+import Stripe from "stripe";
+const stripe = new Stripe(
+  "sk_test_51MlMrOB3V27vlWJWjqJoBgQdgjk93ZRwHxWPKLZAFmyUB6hR3e0fAlPY5WUqHvYzkiVgyzfBEst7g0qLdbkSaIHA00fZiCTxDf"
+);
 const sessionId = uuidv4();
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -29,11 +31,9 @@ app.listen(PORT, () => {
   console.log("サーバーが起動中・・・");
 });
 
-
 //stripe
 
 app.post("/create-payment-intent", async (req, res) => {
-
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: 1000,
@@ -49,7 +49,6 @@ app.post("/create-payment-intent", async (req, res) => {
 });
 
 app.listen(4242, () => console.log("Node server listening on port 4242!"));
-
 
 async function authenticateUser(email, password) {
   const user = await prisma.users.findUnique({ where: { email } });
@@ -114,14 +113,22 @@ app.get("/items/:id", async (req, res) => {
 
 app.get("/item/:user_id", async (req, res) => {
   const user_id = parseInt(req.params.user_id);
-  const items= await prisma.items.findMany({
+  const items = await prisma.items.findMany({
     where: {
       user_id: user_id,
     },
   });
   return res.json(items);
 });
-
+app.get("/userdata/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const items = await prisma.users.findUnique({
+    where: {
+      id:id,
+    },
+  });
+  return res.json(items);
+});
 
 app.post("/items", async (req, res) => {
   const {
@@ -159,28 +166,19 @@ app.post("/items", async (req, res) => {
   return res.json(item);
 });
 //comment
-app.get("/comment/:product_id", async (req, res) => {
-  const product_id = Number(req.params.product_id);
-  const comment = await prisma.comment.findMany({
-    where: {
-      product_id:Number(product_id)
-    },
-  });
+app.get("/comment", async (req, res) => {
+  const comment = await prisma.comment.findMany();
   return res.json(comment);
 });
 
-
 app.post("/comment", async (req, res) => {
-  const {
-    comment,
-    product_id,
-    user_id,
-  } = req.body;
+  const { comment, product_id, user_id ,name} = req.body;
   const comments = await prisma.comment.create({
     data: {
       comment,
       product_id,
       user_id,
+      name
     },
   });
   return res.json(comments);
@@ -463,4 +461,33 @@ app.get("/orders", async (req, res) => {
     },
   });
   return res.json(order);
+});
+
+//review
+app.get("/review", async (req, res) => {
+  const ratingReview = await prisma.review.findMany();
+  return res.json(ratingReview);
+});
+app.get("/review/:user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+  const reviewData = await prisma.review.findMany({
+    where: {
+      user_id: Number(user_id),
+    },
+  });
+  return res.json(reviewData);
+});
+
+app.post("/review", async (req, res) => {
+  const { comment, user_id, product_id, rating, createdAt } = req.body;
+  const ratingReview = await prisma.review.create({
+    data: {
+      comment,
+      user_id,
+      product_id,
+      rating,
+      createdAt,
+    },
+  });
+  return res.json(ratingReview);
 });

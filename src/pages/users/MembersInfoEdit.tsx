@@ -73,10 +73,6 @@ const MembersInfoEdit = () => {
     }
   }, []);
 
-  useEffect(() => {
-    // ページを再読み込み
-  }, []);
-
   //image
   useEffect(() => {
     (async () => {
@@ -196,7 +192,7 @@ const MembersInfoEdit = () => {
                 return (
                   <Box key={index}>
                     <Avatar
-                      sx={{ width: "120px", height: "120px" }}
+                      sx={{ width: "200px", height: "200px",backgroundSize: "200px", }}
                       alt="profile_image"
                       src={image.image}
                     />
@@ -207,7 +203,7 @@ const MembersInfoEdit = () => {
           <Box mb={10}>
             {user.nick_name ? user.nick_name : user.first_name}さん
           </Box>
-          <Accordion>
+          <Accordion >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel-content"
@@ -215,8 +211,8 @@ const MembersInfoEdit = () => {
             >
               <Typography>会員情報を変更する</Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              <Box>
+            <AccordionDetails >
+              <Box sx={{m:"auto"}}>
                 <NickNameInput nickName={nickName} setNickName={setNickName} />
                 <LastNameInput lastName={lastName} setLastName={setLastName} />
                 <FirstNameInput
@@ -325,6 +321,18 @@ const MembersInfoEdit = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography>￥</Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>レビューを確認する</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography></Typography>
             </AccordionDetails>
           </Accordion>
           <Accordion>

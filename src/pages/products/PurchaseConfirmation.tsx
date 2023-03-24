@@ -359,7 +359,7 @@ const PurchaseConfirmation = () => {
     <>
       <Grid item xs={12}>
         <Divider sx={{ marginTop: 10, fontWeight: "bold" }}>購入内容</Divider>
-        <Table sx={{ minWidth: 800 }} aria-label="spanning table">
+        <Table sx={{ maxWidth: 800 }} aria-label="spanning table">
           <TableHead>
             <TableRow sx={{ borderBottom: 1, color: "#E0E0E0" }}>
               <TableCell>カートに入っている商品</TableCell>
@@ -386,7 +386,7 @@ const PurchaseConfirmation = () => {
                       </Link>
                       <Link
                         href={`/productdetail/${Number(item.product_id)}`}
-                        sx={{ width: 200 }}
+                        sx={{maxWidth: 200 }}
                       >
                         {item.name}
                       </Link>
@@ -421,7 +421,7 @@ const PurchaseConfirmation = () => {
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
           />
-          <Typography sx={{ width: 500, m: "auto", mt: 5 }}></Typography>
+          <Typography sx={{ maxWidth: 500, m: "auto", mt: 5 }}></Typography>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -431,7 +431,7 @@ const PurchaseConfirmation = () => {
           </Divider>
           <Box
             sx={{
-              width: 500,
+              maxWidth: 500,
               m: "auto",
               mt: 1,
               fontSize: "12px",
@@ -477,7 +477,7 @@ const PurchaseConfirmation = () => {
         color="primary"
         variant="contained"
         onClick={submitRegister}
-        sx={{ width: 200, my: 8 }}
+        sx={{maxWidth: 200, my: 8 }}
       >
         購入する
       </Button>

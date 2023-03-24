@@ -83,12 +83,13 @@ const ProductRegistration = () => {
     return true
   }
 
+  console.log(itemName.length)
   const ValidateName = () => {
     if (!itemName) {
       setNameErr("*商品名を入力してください");
       return false;
     }
-    if (itemName.length<=12) {
+    if (itemName.length>=12) {
       setNameErr("*タイトルは12文字未満で入力してください");
       return false;
     }
@@ -111,7 +112,6 @@ const ProductRegistration = () => {
     setPriceErr("");
     return true;
   };
-
 
   const submitRegister = async (e: any) => {
     e.preventDefault();
