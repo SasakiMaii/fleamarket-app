@@ -12,7 +12,7 @@ const DetailMessageText = (props: DetailMessageProps) => {
   const { detailMessage, setDetailMessage } = props;
   return (
     <Box>
-      <InputLabel id="prefectuer">商品の説明</InputLabel>
+      <InputLabel id="prefectuer" sx={{fontWeight:"bold"}}>商品の説明</InputLabel>
       <Textarea
         sx={{ my: 2 }}
         placeholder="色、素材、重さ、定価、注意点など"

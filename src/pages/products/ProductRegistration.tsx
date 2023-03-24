@@ -153,8 +153,9 @@ const ProductRegistration = () => {
   };
 
   return (
-    <Box >
-      <Box sx={{ fontSize: 20, fontWeight: "bold", my: 10 }}> 商品の出品</Box>
+    <Box sx={{backgroundImage: "url(../public/beig.jpeg)",maxWidth:1500 ,px:20,mt:10,py:3,borderRadius:3}}>
+      
+      <Box sx={{ fontSize: 20, fontWeight: "bold", my: 6,backgroundColor:"#fffffc",py:2 ,borderRadius:3,mb:8}}> 商品の出品</Box>
       <form onSubmit={submitRegister}>
         <ItemImageSelect
           itemImage={itemImage}
@@ -191,7 +192,9 @@ const ProductRegistration = () => {
           color="primary"
           variant="contained"
           fullWidth
-          sx={{ mt: 5 }}
+          sx={{ mt: 5,backgroundColor:"#27B3B2",  "&:hover": {
+            backgroundColor: "#1D738E"
+          } }}
           onClick={submitRegister}
         >
           出品する

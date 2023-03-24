@@ -13,32 +13,29 @@ type CategorySerchProps = {
 
 const CategorySearch = (props: CategorySerchProps) => {
   const { itemCategory, setItemcategory, items, setItems } = props;
-
+  const [originalItems, setOriginalItems] = useState<Items[]>([]);
   //Item情報
   useEffect(() => {
     (async () => {
       const res = await fetch("http://localhost:8000/items");
       const data = await res.json();
       setItems(data);
+      setOriginalItems(data);
     })();
-  }, [itemCategory]);
+  }, []);
   //選んだカテゴリーの商品を表示
   
   console.log(items,"items!!");
   console.log(itemCategory)
   
   const onItemSelect = () => {
-    const filteredItems = items.filter((item) => item.category === itemCategory);
+    const filteredItems = originalItems.filter((item) => item.category === itemCategory);
     setItems(filteredItems);
   };
   
   const onSelectReset=()=>{
-    (async () => {
-      const res = await fetch("http://localhost:8000/items");
-      const data = await res.json();
-      setItems(data);
-    })();
-    setItemcategory("")
+    setItems(originalItems);
+    setItemcategory("");
   }
 
   return (
@@ -49,6 +46,7 @@ const CategorySearch = (props: CategorySerchProps) => {
       />
       <Box ml={2}>
         <Button
+          type="button"
           sx={{
             backgroundColor: "#82ae46",
             p: 0,
@@ -66,13 +64,14 @@ const CategorySearch = (props: CategorySerchProps) => {
       </Box>
       <Box ml={2}>
         <Button
+          type="button"
           sx={{
             backgroundColor: "#82ae46",
             p: 0,
             color: "#fff",
             fontWeight: "bold",
             mt: 1,
-            mr: 2,
+            mr: 10,
             "&:hover": {
               backgroundColor: "#669934",
             },

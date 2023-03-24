@@ -133,7 +133,7 @@ const Top = () => {
       </Box>
       <Box
         mb={5}
-        sx={{ borderBottom: 1, fontWeight: "bold" }}
+        sx={{ borderBottom: 1, fontWeight: "bold",pb:1.5,color:"#726F6A" }}
         textAlign="center"
       >
         出品商品一覧
@@ -144,7 +144,8 @@ const Top = () => {
         flexWrap="wrap"
         alignItems="center"
       >
-        {items.map((item: Items) => {
+        {items.length>=1?(
+        items.map((item: Items) => {
           return (
             <Box mb={5} key={item.id} width="200px" mx={2}>
               <div key={item.id}>
@@ -198,7 +199,10 @@ const Top = () => {
               </div>
             </Box>
           );
-        })}
+        })
+        ):(
+          <Box sx={{p:20}}>一致する商品はありません</Box>
+        )}
       </Box>
     </Box>
   );

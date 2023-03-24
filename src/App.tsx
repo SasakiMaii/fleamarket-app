@@ -57,7 +57,7 @@ function App() {
               element={<MembersInfoEdit />}
             ></Route>
             <Route path="/favorite" element={<Favorite />}></Route>
-            <Route path="/histry" element={<Histry />}></Route>
+            <Route path="/histry/:id" element={<Histry />}></Route>
             <Route path="productdetail/:id" element={<ProductDetail />}></Route>
             <Route path="/creditpayment" element={<CreditPayment/>}></Route>
             <Route path="/paymentcompletion" element={<PaymentCompletion/>}></Route>

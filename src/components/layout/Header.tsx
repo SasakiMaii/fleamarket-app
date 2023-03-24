@@ -57,7 +57,7 @@ function Header() {
     } else if (id === 2) {
       navigate("/favorite");
     } else if (id === 3) {
-      navigate("/histry");
+      navigate(`/histry/${userCookieData}`);
     } else if (id === 4) {
       navigate("/cart");
       window.location.reload()
@@ -222,13 +222,13 @@ function Header() {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {userData.length>=1&&userData.map((user)=>{
                   return(
-                    <>
+                    <Box key={user.id}>
                     {
                       user.image?
                       <Avatar alt="Remy Sharp" src={user?.image} sx={{backgroundColor:"#fff"}} />:
                       <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                     }
-                    </>
+                    </Box>
                   )
                 })}
               </IconButton>
