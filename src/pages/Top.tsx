@@ -125,7 +125,7 @@ const Top = () => {
           <Link to={"/login"}>ログインページへ移動</Link>
         </Box>
       )} */}
-  <Box  sx={{ backgroundImage: "url(../public/fleamarket.png)",maxWidth:1500,minWidth:1500,height:200 }}>
+  <Box  sx={{ backgroundImage: "url(../public/fleamarket.png)",maxWidth:"100%",minWidth:"100%",height:200 }}>
   &emsp;
   </Box>
       <Box sx={{ marginRight: 0, textAlign: "rigth",flex:"right" ,mt:7,pt:2,mb:3}}>

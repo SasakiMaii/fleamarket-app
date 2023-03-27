@@ -11,62 +11,6 @@ type CommentProps = {
 const Comment = (props: CommentProps) => {
   const { comment, setComment, onCommmentSending } = props;
 
-  // const [commentData, setCommentData] = useState<CommentType[]>([]);
-
-  // const [userCookieData, setUserCookieData] = useState<any>([]);
-  // //cookieのuserIDを復号して取得
-  // useEffect(() => {
-  //   const cookieData = document.cookie
-  //     .split(";")
-  //     .find((cookie) => cookie.trim().startsWith("data="));
-  //   const encryptedData = cookieData ? cookieData.split("=")[1] : "";
-  //   const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
-  //     const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
-  //     const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-  //     return decrypted;
-  //   };
-  //   if (document.cookie) {
-  //     const decording = decrypts(encryptedData);
-  //     const Cookiedata = JSON.parse(decording);
-  //     setUserCookieData(Cookiedata);
-  //   }
-  // }, []);
-
-  // console.log(typeof userCookieData)
-
-  // //ユーザ情報取得
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:8000/users/${userCookieData}`);
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setUsers(data);
-  //     } catch (error) {
-  //       console.error("An error occurred:", error);
-  //     }
-  //   })();
-  // }, []);
-  // console.log(users,"users")
-
-  //   //コメント取得
-  //   useEffect(() => {
-  //     (async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:8000/comment`);
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setCommentData(data);
-  //     } catch (error) {
-  //       console.error("An error occurred:", error);
-  //     }
-  //   })();
-  // }, []);
-
   return (
     <>
       <Box sx={{ fontWeight: "bold", mt: 5 }}>商品へのコメント</Box>

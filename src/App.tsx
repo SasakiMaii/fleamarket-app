@@ -16,6 +16,7 @@ import React, { createContext, useContext, useState } from "react";
 import { Session, SessionContextType, SessionContextValue, Users } from "./types/type";
 import CreditPayment from "./pages/products/CreditPayment";
 import PaymentCompletion from "./pages/products/PaymentCompletion";
+import EvaluationList from './pages/users/EvaluationList';
 
 
 
@@ -58,6 +59,7 @@ function App() {
             ></Route>
             <Route path="/favorite" element={<Favorite />}></Route>
             <Route path="/histry/:id" element={<Histry />}></Route>
+            <Route path="evaluationlist/:id" element={<EvaluationList />}></Route>
             <Route path="productdetail/:id" element={<ProductDetail />}></Route>
             <Route path="/creditpayment" element={<CreditPayment/>}></Route>
             <Route path="/paymentcompletion" element={<PaymentCompletion/>}></Route>

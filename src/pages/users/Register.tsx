@@ -71,7 +71,8 @@ const Register = () => {
     setItemImage("");
   };
 
-  const emailMatch = userData.some((data) => data.email === email);
+  
+  const emailMatch = userData.length>=1&&userData.some((data) => data.email === email);
 
 
   const validateImage = () => {

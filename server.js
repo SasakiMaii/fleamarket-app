@@ -102,7 +102,7 @@ app.get("/items", async (req, res) => {
 });
 
 app.get("/items/:product_id", async (req, res) => {
-  const id = parseInt(req.params.product_id) ;
+  const id = parseInt(req.params.product_id);
   const item = await prisma.items.findUnique({
     where: {
       id: Number(id),
@@ -124,7 +124,7 @@ app.get("/userdata/:id", async (req, res) => {
   const id = Number(req.params.id);
   const items = await prisma.users.findUnique({
     where: {
-      id:id,
+      id: id,
     },
   });
   return res.json(items);
@@ -176,6 +176,19 @@ app.delete("/items/:id", async (req, res) => {
   return res.json(cart);
 });
 
+app.get("/itemreview/:user_id", async (req, res) => {
+  const user_id = parseInt(req.params.user_id);
+  const order = await prisma.items.findMany({
+    where: {
+      user_id: Number(user_id),
+    },
+    include: {
+      reviews:true
+    },
+  });
+  return res.json(order);
+});
+
 //comment
 app.get("/comment", async (req, res) => {
   const comment = await prisma.comment.findMany();
@@ -183,13 +196,13 @@ app.get("/comment", async (req, res) => {
 });
 
 app.post("/comment", async (req, res) => {
-  const { comment, product_id, user_id ,name} = req.body;
+  const { comment, product_id, user_id, name } = req.body;
   const comments = await prisma.comment.create({
     data: {
       comment,
       product_id,
       user_id,
-      name
+      name,
     },
   });
   return res.json(comments);
@@ -256,6 +269,15 @@ app.get("/user/:id", async (req, res) => {
   const register = await prisma.users.findUnique({
     where: {
       id: Number(id),
+    },
+  });
+  return res.json(register);
+});
+app.get("/userdata/:user_id", async (req, res) => {
+  const user_id = parseInt(req.params.id) ;
+  const register = await prisma.users.findUnique({
+    where: {
+      user_id: Number(user_id),
     },
   });
   return res.json(register);
@@ -460,7 +482,7 @@ app.post("/orders", async (req, res) => {
         connect: carts && carts.map((cart) => ({ id: cart.id })),
       },
     },
-    include: { carts: true },
+    include: { carts: true},
   });
   return res.json(order);
 });
@@ -500,6 +522,18 @@ app.get("/review/:user_id", async (req, res) => {
   });
   return res.json(reviewData);
 });
+// app.get("/review/:user_id", async (req, res) => {
+//   const user_id = parseInt(req.params.user_id);
+//   const order = await prisma.review.findMany({
+//     where: {
+//       user_id: Number(user_id),
+//     },
+//     include: {
+//       review:true
+//     },
+//   });
+//   return res.json(order);
+// });
 
 app.post("/review", async (req, res) => {
   const { comment, user_id, product_id, rating, createdAt } = req.body;

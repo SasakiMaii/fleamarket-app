@@ -1,8 +1,14 @@
-import { Avatar, Box, Button, Card, CardMedia, Link } from "@mui/material";
+import { Avatar, Box, Button, Card, CardMedia, Grid, Link } from "@mui/material";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import NickNameInput from "../../components/form/NickNameInput";
 import { useNavigate } from "react-router-dom";
-import { AddressResult, StylesProps, Users, Items } from "../../types/type";
+import {
+  AddressResult,
+  StylesProps,
+  Users,
+  Items,
+  Review,
+} from "../../types/type";
 import CryptoJS from "crypto-js";
 import { secretKey } from "./Login";
 import FirstNameInput from "../../components/form/FirstNameInput";
@@ -51,6 +57,7 @@ const MembersInfoEdit = () => {
   const [itemImageName, setItemImageName] = useState<any>([]);
   const [userCookieData, setUserCookeData] = useState<any>([]);
   const [items, setItems] = useState<Items[]>([]);
+  const [review, setReview] = useState<Items[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -105,6 +112,19 @@ const MembersInfoEdit = () => {
   }, [userCookieData]);
   console.log(items);
 
+  //レビューの表示
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `http://localhost:8000/itemreview/${userCookieData}`
+      );
+      const data = await res.json();
+      setReview(data);
+    };
+    fetchData();
+  }, [userCookieData]);
+  console.log(review, "re");
+
   //郵便番号から住所取得するAPI
   const getZipCode = async () => {
     const response = await fetch(
@@ -146,18 +166,18 @@ const MembersInfoEdit = () => {
     setItemImage("");
   };
 
-    //出品商品を削除
-    const deleteItem = async (d:number|undefined) => {
-      const res = await fetch(`http://localhost:8000/items/${d}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      console.log(data, "削除成功");
-      setItems(items.filter((item: Items) => item.id !== d));
-    };
+  //出品商品を削除
+  const deleteItem = async (d: number | undefined) => {
+    const res = await fetch(`http://localhost:8000/items/${d}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    console.log(data, "削除成功");
+    setItems(items.filter((item: Items) => item.id !== d));
+  };
 
   //更新
   const submitEdit = async (
@@ -205,7 +225,11 @@ const MembersInfoEdit = () => {
                 return (
                   <Box key={index}>
                     <Avatar
-                      sx={{ width: "200px", height: "200px",backgroundSize: "200px", }}
+                      sx={{
+                        width: "200px",
+                        height: "200px",
+                        backgroundSize: "200px",
+                      }}
                       alt="profile_image"
                       src={image.image}
                     />
@@ -216,7 +240,7 @@ const MembersInfoEdit = () => {
           <Box mb={10}>
             {user.nick_name ? user.nick_name : user.first_name}さん
           </Box>
-          <Accordion >
+          <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel-content"
@@ -224,8 +248,8 @@ const MembersInfoEdit = () => {
             >
               <Typography>会員情報を変更する</Typography>
             </AccordionSummary>
-            <AccordionDetails >
-              <Box sx={{m:"auto"}}>
+            <AccordionDetails>
+              <Box sx={{ m: "auto" }}>
                 <NickNameInput nickName={nickName} setNickName={setNickName} />
                 <LastNameInput lastName={lastName} setLastName={setLastName} />
                 <FirstNameInput
@@ -293,7 +317,7 @@ const MembersInfoEdit = () => {
                 {items.length >= 1 ? (
                   items.map((item) => {
                     return (
-                      <Card sx={{width:"180px", m:2 }}>
+                      <Card sx={{ width: "180px", m: 2 }}>
                         <CardMedia
                           sx={{
                             height: 180,
@@ -305,7 +329,9 @@ const MembersInfoEdit = () => {
                         />
                         <Box>{item.name}</Box>
                         <Box>¥{item.price}</Box>
-                        <Button onClick={()=>deleteItem(item.id)}>出品を削除</Button>
+                        <Button onClick={() => deleteItem(item.id)}>
+                          出品を削除
+                        </Button>
                       </Card>
                     );
                   })
@@ -324,28 +350,29 @@ const MembersInfoEdit = () => {
               </Box>
             </AccordionDetails>
           </Accordion>
+          
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>売上金の確認</Typography>
+              <Typography>受け取り評価を確認する</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>￥</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>レビューを確認する</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography></Typography>
+              {review.map((data) => {
+                return (
+                  <Grid>
+                    {data.reviews.map((review: any) => (
+                      <Card sx={{textAlign:"left",p:2,m:2,backgroundColor:"#eedcb3"}}>
+                        <Box>商品名:{data.name}</Box>
+                        <Box>評価:★{review.rating}</Box>
+                        <Box>コメント:{review.comment}</Box>
+                      </Card>
+                    ))}
+                  </Grid>
+                );
+              })}
             </AccordionDetails>
           </Accordion>
           <Accordion>
