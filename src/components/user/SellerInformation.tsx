@@ -31,7 +31,7 @@ console.log(users)
     const seller = users.filter((user) => {
       return user.id === detailItems[0]?.user_id;
     });
-    console.log(seller);
+    console.log(seller,"se");
   return (
     <>
     <Box sx={{ m: 1 ,fontWeight:"bold",mt:10}}>出品者情報</Box>
@@ -54,7 +54,7 @@ console.log(users)
             }
               <Box sx={{ pb: 1 }}>{user.nick_name} </Box>
               <Box sx={{ pb: 1 }}>{user.profile}</Box>
-              <Link>レビューを見る</Link>
+              <Link href={`/evaluationlist/${user.id}`}>過去の評価を見る</Link>
             </Card>
           );
         })}

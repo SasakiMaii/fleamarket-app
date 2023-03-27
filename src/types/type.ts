@@ -18,6 +18,7 @@ export type AddressResult = {
 };
 
 export type Items = {
+  [x: string]: any;
   id?: number;
   name?: string;
   price?: number;

@@ -215,10 +215,10 @@ const PurchaseConfirmation = () => {
     items.map((data) => {
       return Number(data.id);
     });
+    console.log(cartItemId,111)
+    console.log(cartProductId,111)
   const matchingData = compareArrays(cartProductId, cartItemId);
   const matchingDataInt = matchingData.map((id) => parseInt(id, 10));
-
-  console.log(matchingDataInt);
 
   //購入処理
   const submitRegister = async (e: any) => {
@@ -292,7 +292,7 @@ const PurchaseConfirmation = () => {
         price: allPrice,
         orderedAt: new Date(),
         user_id: Number(userCookieData),
-        carts: cart,
+        carts: cart
       };
 
       const response = await fetch("http://localhost:8000/orders", {

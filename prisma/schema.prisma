@@ -11,11 +11,11 @@ datasource db {
 }
 
 model Users {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   nick_name   String?
   first_name  String
   last_name   String
-  email       String  @unique
+  email       String   @unique
   password    String
   profile     String?
   image       String?
@@ -25,24 +25,8 @@ model Users {
   city        String
   street      String
   bilding     String?
-}
-
-model Items {
-  id             Int       @id @default(autoincrement())
-  name           String
-  price          Int
-  image          String
-  description    String
-  user_id        Int
-  size_id        Int?
-  shopping_date  DateTime?
-  shopping_price Int?
-  product_state  String?
-  product_brand  String?
-  product_days   String?
-  category       String?
-  state          Boolean?
-  order_id       Int?
+  reviews     Review[]
+  Items       Items[]
 }
 
 model Likes {
@@ -64,6 +48,7 @@ model Cart {
   cart_date  DateTime?
   category   String
   image      String?
+  item       Items?    @relation(fields: [product_id], references: [id])
   product_id Int?
   order      Order?    @relation("OrderToCart", fields: [orderId], references: [id])
   orderId    Int?
@@ -76,6 +61,7 @@ model Order {
   user_id   Int
   orderedAt DateTime @default(now())
   carts     Cart[]   @relation("OrderToCart")
+  products  Items[]
 }
 
 model Comment {
@@ -85,6 +71,7 @@ model Comment {
   user_id    Int
   product_id Int
   name       String?
+  item       Items?   @relation(fields: [product_id], references: [id])
 }
 
 model Review {
@@ -92,6 +79,32 @@ model Review {
   comment    String?
   createdAt  DateTime @default(now())
   rating     Int
+  user       Users?   @relation(fields: [user_id], references: [id])
   user_id    Int
   product_id Int
+  item       Items?   @relation(fields: [product_id], references: [id])
+}
+
+model Items {
+  id             Int       @id @default(autoincrement())
+  name           String
+  price          Int
+  image          String
+  description    String
+  user           Users?    @relation(fields: [user_id], references: [id])
+  user_id        Int
+  size_id        Int?
+  shopping_date  DateTime?
+  shopping_price Int?
+  product_state  String?
+  product_brand  String?
+  product_days   String?
+  category       String?
+  state          Boolean?
+  order_id       Int?
+  reviews        Review[]
+  Order          Order?    @relation(fields: [orderId], references: [id])
+  orderId        Int?
+  Comment        Comment[]
+  Cart           Cart[]
 }
