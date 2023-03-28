@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 // import { SessionContext } from "../../App";
 import CryptoJS from "crypto-js";
-import { Cookie } from "@mui/icons-material";
 
 export const secretKey = "your-secret-key";
 
@@ -64,21 +63,6 @@ const Login = (user: Users) => {
     setErr([]);
     e.preventDefault();
     if (emailMatch === true && passMatch === true) {
-    //   const res = await fetch("http://localhost:8000/login", {
-    //     method: "POST",
-    //     mode: 'cors', //クロスオリジンリクエストをするのでCORSモードにする
-    //     credentials: 'include' ,
-    //     body: JSON.stringify({
-    //       email: email,
-    //       password: password,
-    //     }),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    //   const data = await res.json();
-    //   console.log(data);
-
       document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
       // setSession({
       //   isLoggedIn: true,

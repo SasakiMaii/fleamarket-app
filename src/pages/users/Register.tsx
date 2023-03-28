@@ -71,10 +71,10 @@ const Register = () => {
     setItemImage("");
   };
 
-  
+  //dbに登録されているemailがあるかないか
   const emailMatch = userData.length>=1&&userData.some((data) => data.email === email);
 
-
+  //画像のバリデーション
   const validateImage = () => {
     const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
     const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
@@ -90,6 +90,7 @@ const Register = () => {
     return true;
   };
 
+  //メールアドレスのバリデーション
   const validateEmail = () => {
     if (!email) {
       setEmailError("*メールアドレスを入力してください");
@@ -107,6 +108,7 @@ const Register = () => {
     return true;
   };
 
+  //電話番号のバリデーション
   const validatePhone = () => {
     if (!phone) {
       setPhoneError("*電話番号を入力してください");
@@ -122,6 +124,7 @@ const Register = () => {
     return true;
   };
 
+  //名前のバリデーション
   const validateName = () => {
     if (!lastName && !firstName) {
       setNameError("*性・名を入力してください");
@@ -131,7 +134,7 @@ const Register = () => {
     setNameError("");
     return true;
   };
-
+//パスワードのバリデーション
   const validatePass = () => {
     if (!password) {
       setPasswordError("*パスワードを入力してください");
@@ -146,7 +149,7 @@ const Register = () => {
     setPasswordError("");
     return true;
   };
-
+//住所のバリデーション
   const validateAddress = () => {
     if (
       !postalCode &&
@@ -164,6 +167,7 @@ const Register = () => {
     return true;
   };
 
+  //登録処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
     const isPassValid = validatePass();
@@ -214,6 +218,7 @@ const Register = () => {
       }
     }
   };
+  
   return (
     <Box mt={10}>
       <Grid>

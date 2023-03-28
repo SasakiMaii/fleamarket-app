@@ -24,12 +24,9 @@ import LastNameInput from "../../components/form/LastNameInput";
 import PhoneInput from "../../components/form/PhoneInput";
 import PostalCodeinput from "../../components/form/PostalCodeinput";
 import { useNavigate, useParams } from "react-router-dom";
-import CheckoutForm from "../../components/cart-form/CheckoutForm";
 
 const PurchaseConfirmation = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [postalCodeData, setPostalCodeData] = useState<AddressResult>({});
   const [prefectuer, setPrefectuer] = useState("");
@@ -47,14 +44,8 @@ const PurchaseConfirmation = () => {
   const [selectedError, setSelectedError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [items, setItems] = useState<Items[]>([]);
-
-  // const [loading, setLoading] = useState(false);
-
   const { id } = useParams();
   const navigate = useNavigate();
-  // const stripePromise = loadStripe(
-  //   "pk_test_51MlMrOB3V27vlWJWlPWsfkQet7REEO553Sw8PKjllmqPucZZvoUBUrY9YzqykxH6HQRhshMUc8s0lF684DJJjKDt00P4HYw7xz"
-  // );
 
   //cookieのuserIDを復号して取得
   useEffect(() => {
@@ -83,7 +74,6 @@ const PurchaseConfirmation = () => {
         );
         const data = await response.json();
         setCart(data[Number(userCookieData)]);
-        console.log(data[Number(userCookieData)]);
       } catch (err) {
         console.log("エラー", err);
       }
@@ -100,7 +90,6 @@ const PurchaseConfirmation = () => {
         const response = await fetch(`http://localhost:8000/items`);
         const data = await response.json();
         setItems(data);
-        console.log(data);
       } catch (err) {
         console.log("エラー", err);
       }
@@ -137,15 +126,13 @@ const PurchaseConfirmation = () => {
     setPrefectuer(user.prefecture);
     setFirstName(user.first_name);
     setLastName(user.last_name);
-    setEmail(user.email);
     setPostalCode(user.postal_code);
   }, [user]);
 
-  //バリデーション
+  //電話番号バリデーション
   const validatePhone = () => {
     if (!phone) {
       setPhoneError("*電話番号を入力してください");
-
       return false;
     }
     if (!/^[0-9-+]+$/.test(phone)) {
@@ -160,17 +147,15 @@ const PurchaseConfirmation = () => {
   const validateName = () => {
     if (!lastName && !firstName) {
       setNameError("*性・名を入力してください");
-
       return false;
     }
     setNameError("");
     return true;
   };
-  //支払い方法
+  //支払い方法のバリデーション
   const validatePayment = () => {
     if (!selectedOption) {
       setSelectedError("*支払い方法を選択してください");
-
       return false;
     }
     setSelectedError("");
@@ -193,33 +178,6 @@ const PurchaseConfirmation = () => {
     setAddressError("");
     return true;
   };
-  console.log(typeof cart, "カート", cart);
-
-  function compareArrays(arr1: string[], arr2: string[]): string[] {
-    const matchingData: string[] = [];
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr2.includes(arr1[i])) {
-        matchingData.push(arr1[i]);
-      }
-    }
-    return matchingData;
-  }
-
-  const cartProductId: any =
-    cart.length >= 1 &&
-    cart.map((data) => {
-      return Number(data.product_id);
-    });
-  const cartItemId: any =
-    items.length >= 1 &&
-    items.map((data) => {
-      return Number(data.id);
-    });
-    console.log(cartItemId,111)
-    console.log(cartProductId,111)
-  const matchingData = compareArrays(cartProductId, cartItemId);
-  const matchingDataInt = matchingData.map((id) => parseInt(id, 10));
-
   //購入処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
@@ -227,15 +185,14 @@ const PurchaseConfirmation = () => {
     const isAddressValid = validateAddress();
     const isNameValid = validateName();
     const isPayment = validatePayment();
-
     if (
       isPhoneValid &&
       isAddressValid &&
       isNameValid &&
-      isPayment&&
-      selectedOption==="コンビニ払い"
+      isPayment &&
+      selectedOption === "コンビニ払い"
     ) {
-       console.log("a")
+      console.log("a");
       const data = {
         price: allPrice,
         orderedAt: new Date(),
@@ -284,7 +241,6 @@ const PurchaseConfirmation = () => {
         console.log(err, "エラー2");
       });
       const result2 = await res2.json();
-      console.log("///state2変更完了///", result2);
       setCart(cart.filter((item: Items) => item.id !== id));
       navigate("/paymentcompletion");
     } else if (selectedOption === "クレジットカード払い") {
@@ -292,9 +248,8 @@ const PurchaseConfirmation = () => {
         price: allPrice,
         orderedAt: new Date(),
         user_id: Number(userCookieData),
-        carts: cart
+        carts: cart,
       };
-
       const response = await fetch("http://localhost:8000/orders", {
         method: "POST",
         body: JSON.stringify(data),
@@ -319,7 +274,6 @@ const PurchaseConfirmation = () => {
         console.log(err, "エラー2");
       });
       const result = await res.json();
-      console.log("///state変更完了///", result);
       //購入したID
       const res2: any = await fetch(
         `http://localhost:8000/itemstate/${userCookieData}`,
@@ -336,30 +290,26 @@ const PurchaseConfirmation = () => {
         console.log(err, "エラー2");
       });
       const result2 = await res2.json();
-      console.log("///state2変更完了///", result2);
       setCart(cart.filter((item: Items) => item.id !== id));
-      navigate("/creditpayment",{state:allPrice});
+      navigate("/creditpayment", { state: allPrice });
     }
   };
-
+  //カートに入っている商品
   const cartState: any =
     cart.length >= 1 &&
     cart.filter((item) => {
       return item.state === true;
     });
-
+  //合計金額
   const allPrice =
     cartState.length >= 1 &&
     cartState.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
-
-  console.log(cartState);
-  console.log(selectedOption);
 
   return (
     <>
       <Grid item xs={12}>
         <Divider sx={{ marginTop: 10, fontWeight: "bold" }}>購入内容</Divider>
-        <Table sx={{ maxWidth: 800 }} aria-label="spanning table">
+        <Table sx={{ maxWidth: 900,minWidth:600 }} aria-label="spanning table">
           <TableHead>
             <TableRow sx={{ borderBottom: 1, color: "#E0E0E0" }}>
               <TableCell>カートに入っている商品</TableCell>
@@ -386,7 +336,7 @@ const PurchaseConfirmation = () => {
                       </Link>
                       <Link
                         href={`/productdetail/${Number(item.product_id)}`}
-                        sx={{maxWidth: 200 }}
+                        sx={{ maxWidth: 200 }}
                       >
                         {item.name}
                       </Link>
@@ -439,7 +389,6 @@ const PurchaseConfirmation = () => {
           >
             *配送先が登録と別住所の場合は入力内容を変更してください。
           </Box>
-
           <Box>
             {nameError && (
               <p style={{ color: "red", fontSize: 13 }}>{nameError}</p>
@@ -477,7 +426,7 @@ const PurchaseConfirmation = () => {
         color="primary"
         variant="contained"
         onClick={submitRegister}
-        sx={{maxWidth: 200, my: 8 }}
+        sx={{ maxWidth: 200, my: 8 }}
       >
         購入する
       </Button>

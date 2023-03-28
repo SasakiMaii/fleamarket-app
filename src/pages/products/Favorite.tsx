@@ -18,7 +18,6 @@ const Favorite = () => {
   const [likes, setLikes] = useState<Likes[]>([]);
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [cartItems, setCartItems] = useState<CartType[]>([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +38,6 @@ const Favorite = () => {
     });
     const data = await res.json();
     document.cookie = `like_product${deletelike.product_id}${deletelike.user_id}=${deletelike.id};path=/; max-age=0; secure`;
-    console.log(data, "削除成功");
     setLikes(likes.filter((like: Likes) => like.id !== deletelike.id));
   };
 
@@ -61,6 +59,7 @@ const Favorite = () => {
     }
   }, []);
 
+  //cartを取得
   useEffect(() => {
     (async () => {
       try {
@@ -69,14 +68,13 @@ const Favorite = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
         setCartItems(data);
       } catch (error) {
         console.error("An error occurred:", error);
       }
     })();
   }, []);
-
+  //カートに追加
   const setCartClick = async (like: any) => {
     const now = new Date();
     const cartId = cartItems.filter((cart) => {
@@ -118,9 +116,7 @@ const Favorite = () => {
         console.log(err, "エラー2");
       });
       const result2 = await res2.json();
-      console.log("///state2変更完了///", result2);
       window.location.reload();
-      console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
       deleteLikes(like)
       document.cookie = `like_product${like.product_id}${like.user_id}=${like.id};path=/; max-age=0; secure`;
     }
@@ -131,7 +127,6 @@ const Favorite = () => {
     return like.user_id===Number(userCookieData);
   });
 
-  console.log(typeof userId);
   return (
     <>
       <Box my={10} sx={{ fontSize: "23px" }}>

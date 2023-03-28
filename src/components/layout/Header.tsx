@@ -1,5 +1,5 @@
 //rafce
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,12 +14,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 // import { SessionContext } from "../../App";
 import CryptoJS from "crypto-js";
 import { secretKey } from "../../pages/users/Login";
 import { Users } from "../../types/type";
-
 
 const pages = [
   { id: 1, category: "出品" },
@@ -33,24 +31,17 @@ const settings = [
 ];
 
 function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [users,setUsers]=useState<Users[]>([])
-  const [userCookieData, setUserCookeData] = React.useState<any>([]);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [users, setUsers] = useState<Users[]>([]);
+  const [userCookieData, setUserCookeData] = useState<any>([]);
   const navigate = useNavigate();
-  // const { session, setSession } = useContext(SessionContext);
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-  console.log(userCookieData===1)
   const handleCloseNavMenu = (id: number) => {
     if (id === 1) {
       navigate("/productregistration");
@@ -60,14 +51,13 @@ function Header() {
       navigate(`/histry/${userCookieData}`);
     } else if (id === 4) {
       navigate("/cart");
-      window.location.reload()
+      window.location.reload();
     } else {
       setAnchorElNav(null);
     }
   };
   //cookie復号
-
-  React.useEffect(() => {
+  useEffect(() => {
     const cookieData = document.cookie
       .split(";")
       .find((cookie) => cookie.trim().startsWith("data="));
@@ -77,20 +67,21 @@ function Header() {
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       return decrypted;
     };
-    if (document.cookie.split(';').some((item) => item.trim().startsWith('data='))) {
+    if (
+      document.cookie.split(";").some((item) => item.trim().startsWith("data="))
+    ) {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
       setUserCookeData(Cookiedata);
     }
   }, []);
-   console.log(userCookieData)
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
-      window.location.reload()
+      window.location.reload();
       navigate(`/membersinfoedit/${userCookieData}`);
-      window.location.reload()
-      window.location.reload()
+      window.location.reload();
+      window.location.reload();
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";
       // setSession(null);
@@ -100,27 +91,20 @@ function Header() {
     }
   };
 
-  useEffect(()=>{
-    (async()=>{
-      const res=await fetch(`http://localhost:8000/user`)
-      const data=await res.json()
-      setUsers(data)
-    })()
-  },[])
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`http://localhost:8000/user`);
+      const data = await res.json();
+      setUsers(data);
+    })();
+  }, []);
 
-  console.log(users)
-
-  const userData=users.filter((user)=>{
-    return(
-      user.id===Number(userCookieData)
-    )
-  })
-
-  console.log(userData)
-  console.log(userCookieData)
+  const userData = users.filter((user) => {
+    return user.id === Number(userCookieData);
+  });
 
   return (
-    <AppBar sx={{backgroundColor:"#F6813C"}}>
+    <AppBar sx={{ backgroundColor: "#F6813C" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <StorefrontIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -141,48 +125,47 @@ function Header() {
           >
             FURIMA
           </Typography>
-            {userCookieData&&
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.id}
-                  onClick={() => handleCloseNavMenu(page.id)}
-                >
-                  <Typography textAlign="center">{page.category}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-}
+          {userCookieData && (
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem
+                    key={page.id}
+                    onClick={() => handleCloseNavMenu(page.id)}
+                  >
+                    <Typography textAlign="center">{page.category}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
           <StorefrontIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -202,64 +185,74 @@ function Header() {
           >
             FURIMA
           </Typography>
-          {userCookieData&&
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.id}
-                onClick={() => handleCloseNavMenu(page.id)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.category}
-              </Button>
-            ))}
-          </Box>
-}
-
-            {userCookieData&&
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {userData.length>=1&&userData.map((user)=>{
-                  return(
-                    <Box key={user.id}>
-                    {
-                      user.image?
-                      <Avatar alt="Remy Sharp" src={user?.image} sx={{backgroundColor:"#fff"}} />:
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                    }
-                    </Box>
-                  )
-                })}
-              </IconButton>
-            </Tooltip>
-            <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                key={setting.id}
-                onClick={() => handleCloseUserMenu(setting.id)}
+          {userCookieData && (
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page.id}
+                  onClick={() => handleCloseNavMenu(page.id)}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  <Typography textAlign="center">{setting.category}</Typography>
-                </MenuItem>
+                  {page.category}
+                </Button>
               ))}
-            </Menu>
-          </Box>
-            }
+            </Box>
+          )}
+
+          {userCookieData && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  {userData.length >= 1 &&
+                    userData.map((user) => {
+                      return (
+                        <Box key={user.id}>
+                          {user.image ? (
+                            <Avatar
+                              alt="Remy Sharp"
+                              src={user?.image}
+                              sx={{ backgroundColor: "#fff" }}
+                            />
+                          ) : (
+                            <Avatar
+                              alt="Remy Sharp"
+                              src="/static/images/avatar/2.jpg"
+                            />
+                          )}
+                        </Box>
+                      );
+                    })}
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.id}
+                    onClick={() => handleCloseUserMenu(setting.id)}
+                  >
+                    <Typography textAlign="center">
+                      {setting.category}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
