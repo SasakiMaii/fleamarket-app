@@ -9,14 +9,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Items,
-  Users,
-  Likes,
-  CartType,
-  CommentType,
-  Orders,
-} from "../../types/type";
+import { Items, Users, Likes, CartType, CommentType } from "../../types/type";
 import Box from "@mui/material/Box";
 import Comment from "../../components/feature/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -38,7 +31,6 @@ const ProductDetail = () => {
   const [comment, setComment] = useState("");
   const [commentData, setCommentData] = useState<CommentType[]>([]);
   const [users, setUsers] = useState<Users[]>([]);
-
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -79,7 +71,6 @@ const ProductDetail = () => {
         setError(err);
         setLoading(false);
       });
-
     return () => {
       controller.abort();
     };
@@ -102,15 +93,11 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-
-      console.log(commentData, "aa");
-      console.log(data);
       setCommentData(data);
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
-  console.log(commentData, "comment");
 
   //詳細商品取得
   const getDetailItem = async (signal: AbortSignal) => {
@@ -122,7 +109,6 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      // console.log(data);
       setDetailItems([data]);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -138,7 +124,6 @@ const ProductDetail = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      // console.log(data);
       setLikeItems(data);
     } catch (error) {
       console.error("An error occurred:", error);
@@ -190,7 +175,6 @@ const ProductDetail = () => {
   const likeId = likeData.map((item) => {
     return item.id;
   });
-
   //「like_product」cookie登録
   const setLikeCookie = (id: number | undefined, maxAge: number) => {
     document.cookie = `like_product${detailItems[0].id}${userCookieData}=${id};path=/; max-age=${maxAge}; secure`;
@@ -207,8 +191,6 @@ const ProductDetail = () => {
     );
   const cookieValue = cookie ? cookie.split("=")[1] : null;
 
-  // console.log(cookieValue);
-
   //ハートをクリックしたとき
   const now = new Date();
   const onLikeFlag = async () => {
@@ -219,7 +201,6 @@ const ProductDetail = () => {
       ) === -1
     ) {
       setLike(true);
-      console.log(like);
       const res = await fetch("http://localhost:8000/likes", {
         method: "POST",
         body: JSON.stringify({
@@ -236,13 +217,10 @@ const ProductDetail = () => {
         },
       });
       const data = await res.json();
-      console.log(data.id, "成功");
-
       setLikeCookie(data.id, 100000);
       window.location.reload();
     } else {
       setLike(false);
-      console.log("a");
       const res: any = await fetch(
         `http://localhost:8000/likes/${cookieValue}`,
         {
@@ -256,10 +234,11 @@ const ProductDetail = () => {
       });
       deleteLikeCookie(likeId);
       const data = await res.json();
-      console.log("削除", data);
     }
   };
 
+  //カートアイテムのproduct_idと詳細画面の商品idが一致しているものを取得
+  // 一致していれば売り切れ表示する
   const cartId: any = cartItems.filter((item) => {
     return (
       detailItems.length > 0 &&
@@ -267,7 +246,6 @@ const ProductDetail = () => {
       item.product_id === detailItems[0].id
     );
   });
-  // console.log(cartId);
 
   //カートに入れるボタン
   const setCartClick = async () => {
@@ -307,9 +285,7 @@ const ProductDetail = () => {
         console.log(err, "エラー2");
       });
       const result2 = await res2.json();
-      console.log("///state2変更完了///", result2);
       window.location.reload();
-      console.log("＊＊＊＊＊＊成功＊＊＊＊＊", data);
     }
   };
 
@@ -317,33 +293,24 @@ const ProductDetail = () => {
   const commentItem: any =
     commentData.length >= 1 &&
     commentData.filter((comment) => {
-      return (
-        // comment.user_id === Number(userCookieData) &&
-        comment.product_id === Number(id)
-      );
+      return comment.product_id === Number(id);
     });
-  console.log(commentItem,'commentItem');
 
-  console.log(typeof userCookieData);
-
-  // const comments = commentItem.length >= 1 && commentItem.map((comment: { createdAt: string }) => {
-  //   const date = new Date(comment.createdAt);
-  //   return date.toLocaleString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
-  // });
-
-  const comments = commentItem.length >= 1 && commentItem.map((comments: { createdAt: string, comment: string,name:string }) => {
-    const date = new Date(comments.createdAt);
-    const formattedDate = date.toLocaleString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
-    const commentText = comments.comment;
-    const name=comments.name;
-    return {createdAt:formattedDate,comment: commentText,name:name};
-  });
-  
-  
-
-
-
-    console.log(comments,"comments")
+  const comments =
+    commentItem.length >= 1 &&
+    commentItem.map(
+      (comments: { createdAt: string; comment: string; name: string }) => {
+        const date = new Date(comments.createdAt);
+        const formattedDate = date.toLocaleString("ja-JP", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const commentText = comments.comment;
+        const name = comments.name;
+        return { createdAt: formattedDate, comment: commentText, name: name };
+      }
+    );
 
   //ユーザ情報取得
   useEffect(() => {
@@ -356,7 +323,6 @@ const ProductDetail = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
         setUsers([data]);
       } catch (error) {
         console.error("An error occurred:", error);
@@ -384,7 +350,6 @@ const ProductDetail = () => {
         }),
       });
       const data = await res.json();
-      console.log(data, "成功");
       setCommentData([...commentData, data]);
       setComment("");
     }
@@ -446,13 +411,9 @@ const ProductDetail = () => {
                 }}
               />
             </ListItem>
-
             <Box
               sx={{
-                textAlign: "right",
-                fontWeight: "bold",
-                color: "#000",
-                overflow: "hidden",
+                textAlign: "right",fontWeight: "bold",color: "#000",overflow: "hidden",
               }}
             >
               <Button sx={{ color: "#000" }} onClick={onLikeFlag}>
@@ -517,7 +478,6 @@ const ProductDetail = () => {
           </Button>
         </Box>
       ))}
-
       {commentData && cartId.length === 0 ? (
         <>
           <Box sx={{ textAlign: "left", mt: 5 }}>
@@ -526,7 +486,7 @@ const ProductDetail = () => {
           {comments.length >= 1 &&
             comments.map((data: CommentType, index: number) => {
               return (
-                <>
+                <Box key={index}>
                   <Card
                     sx={{
                       backgroundColor: "#e7e7eb",
@@ -547,7 +507,7 @@ const ProductDetail = () => {
                       </Box>
                     </Box>
                   </Card>
-                </>
+                </Box>
               );
             })}
           <Comment

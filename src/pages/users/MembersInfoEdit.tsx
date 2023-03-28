@@ -1,13 +1,18 @@
-import { Avatar, Box, Button, Card, CardMedia, Grid, Link } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardMedia,
+  Grid,
+} from "@mui/material";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import NickNameInput from "../../components/form/NickNameInput";
 import { useNavigate } from "react-router-dom";
 import {
   AddressResult,
-  StylesProps,
   Users,
   Items,
-  Review,
 } from "../../types/type";
 import CryptoJS from "crypto-js";
 import { secretKey } from "./Login";
@@ -31,7 +36,6 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const MembersInfoEdit = () => {
-  const [userCookie, setUserCookie] = useState<any>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [postalCode, setPostalCode] = useState("");
@@ -44,21 +48,14 @@ const MembersInfoEdit = () => {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [profile, setProfile] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
-  const [addressError, setAddressError] = useState("");
   const [userImageData, setUserImageData] = useState<any[]>([]);
   const [itemImage, setItemImage] = useState("");
-  const [imageError, setImageError] = useState("");
   const [nickName, setNickName] = useState("");
   const [user, setUser] = useState<any>([]);
   const [itemImageName, setItemImageName] = useState<any>([]);
   const [userCookieData, setUserCookeData] = useState<any>([]);
   const [items, setItems] = useState<Items[]>([]);
   const [review, setReview] = useState<Items[]>([]);
-  const navigate = useNavigate();
   const { id } = useParams();
 
   //cookie復号
@@ -215,6 +212,12 @@ const MembersInfoEdit = () => {
     }
   };
 
+  const reviewmatch = review
+    .map((item: any) => {
+      return item.reviews.map((review: any) => review.comment);
+    })
+    .flat();
+  console.log(reviewmatch);
   return (
     <Box mt={10} mb={2}>
       <>
@@ -350,29 +353,42 @@ const MembersInfoEdit = () => {
               </Box>
             </AccordionDetails>
           </Accordion>
-          
+
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>受け取り評価を確認する</Typography>
+              <Typography>自分の評価を確認する</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {review.map((data) => {
-                return (
-                  <Grid>
-                    {data.reviews.map((review: any) => (
-                      <Card sx={{textAlign:"left",p:2,m:2,backgroundColor:"#eedcb3"}}>
-                        <Box>商品名:{data.name}</Box>
-                        <Box>評価:★{review.rating}</Box>
-                        <Box>コメント:{review.comment}</Box>
-                      </Card>
-                    ))}
-                  </Grid>
-                );
-              })}
+              {reviewmatch.length >= 1 ? (
+                review.map((data) => {
+                  return (
+                    <Grid>
+                      {data.reviews.map((review: any) => (
+                        <Card
+                          sx={{
+                            textAlign: "left",
+                            p: 2,
+                            m: 2,
+                            backgroundColor: "#eedcb3",
+                          }}
+                        >
+                          <Box>商品名:{data.name}</Box>
+                          <Box>評価:★{review.rating}</Box>
+                          <Box>コメント:{review.comment}</Box>
+                        </Card>
+                      ))}
+                    </Grid>
+                  );
+                })
+              ) : (
+                <>
+                  <Box>評価はありません。</Box>
+                </>
+              )}
             </AccordionDetails>
           </Accordion>
           <Accordion>

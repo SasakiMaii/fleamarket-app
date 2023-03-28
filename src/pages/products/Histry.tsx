@@ -79,7 +79,6 @@ const Histry = () => {
     (async () => {
       const res = await fetch(`http://localhost:8000/review/${userCookieData}`);
       const data = await res.json();
-      console.log(data);
       setReview(data);
     })();
   }, []);
@@ -88,7 +87,6 @@ const Histry = () => {
   const reviewMatch: number[] = review.map((data) => {
     return data.product_id;
   });
-  console.log(reviewMatch);
 
   //レビューを送信
   const onReview = async () => {
@@ -109,7 +107,6 @@ const Histry = () => {
       }),
     });
     const data = await res.json();
-    console.log(data);
     setOpen(false);
     window.location.reload();
   };

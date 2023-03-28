@@ -9,10 +9,9 @@ import ItemDaysSelect from "../../components/listing-form/ItemDaysSelect";
 import ItemImageSelect from "../../components/listing-form/ItemImageSelect";
 import ItemNameInput from "../../components/listing-form/ItemNameInput";
 import PriceInput from "../../components/listing-form/PriceInput";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
-
 
 const ProductRegistration = () => {
   const [itemName, setItemName] = useState("");
@@ -24,14 +23,15 @@ const ProductRegistration = () => {
   const [itemDays, setItemDays] = useState("1~2日で発送");
   const [itemImage, setItemImage] = useState("");
   const [itemImageName, setItemImageName] = useState<any>("");
-
   const [nameErr, setNameErr] = useState("");
   const [detailMessageErr, setDetailMessageErr] = useState("");
   const [priceErr, setPriceErr] = useState("");
   const [imageError, setImageError] = useState("");
   const [userCookieData, setUserCookieData] = useState<any>([]);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const now = new Date();
 
+  //cookie復号
   useEffect(() => {
     const cookieData = document.cookie
       .split(";")
@@ -46,56 +46,56 @@ const ProductRegistration = () => {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
       setUserCookieData(Cookiedata);
-      // const idData=userCookieData.map((user:any)=>{
-      //   return user.id
-      // })
     }
   }, []);
 
-  const now = new Date();
-
-  const handleImageChange=(event: any)=> {
+  //
+  const handleImageChange = (event: any) => {
     const selectedFile = event.target.files[0];
+    //ファイルの読み込みを可能にする
     const reader: any = new FileReader();
+    //指定したファイルをURL形式で読み込む
     reader.readAsDataURL(selectedFile);
+    //ファイルの読み込みが成功したか失敗したかを示すプロパティ。成功したらitemimageにセットする
     reader.onloadend = () => {
       setItemImage(reader.result);
     };
     setItemImageName([selectedFile]);
-  }
-
-  const clearImage=()=>{
-    setItemImage("")
-  }
-
-  const validateImage=()=>{
-    const imageSizeLimit = 5 * 1024 * 1024; // 最大5MB
-    const allowedImageTypes = ['image/png', 'image/jpeg','image/jpg'];
-    if(itemImageName[0].size>imageSizeLimit){
-      setImageError("*画像のサイズが大きいです")
-      return false
+  };
+  //画像削除
+  const clearImage = () => {
+    setItemImage("");
+  };
+//画像のバリデーション
+const validateImage = () => {
+  const imageSizeLimit = 5 * 100 * 140; 
+    const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (itemImageName[0]?.size > imageSizeLimit) {
+      setImageError("*画像のサイズが大きいです");
+      return false;
     }
-    if (!allowedImageTypes.includes(itemImageName[0].type)){
-      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。")
-      return false
+    if (!allowedImageTypes.includes(itemImageName[0]?.type)) {
+      setImageError("*送信できるファイルの形式は、「.jpeg/.jpg/.png」です。");
+      return false;
     }
-    setImageError("")
-    return true
-  }
+    setImageError("");
+    return true;
+  };
 
-  console.log(itemName.length)
+  //名前のバリデーション
   const ValidateName = () => {
     if (!itemName) {
       setNameErr("*商品名を入力してください");
       return false;
     }
-    if (itemName.length>=12) {
+    if (itemName.length >= 12) {
       setNameErr("*タイトルは12文字未満で入力してください");
       return false;
     }
     setNameErr("");
     return true;
   };
+  //説明らんのバリデーション
   const ValidateDetailMessage = () => {
     if (!detailMessage) {
       setDetailMessageErr("*商品の説明を入力してください");
@@ -104,6 +104,7 @@ const ProductRegistration = () => {
     setDetailMessageErr("");
     return true;
   };
+  //値段のバリデーション
   const ValidatePrice = () => {
     if (!price) {
       setPriceErr("*商品の金額を入力してください");
@@ -113,39 +114,39 @@ const ProductRegistration = () => {
     return true;
   };
 
+  //登録処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
     let isNameValid = ValidateName();
     let isDetailMessageValid = ValidateDetailMessage();
     let isPriceVarlid = ValidatePrice();
-    const isImageValid=validateImage();
+    const isImageValid = validateImage();
 
-    if (isDetailMessageValid && isNameValid && isPriceVarlid&&isImageValid) {
+    if (isDetailMessageValid && isNameValid && isPriceVarlid && isImageValid) {
       try {
         const response = await fetch("http://localhost:8000/items", {
           method: "POST",
           body: JSON.stringify({
             name: itemName,
             price: Number(price),
-            image: itemImage||'',
+            image: itemImage || "",
             description: detailMessage,
             shopping_date: now,
             product_state: itemCondition,
-            product_brand: brand||"",
+            product_brand: brand || "",
             product_days: itemDays,
             category: itemCategory,
             user_id: Number(userCookieData),
             size_id: 1,
             shopping_price: 1,
-            state:true,
+            state: true,
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
         const data = await response.json();
-        console.log(data);
-        navigate('/')
+        navigate("/");
       } catch (err) {
         console.log(err, "エラー");
       }
@@ -153,17 +154,38 @@ const ProductRegistration = () => {
   };
 
   return (
-    <Box sx={{backgroundImage: "url(../public/beig.jpeg)",maxWidth:1500 ,px:20,mt:10,py:3,borderRadius:3}}>
-      
-      <Box sx={{ fontSize: 20, fontWeight: "bold", my: 6,backgroundColor:"#fffffc",py:2 ,borderRadius:3,mb:8}}> 商品の出品</Box>
+    <Box
+      sx={{
+        backgroundImage: "url(../public/beig.jpeg)",
+        maxWidth: 1500,
+        px: 20,
+        mt: 10,
+        py: 3,
+        borderRadius: 3,
+      }}
+    >
+      <Box
+        sx={{
+          fontSize: 20,
+          fontWeight: "bold",
+          my: 6,
+          backgroundColor: "#fffffc",
+          py: 2,
+          borderRadius: 3,
+          mb: 8,
+        }}
+      >
+        商品の出品
+      </Box>
       <form onSubmit={submitRegister}>
+      {imageError && <p style={{ color: "red", fontSize: 13 }}>{imageError}</p>}
         <ItemImageSelect
           itemImage={itemImage}
           setItemImage={setItemImage}
           handleImageChange={handleImageChange}
           itemImageName={itemImageName}
           setItemImageName={setItemImageName}
-          text='商品の画像'
+          text="商品の画像"
           clearImage={clearImage}
         />
         <ItemCategorySelect
@@ -192,9 +214,13 @@ const ProductRegistration = () => {
           color="primary"
           variant="contained"
           fullWidth
-          sx={{ mt: 5,backgroundColor:"#27B3B2",  "&:hover": {
-            backgroundColor: "#1D738E"
-          } }}
+          sx={{
+            mt: 5,
+            backgroundColor: "#27B3B2",
+            "&:hover": {
+              backgroundColor: "#1D738E",
+            },
+          }}
           onClick={submitRegister}
         >
           出品する

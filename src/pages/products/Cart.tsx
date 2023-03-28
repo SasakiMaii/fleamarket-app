@@ -36,7 +36,6 @@ const Cart = () => {
       setUserCookieData(Cookiedata);
     }
   }, []);
-  console.log(userCookieData);
 
 //ログイン中ユーザのカートの中身
   useEffect(() => {
@@ -46,13 +45,11 @@ const Cart = () => {
           `http://localhost:8000/cart/${userCookieData}`
         );
         const data = await response.json();
-        console.log(data);
         setCart(
           data[Number(userCookieData)] === undefined
             ? []
             : data[Number(userCookieData)]
         );
-        console.log(data[Number(userCookieData)]);
       } catch (err) {
         console.log("エラー", err);
       }
@@ -61,8 +58,6 @@ const Cart = () => {
       fetchCart();
     }
   }, [userCookieData]);
-
-  console.log(cart);
 
   //カートに入っているアイテムの削除
   const onCartItemDelete = async (id: number | undefined,cartProductId:number|undefined) => {
@@ -75,7 +70,6 @@ const Cart = () => {
       console.log(err, "エラー");
     });
     const data = await res.json();
-    console.log("削除", data);
     const res2: any = await fetch(
       `http://localhost:8000/orderitems/${cartProductId}`,
       {
@@ -91,7 +85,6 @@ const Cart = () => {
       console.log(err, "エラー2");
     });
     const result2 = await res2.json();
-    console.log("///res2変更完了///", result2);
     setCart(cart.filter((item: Items) => item.id !== id));
   };
 
@@ -108,8 +101,6 @@ const Cart = () => {
   const allPrice =
   cartState.length >= 1 &&
   cartState.reduce((acc: number, item: Items) => acc + Number(item.price), 0);
-
-  console.log(cartState)
 
   return (
     <Box mt={10}>

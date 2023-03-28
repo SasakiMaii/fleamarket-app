@@ -37,7 +37,7 @@ const ItemImageSelect = (props: ItemImageProps) => {
         <img width={200} height={200} src={itemImage} alt="uploaded image" />
       )}
       <Button onClick={clearImage}>選択されている画像をクリア</Button>
-      <Box>※最大5MB</Box>
+      <Box>※最大70KB</Box>
     </Box>
   );
 };

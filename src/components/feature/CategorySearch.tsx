@@ -24,19 +24,18 @@ const CategorySearch = (props: CategorySerchProps) => {
     })();
   }, []);
   //選んだカテゴリーの商品を表示
-  
-  console.log(items,"items!!");
-  console.log(itemCategory)
-  
+
   const onItemSelect = () => {
-    const filteredItems = originalItems.filter((item) => item.category === itemCategory);
+    const filteredItems = originalItems.filter(
+      (item) => item.category === itemCategory
+    );
     setItems(filteredItems);
   };
-  
-  const onSelectReset=()=>{
+
+  const onSelectReset = () => {
     setItems(originalItems);
     setItemcategory("");
-  }
+  };
 
   return (
     <Box display="flex" alignItems="center" justifyContent="flex-end">

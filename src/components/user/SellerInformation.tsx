@@ -26,19 +26,17 @@ useEffect(()=>{
     }
   })()
 },[])
-console.log(users)
     //出品したユーザー（itemsのuser_idとクッキーのidが一致）
     const seller = users.filter((user) => {
       return user.id === detailItems[0]?.user_id;
     });
-    console.log(seller,"se");
   return (
     <>
     <Box sx={{ m: 1 ,fontWeight:"bold",mt:10}}>出品者情報</Box>
       {seller.length >= 1 &&
         seller.map((user) => {
           return (
-            <Card sx={{ p: 3, width: 400, textAlign: "center", m: "auto"  ,pt:2 }}>
+            <Card key={user.id} sx={{ p: 3, width: 400, textAlign: "center", m: "auto"  ,pt:2 }}>
               {user.image&&
               <CardMedia
               sx={{
