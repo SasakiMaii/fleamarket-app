@@ -7,7 +7,7 @@ type EmailProps = {
   setEmail:any;
 };
 
-const EmailInput = React.memo((props: EmailProps) => {
+const EmailInput = (props: EmailProps) => {
   const { email, setEmail} = props;
   return (
     <div>
@@ -26,6 +26,6 @@ const EmailInput = React.memo((props: EmailProps) => {
           />
     </div>
   );
-});
+};
 
 export default EmailInput;

@@ -26,7 +26,11 @@ const Top = () => {
     return decrypted;
   };
   useEffect(() => {
-    if (document.cookie) {
+    if (document.cookie
+      .split("; ")
+      .find((cookie) =>
+        cookie.startsWith(`data=`)
+      )) {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
       setUserCookie(Cookiedata);

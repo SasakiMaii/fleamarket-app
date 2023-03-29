@@ -10,7 +10,7 @@ type LastNameProps = {
   editLastName?: string | undefined;
 };
 
-const LastNameInput = React.memo((props: LastNameProps) => {
+const LastNameInput = (props: LastNameProps) => {
   const { lastName, setLastName, editLastName } = props;
 
   return (
@@ -30,6 +30,6 @@ const LastNameInput = React.memo((props: LastNameProps) => {
           />
     </Box>
   );
-});
+};
 
 export default LastNameInput;

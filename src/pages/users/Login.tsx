@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import React from "react";
 import EmailInput from "../../components/form/EmailInput";
 import PasswordInput from "../../components/form/PasswordInput";
 import {
@@ -12,10 +13,9 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { pink } from "@mui/material/colors";
-import { SessionContextType, Users } from "../../types/type";
+import { Users } from "../../types/type";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-// import { SessionContext } from "../../App";
+
 import CryptoJS from "crypto-js";
 
 export const secretKey = "your-secret-key";
@@ -26,14 +26,12 @@ function encrypt(data: string | CryptoJS.lib.WordArray) {
   return encrypted;
 }
 
-const Login = (user: Users) => {
+const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string[]>([]);
   const [loginData, setLoginData] = useState<Users[]>([]);
-  const navigate = useNavigate();
-  // const { session, setSession } =
-  //   useContext<SessionContextType>(SessionContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,10 +62,6 @@ const Login = (user: Users) => {
     e.preventDefault();
     if (emailMatch === true && passMatch === true) {
       document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
-      // setSession({
-      //   isLoggedIn: true,
-      //   user: user
-      // })
       navigate("/");
       window.location.reload()
     } else if (emailMatch === false || passMatch === false) {

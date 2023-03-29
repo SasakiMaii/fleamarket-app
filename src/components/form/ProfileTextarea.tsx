@@ -11,7 +11,7 @@ type ProfileProps = {
   editProfile?: string | undefined;
 };
 
-const ProfileTextarea = React.memo((props: ProfileProps) => {
+const ProfileTextarea =(props: ProfileProps) => {
   const { profile, setProfile, editProfile } = props;
 
   const [text, setText] = useState("");
@@ -60,6 +60,6 @@ const ProfileTextarea = React.memo((props: ProfileProps) => {
       </Box>
     </div>
   );
-});
+};
 
 export default ProfileTextarea;

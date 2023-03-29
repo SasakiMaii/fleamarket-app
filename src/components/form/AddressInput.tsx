@@ -20,7 +20,7 @@ type AddressProps = {
   setBuilding: Dispatch<SetStateAction<string>>;
 };
 
-const AddressInput = React.memo((props: AddressProps) => {
+const AddressInput = (props: AddressProps) => {
   const {
     postalCodeData,
     prefectuer,
@@ -138,6 +138,6 @@ const AddressInput = React.memo((props: AddressProps) => {
       </div>
     </div>
   );
-});
+};
 
 export default AddressInput;
