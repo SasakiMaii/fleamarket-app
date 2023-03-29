@@ -1,5 +1,12 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  BrowserRouter as Router,
+  useNavigate,
+  NavigateFunction,
+} from "react-router-dom";
 import Login from "./pages/users/Login";
 import Register from "./pages/users/Register";
 import Top from "./pages/Top";
@@ -12,13 +19,11 @@ import ProductRegistration from "./pages/products/ProductRegistration";
 import PurchaseConfirmation from "./pages/products/PurchaseConfirmation";
 import ErrPage from "./pages/404";
 import Header from "./components/layout/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Session } from "./types/type";
 import CreditPayment from "./pages/products/CreditPayment";
 import PaymentCompletion from "./pages/products/PaymentCompletion";
-import EvaluationList from './pages/users/EvaluationList';
-
-
+import EvaluationList from "./pages/users/EvaluationList";
 
 // export const SessionContext = React.createContext<SessionContextType>({
 //   session: { isLoggedIn: false, user: null },
@@ -30,52 +35,46 @@ import EvaluationList from './pages/users/EvaluationList';
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   //cookieが存在するかしないか(リダイレクトに使用)
   function checkCookieExists(cookieName: string) {
-    const cookies = document.cookie.split(';'); // すべてのCookieを取得し、配列に変換する
+    const cookies = document.cookie.split(";"); // すべてのCookieを取得し、配列に変換する
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim(); // Cookieの前後にある余分なスペースを削除する
-      if (cookie.startsWith(cookieName + '=')) {
+      if (cookie.startsWith(cookieName + "=")) {
+   
         return setIsAuthenticated(true); // 名前が一致するCookieが見つかった場合にはtrueを返す
       }
     }
     return setIsAuthenticated(false); // 名前が一致するCookieが見つからなかった場合にはfalseを返す
   }
 
+
   return (
-    <>
-      <Router>
-        {/* <SessionContext.Provider value={{ session, setSession }}> */}
-          <Header />
-          <Routes>
-            <Route path="/" element={<Top />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/register" element={<Register />}></Route>
-            <Route path="/cart" element={<Cart />}></Route>
-            <Route
-              path="/membersinfoedit/:id"
-              element={<MembersInfoEdit />}
-            ></Route>
-            <Route path="/favorite" element={<Favorite />}></Route>
-            <Route path="/histry/:id" element={<Histry />}></Route>
-            <Route path="evaluationlist/:id" element={<EvaluationList />}></Route>
-            <Route path="productdetail/:id" element={<ProductDetail />}></Route>
-            <Route path="/creditpayment" element={<CreditPayment/>}></Route>
-            <Route path="/paymentcompletion" element={<PaymentCompletion/>}></Route>
-            <Route
-              path="/productregistration"
-              element={<ProductRegistration />}
-            ></Route>
-            <Route
-              path="/purchaseconfirmation/:id"
-              element={<PurchaseConfirmation />}
-            ></Route>
-            <Route path="*" element={<ErrPage />}></Route>
-          </Routes>
-        {/* </SessionContext.Provider> */}
-      </Router>
-    </>
+    <Router>
+      {/* <SessionContext.Provider value={{ session, setSession }}> */}
+      <Header />
+      <Routes>
+        <Route path="/" element={<Top />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/membersinfoedit/:id" element={<MembersInfoEdit />} />
+        <Route path="/favorite" element={<Favorite />} />
+        <Route path="/histry/:id" element={<Histry />} />
+        <Route path="evaluationlist/:id" element={<EvaluationList />} />
+        <Route path="productdetail/:id" element={<ProductDetail />} />
+        <Route path="/creditpayment" element={<CreditPayment />} />
+        <Route path="/paymentcompletion" element={<PaymentCompletion />} />
+        <Route path="/productregistration" element={<ProductRegistration />} />
+        <Route
+          path="/purchaseconfirmation/:id"
+          element={<PurchaseConfirmation />}
+        />
+        <Route path="*" element={<ErrPage />} />
+      </Routes>
+      {/* </SessionContext.Provider> */}
+    </Router>
   );
 }
 

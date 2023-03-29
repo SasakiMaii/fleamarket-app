@@ -22,9 +22,10 @@ export const secretKey = "your-secret-key";
 
 // 暗号化
 function encrypt(data: string | CryptoJS.lib.WordArray) {
-  const encrypted = CryptoJS.AES.encrypt(data, secretKey).toString();
+  const encrypted = CryptoJS.AES&&CryptoJS.AES.encrypt(data, secretKey).toString();
   return encrypted;
 }
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string[]>([]);
   const [loginData, setLoginData] = useState<Users[]>([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,9 +51,6 @@ const Login = () => {
   const emailMatch = loginData.some((data) => data.email === email);
   const passMatch = loginData.some((data) => data.password === password);
   const emailFilter = loginData.filter((data) => data.email === email);
-
-  console.log(emailFilter[0]?.id, "filter");
-  console.log(loginData[0])
   const id = emailFilter[0]?.id;
 
   const save: any = JSON.stringify(id);
@@ -63,7 +62,6 @@ const Login = () => {
     if (emailMatch === true && passMatch === true) {
       document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
       navigate("/");
-      window.location.reload()
     } else if (emailMatch === false || passMatch === false) {
       setErr(["＊入力内容を確認してください＊"]);
     }

@@ -45,7 +45,11 @@ const ProductDetail = () => {
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       return decrypted;
     };
-    if (document.cookie) {
+    if (document.cookie
+      .split("; ")
+      .find((cookie) =>
+        cookie.startsWith(`data=`)
+      )) {
       const decording = decrypts(encryptedData);
       const Cookiedata = JSON.parse(decording);
       setUserCookieData(Cookiedata);
@@ -356,7 +360,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <Box mt={8} sx={{ textAlign: "center", maxWidth: 900, overflow: "hidden" }}>
+    <Box mt={8} sx={{ textAlign: "center", maxWidth: 900, overflow: "hidden",backgroundImage: "url(../public/beig.jpeg)",p:10 }}>
       {cartId.length >= 1 && (
         <Box
           sx={{

@@ -20,7 +20,7 @@ const ItemCategorySelect = (props: ItemCategoryProps) => {
         onChange={(e: SelectChangeEvent) => setItemCategory(e.target.value)}
         value={itemCategory}
         sx={{ mb: 3,px:3,py:2,maxWidth:250,height:30,backgroundColor:"#fff" }}
-        aria-labelledby="condition-label"
+        aria-labelledby="category-label"
       >
         <MenuItem value="その他">その他</MenuItem>
         <MenuItem value="本・CD">本・CD</MenuItem>

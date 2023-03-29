@@ -13,13 +13,15 @@ const PasswordInput = (props: PassProps) => {
   const { password, setPassword, editPass } = props;
   return (
     <Box>
-          <label htmlFor="password"></label>
+          <label htmlFor="password"style={{color
+          :"#fff"}}>password</label>
           <TextField
             type="password"
             id="password"
             fullWidth
             required
             label="パスワード"
+            placeholder="パスワード"
             variant="standard"
             value={password||""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>

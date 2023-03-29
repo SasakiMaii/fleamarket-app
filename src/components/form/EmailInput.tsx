@@ -11,11 +11,13 @@ const EmailInput = (props: EmailProps) => {
   const { email, setEmail} = props;
   return (
     <div>
-          <label htmlFor="email"></label>
+          <label htmlFor="email" style={{color
+          :"#fff"}}>email</label>
           <TextField
             type="email"
             id="email"
             label="メールアドレス"
+            placeholder="メールアドレス"
             variant="standard"
             fullWidth
             value={email||""}

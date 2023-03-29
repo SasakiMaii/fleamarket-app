@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import NickNameInput from "../../components/form/NickNameInput";
-import { useNavigate } from "react-router-dom";
 import {
   AddressResult,
   Users,
@@ -107,7 +106,6 @@ const MembersInfoEdit = () => {
     };
     fetchData();
   }, [userCookieData]);
-  console.log(items);
 
   //レビューの表示
   useEffect(() => {
@@ -120,7 +118,6 @@ const MembersInfoEdit = () => {
     };
     fetchData();
   }, [userCookieData]);
-  console.log(review, "re");
 
   //郵便番号から住所取得するAPI
   const getZipCode = async () => {
@@ -205,7 +202,7 @@ const MembersInfoEdit = () => {
         body: JSON.stringify(data),
       });
       const resData = await response.json();
-      window.location.reload();
+      setUser(resData)
       alert("更新が完了しました");
     } catch (error) {
       console.log("era", error);
@@ -217,7 +214,7 @@ const MembersInfoEdit = () => {
       return item.reviews.map((review: any) => review.comment);
     })
     .flat();
-  console.log(reviewmatch);
+
   return (
     <Box mt={10} mb={2}>
       <>
