@@ -9,7 +9,7 @@ type PassProps = {
   editPass?: string | undefined;
 };
 
-const PasswordInput = React.memo((props: PassProps) => {
+const PasswordInput = (props: PassProps) => {
   const { password, setPassword, editPass } = props;
   return (
     <Box>
@@ -28,6 +28,6 @@ const PasswordInput = React.memo((props: PassProps) => {
           />
     </Box>
   );
-});
+};
 
 export default PasswordInput;

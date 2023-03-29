@@ -10,7 +10,7 @@ type NicknameProps = {
   editNickName?: string | undefined;
 };
 
-const NickNameInput = React.memo((props: NicknameProps) => {
+const NickNameInput =(props: NicknameProps) => {
   const { nickName, setNickName,editNickName  } = props;
 
   return (
@@ -29,6 +29,6 @@ const NickNameInput = React.memo((props: NicknameProps) => {
         />
     </Box>
   );
-});
+};
 
 export default NickNameInput;

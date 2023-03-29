@@ -9,7 +9,7 @@ type FirstNameProps = {
   editFirstName?: string | undefined;
 };
 
-const FirstNameInput = React.memo((props: FirstNameProps) => {
+const FirstNameInput = (props: FirstNameProps) => {
   const { firstName, setFirstName, editFirstName } = props;
 
   return (
@@ -29,6 +29,6 @@ const FirstNameInput = React.memo((props: FirstNameProps) => {
           />
     </Box>
   );
-});
+};
 
 export default FirstNameInput;

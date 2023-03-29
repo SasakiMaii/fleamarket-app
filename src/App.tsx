@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/users/Login";
 import Register from "./pages/users/Register";
 import Top from "./pages/Top";
@@ -12,8 +12,8 @@ import ProductRegistration from "./pages/products/ProductRegistration";
 import PurchaseConfirmation from "./pages/products/PurchaseConfirmation";
 import ErrPage from "./pages/404";
 import Header from "./components/layout/Header";
-import React, { createContext, useContext, useState } from "react";
-import { Session, SessionContextType, SessionContextValue, Users } from "./types/type";
+import { useState } from "react";
+import { Session } from "./types/type";
 import CreditPayment from "./pages/products/CreditPayment";
 import PaymentCompletion from "./pages/products/PaymentCompletion";
 import EvaluationList from './pages/users/EvaluationList';

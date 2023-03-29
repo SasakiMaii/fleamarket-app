@@ -64,7 +64,7 @@ const MembersInfoEdit = () => {
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));
   const encryptedData = cookieData ? cookieData.split("=")[1] : "";
-  React.useEffect(() => {
+  useEffect(() => {
     const decrypts = (data: string | CryptoJS.lib.CipherParams) => {
       const bytes = CryptoJS.AES.decrypt(String(data), secretKey);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
@@ -294,6 +294,7 @@ const MembersInfoEdit = () => {
                     color="primary"
                     variant="contained"
                     fullWidth
+                    data-testid="submit-button"
                     onClick={submitEdit}
                   >
                     登録内容の変更
@@ -332,7 +333,7 @@ const MembersInfoEdit = () => {
                         />
                         <Box>{item.name}</Box>
                         <Box>¥{item.price}</Box>
-                        <Button onClick={() => deleteItem(item.id)}>
+                        <Button ata-testid="delete-button" onClick={() => deleteItem(item.id)}>
                           出品を削除
                         </Button>
                       </Card>
@@ -400,7 +401,7 @@ const MembersInfoEdit = () => {
               <Typography>設定</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Button sx={{ textAlign: "center" }}>通知をオンにする</Button>
+              <Button ata-testid="tuuti-button" sx={{ textAlign: "center" }}>通知をオンにする</Button>
             </AccordionDetails>
           </Accordion>
         </Suspense>

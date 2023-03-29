@@ -7,7 +7,7 @@ type ImageProps = {
   handleFileSelect: any;
 };
 
-const ImageRegistration = React.memo((props: ImageProps) => {
+const ImageRegistration = (props: ImageProps) => {
   const { file, setFile, handleFileSelect } = props;
 
   return (
@@ -24,6 +24,6 @@ const ImageRegistration = React.memo((props: ImageProps) => {
       />
     </>
   );
-});
+};
 
 export default ImageRegistration;

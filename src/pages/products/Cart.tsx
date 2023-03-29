@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Box, Button, Link } from "@mui/material";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Items, CartType } from "../../types/type";
 import { useEffect } from "react";
 import { secretKey } from "../users/Login";
@@ -17,8 +17,6 @@ const Cart = () => {
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [cart, setCart] = useState<CartType[]>([]);
   const navigate=useNavigate()
-
-
   //cookieのuserIDを復号して取得
   useEffect(() => {
     const cookieData = document.cookie
