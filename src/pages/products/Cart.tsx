@@ -33,7 +33,7 @@ const Cart = () => {
       const Cookiedata = JSON.parse(decording);
       setUserCookieData(Cookiedata);
     }
-  }, []);
+  }, [userCookieData]);
 
 //ログイン中ユーザのカートの中身
   useEffect(() => {

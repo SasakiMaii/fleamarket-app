@@ -62,7 +62,6 @@ const Login = () => {
     if (emailMatch === true && passMatch === true) {
       document.cookie = `data=${encryptedData}; path=/; max-age=1000000000; secure`;
       navigate("/");
-      window.location.reload()
     } else if (emailMatch === false || passMatch === false) {
       setErr(["＊入力内容を確認してください＊"]);
     }

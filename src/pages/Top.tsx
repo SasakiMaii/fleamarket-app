@@ -57,7 +57,6 @@ const Top = () => {
     }
   }, [userCookie]);
 
-
   //Item情報
   useEffect(() => {
     (async () => {
@@ -81,11 +80,6 @@ const Top = () => {
       }
     })();
   }, []);
-
-  //cookieのユーザIdと一致したuserを取得
-  const userMutch = user.filter((data) => {
-    return data.id === Number(userCookie);
-  });
 
   return (
     <Box sx={{ backgroundImage: "url(../public/beig.jpeg)" }}>

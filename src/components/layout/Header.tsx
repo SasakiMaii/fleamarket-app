@@ -78,7 +78,7 @@ function Header() {
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
-      window.location.reload();
+      // window.location.reload();
       navigate(`/membersinfoedit/${userCookieData}`);
       window.location.reload();
       window.location.reload();
@@ -108,24 +108,52 @@ function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <StorefrontIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href={"/"}
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            FURIMA
-          </Typography>
-          {userCookieData && (
+          {!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          ) ? (
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href={"/"}
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              FURIMA
+            </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                pointerEvents: "none",
+              }}
+            >
+              FURIMA
+            </Typography>
+          )}
+          {!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          ) && (
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -167,25 +195,55 @@ function Header() {
             </Box>
           )}
           <StorefrontIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            href={"/"}
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            FURIMA
-          </Typography>
-          {userCookieData && (
+          {!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          ) ? (
+            <Typography
+              variant="h5"
+              noWrap
+              href={"/"}
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              FURIMA
+            </Typography>
+          ) : (
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+                pointerEvents: "none",
+              }}
+            >
+              FURIMA
+            </Typography>
+          )}
+
+          {!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          ) && (
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
@@ -199,7 +257,11 @@ function Header() {
             </Box>
           )}
 
-          {userCookieData && (
+          {!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          ) && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
