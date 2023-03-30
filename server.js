@@ -13,6 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const prisma = new PrismaClient();
 
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.static("public"));
