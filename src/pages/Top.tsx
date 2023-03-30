@@ -128,7 +128,7 @@ const Top = () => {
             return (
               <Box mb={5} key={item.id} width="200px" mx={2}>
                 <div key={item.id}>
-                  <NavLink to={`productdetail/${item.id}`}>
+                  <NavLink to={`/productdetail/${item.id}`}>
                     <Card
                       sx={{
                         maxWidth: 200,
