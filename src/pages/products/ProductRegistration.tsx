@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BrandInput from "../../components/listing-form/BrandInput";
 import DetailMessageText from "../../components/listing-form/DetailMessageText";
 import ItemCategorySelect from "../../components/listing-form/ItemCategorySelect";
@@ -49,7 +49,6 @@ const ProductRegistration = () => {
     }
   }, []);
 
-  //
   const handleImageChange = (event: any) => {
     const selectedFile = event.target.files[0];
     //ファイルの読み込みを可能にする
@@ -68,7 +67,7 @@ const ProductRegistration = () => {
   };
 //画像のバリデーション
 const validateImage = () => {
-  const imageSizeLimit = 5 * 100 * 140; 
+  const imageSizeLimit = 5 * 100 * 140;
     const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
     if (itemImageName[0]?.size > imageSizeLimit) {
       setImageError("*画像のサイズが大きいです");
@@ -114,6 +113,7 @@ const validateImage = () => {
     return true;
   };
 
+  console.log(itemName)
   //登録処理
   const submitRegister = async (e: any) => {
     e.preventDefault();
@@ -127,7 +127,7 @@ const validateImage = () => {
         const response = await fetch("http://localhost:8000/items", {
           method: "POST",
           body: JSON.stringify({
-            name: itemName,
+            name:itemName,
             price: Number(price),
             image: itemImage || "",
             description: detailMessage,

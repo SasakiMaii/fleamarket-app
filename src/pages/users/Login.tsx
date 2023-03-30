@@ -34,7 +34,7 @@ const Login = () => {
   const [err, setErr] = useState<string[]>([]);
   const [loginData, setLoginData] = useState<Users[]>([]);
 
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

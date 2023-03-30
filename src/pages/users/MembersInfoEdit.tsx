@@ -58,7 +58,6 @@ const MembersInfoEdit = () => {
   const { id } = useParams();
 
   //cookie復号
-
   const cookieData = document.cookie
     .split(";")
     .find((cookie) => cookie.trim().startsWith("data="));
@@ -140,6 +139,7 @@ const MembersInfoEdit = () => {
     setLastName(user.last_name);
     setProfile(user.profile);
     setEmail(user.email);
+    setItemImage(user.image);
     setPostalCode(user.postal_code);
   }, [user]);
 
@@ -154,7 +154,6 @@ const MembersInfoEdit = () => {
     setItemImageName([selectedFile]);
   };
 
-  console.log(items);
   //プロフィール写真削除
   const clearImage = () => {
     setItemImage("");

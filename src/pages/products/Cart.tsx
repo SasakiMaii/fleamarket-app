@@ -33,11 +33,11 @@ const Cart = () => {
       const Cookiedata = JSON.parse(decording);
       setUserCookieData(Cookiedata);
     }
-  }, [userCookieData]);
+  }, []);
 
 //ログイン中ユーザのカートの中身
   useEffect(() => {
-    async function fetchCart() {
+    (async()=>{
       try {
         const response = await fetch(
           `http://localhost:8000/cart/${userCookieData}`
@@ -51,10 +51,7 @@ const Cart = () => {
       } catch (err) {
         console.log("エラー", err);
       }
-    }
-    if (userCookieData) {
-      fetchCart();
-    }
+    })()
   }, [userCookieData]);
 
   //カートに入っているアイテムの削除
