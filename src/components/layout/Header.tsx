@@ -78,9 +78,8 @@ function Header() {
 
   const handleCloseUserMenu = (id: number) => {
     if (id === 1) {
-      // window.location.reload();
-      navigate(`/membersinfoedit/${userCookieData}`);
       window.location.reload();
+      navigate(`/membersinfoedit/${userCookieData}`);
       window.location.reload();
     } else if (id === 2) {
       document.cookie = "data=; max-age=0; path=/;";

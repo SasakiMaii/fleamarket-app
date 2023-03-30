@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { AddressResult, CartType, Items } from "../../types/type";
 import { secretKey } from "../users/Login";
@@ -39,11 +39,10 @@ const PurchaseConfirmation = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [cart, setCart] = useState<CartType[]>([]);
   const [user, setUser] = useState<any>([]);
-  const [nameError, setNameError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
   const [selectedError, setSelectedError] = useState("");
   const [addressError, setAddressError] = useState("");
-  const [items, setItems] = useState<Items[]>([]);
+  const nameErrorRef=useRef("")
+  const phoneErrorRef=useRef("")
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -83,22 +82,6 @@ const PurchaseConfirmation = () => {
     }
   }, [userCookieData]);
 
-  //商品の取得
-  useEffect(() => {
-    async function fetchCart() {
-      try {
-        const response = await fetch(`http://localhost:8000/items`);
-        const data = await response.json();
-        setItems(data);
-      } catch (err) {
-        console.log("エラー", err);
-      }
-    }
-    if (userCookieData) {
-      fetchCart();
-    }
-  }, []);
-
   //住所検索API
   const getZipCode = async () => {
     const response = await fetch(
@@ -132,24 +115,25 @@ const PurchaseConfirmation = () => {
   //電話番号バリデーション
   const validatePhone = () => {
     if (!phone) {
-      setPhoneError("*電話番号を入力してください");
+      phoneErrorRef.current=("*電話番号を入力してください");
       return false;
     }
     if (!/^[0-9-+]+$/.test(phone)) {
-      setPhoneError("*有効な電話番号を入力してください");
+      phoneErrorRef.current=("*有効な電話番号を入力してください");
 
       return false;
     }
-    setPhoneError("");
+    phoneErrorRef.current=""
     return true;
   };
   //名前バリデーション
+  console.log(nameErrorRef.current)
   const validateName = () => {
-    if (!lastName && !firstName) {
-      setNameError("*性・名を入力してください");
+    if (!lastName || !firstName) {
+      nameErrorRef.current="*性・名を入力してください";
       return false;
     }
-    setNameError("");
+    nameErrorRef.current=""
     return true;
   };
   //支払い方法のバリデーション
@@ -390,8 +374,8 @@ const PurchaseConfirmation = () => {
             *配送先が登録と別住所の場合は入力内容を変更してください。
           </Box>
           <Box>
-            {nameError && (
-              <p style={{ color: "red", fontSize: 13 }}>{nameError}</p>
+            {nameErrorRef.current && (
+              <p style={{ color: "red", fontSize: 13 }}>{nameErrorRef.current}</p>
             )}
             <LastNameInput lastName={lastName} setLastName={setLastName} />
             <FirstNameInput firstName={firstName} setFirstName={setFirstName} />
@@ -414,8 +398,8 @@ const PurchaseConfirmation = () => {
               building={building}
               setBuilding={setBuilding}
             />
-            {phoneError && (
-              <p style={{ color: "red", fontSize: 13 }}>{phoneError}</p>
+            { phoneErrorRef.current && (
+              <p style={{ color: "red", fontSize: 13 }}>{phoneErrorRef.current}</p>
             )}
             <PhoneInput phone={phone} setPhone={setPhone} />
           </Box>

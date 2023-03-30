@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, MutableRefObject, RefObject, SetStateAction } from "react";
 import { Box } from "@mui/system";
 import { InputLabel, TextField } from "@mui/material";
 
@@ -9,6 +9,7 @@ type ItemNamePrps = {
 
 const ItemNameInput = (props: ItemNamePrps) => {
   const { itemName, setItemName } = props;
+
   return (
     <Box>
       <InputLabel id="itemName" sx={{mt:2,fontWeight:"bold"}}>商品の名前</InputLabel>
