@@ -216,7 +216,7 @@ const ProductDetail = () => {
     if (cartId.length >= 1) {
       alert("こちらの商品は販売終了しました。");
     } else {
-      navigate("/cart", { state: detailItems });
+      navigate("/cart");
       const res = await fetch(`http://localhost:8000/cart`, {
         method: "POST",
         body: JSON.stringify({
