@@ -22,8 +22,6 @@ import SellerInformation from "../../components/user/SellerInformation";
 
 const ProductDetail = () => {
   const [detailItems, setDetailItems] = useState<Items[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
   const [like, setLike] = useState(false);
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [likeItems, setLikeItems] = useState<Likes[]>([]);
@@ -56,100 +54,66 @@ const ProductDetail = () => {
     }
   }, []);
 
-  //lodingに関して
-  useEffect(() => {
-    setLoading(true);
-    const controller = new AbortController();
-    const signal = controller.signal;
-    Promise.all([
-      getDetailItem(signal),
-      getlikeItem(signal),
-      getComment(signal),
-      getCartItem(signal),
-    ])
-      .then(() => {
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err.name === "AbortError") return;
-        setError(err);
-        setLoading(false);
-      });
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (error) {
-    return <p>{error.message}</p>;
-  }
-
-  //コメント
-  const getComment = async (signal: AbortSignal) => {
-    try {
-      const response = await fetch(`http://localhost:8000/comment`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setCommentData(data);
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
-
-  //詳細商品取得
-  const getDetailItem = async (signal: AbortSignal) => {
-    try {
-      const response = await fetch(`http://localhost:8000/items/${id}`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setDetailItems([data]);
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
-  //お気に入りアイテム取得
-  const getlikeItem = async (signal: AbortSignal) => {
-    try {
-      const response = await fetch(`http://localhost:8000/likes`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setLikeItems(data);
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
-
   //カート情報取得
-  const getCartItem = async (signal: AbortSignal) => {
-    try {
-      const response = await fetch(`http://localhost:8000/cart`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setCartItems(data);
-    } catch (error) {
-      console.error("An error occurred:", error);
+  useEffect(()=>{
+(async()=>{
+  try {
+    const response = await fetch(`http://localhost:8000/cart`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
-
+    const data = await response.json();
+    setCartItems(data);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+})()
+  },[userCookieData])
+    //お気に入りアイテム取得
+  useEffect(()=>{
+(async()=>{
+  try {
+    const response = await fetch(`http://localhost:8000/likes`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setLikeItems(data);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+})()
+  },[])
+    //詳細商品取得
+  useEffect(()=>{
+(async()=>{
+  try {
+    const response = await fetch(`http://localhost:8000/items/${id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setDetailItems([data]);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+})()
+  },[userCookieData])
+    //コメント
+  useEffect(()=>{
+(async()=>{
+  try {
+    const response = await fetch(`http://localhost:8000/comment`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setCommentData(data);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+})()
+  },[userCookieData])
   //ログインしているユーザーがお気に入りしている商品
   const likeData = likeItems.filter((like) => {
     return (
@@ -160,7 +124,6 @@ const ProductDetail = () => {
   const likeItemsID = likeItems.filter((like) => {
     return like.user_id === Number(userCookieData);
   });
-
   //「like_product」が存在していたらアイコン変える
   useEffect(() => {
     if (
@@ -174,7 +137,6 @@ const ProductDetail = () => {
       setLike(false);
     }
   }, [detailItems]);
-
   //お気に入りテーブルのIDを表示
   const likeId = likeData.map((item) => {
     return item.id;
@@ -240,8 +202,6 @@ const ProductDetail = () => {
       const data = await res.json();
     }
   };
-
-  //カートアイテムのproduct_idと詳細画面の商品idが一致しているものを取得
   // 一致していれば売り切れ表示する
   const cartId: any = cartItems.filter((item) => {
     return (
