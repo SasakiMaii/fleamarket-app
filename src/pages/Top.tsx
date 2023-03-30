@@ -82,10 +82,10 @@ const Top = () => {
   }, []);
 
   return (
-    <Box sx={{ backgroundImage: "url(../public/beig.jpeg)" }}>
+    <Box sx={{ backgroundImage: "url(../public/beig.jpg)" }}>
       <Box
         sx={{
-          backgroundImage: "url(../public/fleamarket.png)",
+          backgroundImage: "url(../public/fleamarket.jpg)",
           maxWidth: "100%",
           minWidth: "100%",
           height: 200,
