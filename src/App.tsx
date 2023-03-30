@@ -55,8 +55,12 @@ function App() {
       {/* <SessionContext.Provider value={{ session, setSession }}> */}
       <Header />
       <Routes>
-        <Route path="/" element={<Top />} />
         <Route path="/login" element={<Login />} />
+      <Route path="/" element={!(
+            document.cookie
+              .split("; ")
+              .find((cookie) => cookie.startsWith(`data=`)) === undefined
+          )  ? <Top /> : <Navigate replace to="/login" />}/>
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/membersinfoedit/:id" element={<MembersInfoEdit />} />
