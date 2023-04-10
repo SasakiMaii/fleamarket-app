@@ -13,9 +13,13 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { secretKey } from "../users/Login";
 import CryptoJS from "crypto-js";
+import { likesState } from "../../Recoil";
+import { useRecoilState } from 'recoil';
 
 const Favorite = () => {
-  const [likes, setLikes] = useState<Likes[]>([]);
+//recoil
+  const [likes, setLikes] = useRecoilState(likesState);
+  
   const [userCookieData, setUserCookieData] = useState<any>([]);
   const [cartItems, setCartItems] = useState<CartType[]>([]);
   const navigate = useNavigate();
