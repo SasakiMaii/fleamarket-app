@@ -4,8 +4,6 @@ import {
   Route,
   Routes,
   BrowserRouter as Router,
-  useNavigate,
-  NavigateFunction,
 } from "react-router-dom";
 import Login from "./pages/users/Login";
 import Register from "./pages/users/Register";
@@ -19,7 +17,7 @@ import ProductRegistration from "./pages/products/ProductRegistration";
 import PurchaseConfirmation from "./pages/products/PurchaseConfirmation";
 import ErrPage from "./pages/404";
 import Header from "./components/layout/Header";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Session } from "./types/type";
 import CreditPayment from "./pages/products/CreditPayment";
 import PaymentCompletion from "./pages/products/PaymentCompletion";

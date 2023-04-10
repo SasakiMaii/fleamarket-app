@@ -214,6 +214,19 @@ const MembersInfoEdit = () => {
     })
     .flat();
 
+    const soldout=items.filter((item)=>{
+     return item.state===false
+    })
+
+    const soldoutPrice=soldout.map((sold)=>{
+      return sold.price
+    })
+
+    const totalPrice = soldoutPrice.reduce((accumulator:any, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    console.log(totalPrice,1)
+
   return (
     <Box mt={10} mb={2}>
       <>
@@ -386,6 +399,18 @@ const MembersInfoEdit = () => {
                   <Box>評価はありません。</Box>
                 </>
               )}
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography>売上金額</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {totalPrice?<Box>￥{totalPrice}</Box>:<Box>売上金はありません</Box>}
             </AccordionDetails>
           </Accordion>
           <Accordion>

@@ -156,7 +156,7 @@ const validateImage = () => {
   return (
     <Box
       sx={{
-        backgroundImage: "url(../public/beig.jpeg)",
+        backgroundImage: "url(../public/beig.jpg)",
         maxWidth: 1500,
         px: 20,
         mt: 10,
